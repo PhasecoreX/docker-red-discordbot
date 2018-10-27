@@ -1,5 +1,7 @@
 FROM phasecorex/user-python:alpine
 
+MAINTAINER Ryan Foster <phasecorex@gmail.com>
+
 RUN apk add --no-cache \
         openjdk8-jre \
         unzip \
@@ -14,4 +16,3 @@ COPY root/ /
 VOLUME /data
 
 CMD ["redbot", "docker"]
-
