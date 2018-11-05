@@ -1,4 +1,4 @@
-FROM phasecorex/user-python:alpine
+FROM phasecorex/user-python:3.7-alpine
 
 MAINTAINER Ryan Foster <phasecorex@gmail.com>
 
