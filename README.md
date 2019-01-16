@@ -26,7 +26,7 @@ Enjoy!
 ## Notes
 This image will run Red-Discordbot as a non-root user. This is great, until you want to install any cogs that depend on external libraries or pip packages. To get around this, the image will run Red-Discordbot in a python virtual environment. You can see this in the directory `/data/venv`. This allows for Red-Discordbot to install any package it wants as the non-root user. This also allows for Red-Discordbot to always be up-to-date when it first launches.
 
-Some pip packages will require external libraries, so some of the popular ones (the ones I need for my bot) are included. If you find that Red-Discordbot cannot install a cog, you can either let me know for including the package in this image, or you can extend this image, running pip3 to install your dependencies:
+Some pip packages will require external libraries, so some of the popular ones (the ones I need for my bot) are included. If you find that Red-Discordbot cannot install a popular cog, you can either let me know for including the package in this image, or you can extend this image, running pip3 to install your dependencies:
 
 ```
 FROM phasecorex/red-discordbot
@@ -36,3 +36,11 @@ RUN apk add --no-cache freetype-dev libpng-dev
 ```
 
 No need to define anything else, as the VOLUME and CMD will be the defaults.
+
+## Versions
+
+### latest
+The default version. It will be occasionally updated with more dependencies that popular cogs need. If you need another dependency for your cog, let me know.
+
+### slim
+This version only contains the bare minimum to run Red-Discordbot. The idea is that you extend this one and add pip dependencies that you need for your specific installation. See the notes section on how to extend this image.
