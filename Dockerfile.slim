@@ -9,19 +9,7 @@ RUN set -eux; \
         git \
         musl-dev \
         openjdk8-jre \
-        unzip \
-# Popular cog dependencies
-    # matplotlib
-        freetype-dev \
-        libpng-dev \
-    # pillow
-        jpeg-dev \
-    # lxml
-        libxml2-dev \
-        libxslt-dev \
-    # imagemagick
-        imagemagick-dev \
-    ;
+        unzip
 
 COPY root/ /
 
