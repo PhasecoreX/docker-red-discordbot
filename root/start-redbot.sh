@@ -7,10 +7,6 @@ python3 -m venv /data/venv
 
 source /data/venv/bin/activate
 
-set +e
-
-pip3 install -U --process-dependency-links --no-cache-dir Red-DiscordBot[voice]
-
-set -e
+pip3 install -U Red-DiscordBot
 
 exec redbot docker
