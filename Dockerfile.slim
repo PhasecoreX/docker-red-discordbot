@@ -1,4 +1,6 @@
-FROM phasecorex/user-python:3.7-alpine
+ARG ARCH_IMG
+
+FROM ${ARCH_IMG}
 
 MAINTAINER Ryan Foster <phasecorex@gmail.com>
 

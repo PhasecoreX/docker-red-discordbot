@@ -1,0 +1,123 @@
+---
+kind: pipeline
+name: red-discordbot-latest
+trigger:
+  branch:
+  - master
+  event:
+  - push
+
+steps:
+- name: docker-build-amd64
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    repo: phasecorex/red-discordbot
+    tags: latest-amd64
+    build_args:
+      - ARCH_IMG=phasecorex/user-python:3.7-alpine-amd64
+
+- name: docker-build-arm32v6
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    repo: phasecorex/red-discordbot
+    tags: latest-arm
+    build_args:
+      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm
+
+- name: docker-build-arm64v8
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    repo: phasecorex/red-discordbot
+    tags: latest-arm64
+    build_args:
+      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm64
+
+- name: docker-push-manifest
+  image: plugins/manifest:1
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    target: phasecorex/red-discordbot:latest
+    template: phasecorex/red-discordbot:latest-ARCH
+    platforms:
+      - linux/amd64
+      - linux/arm
+      - linux/arm64
+
+---
+kind: pipeline
+name: red-discordbot-slim
+trigger:
+  branch:
+  - master
+  event:
+  - push
+
+steps:
+- name: docker-build-amd64
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    repo: phasecorex/red-discordbot
+    tags: slim-amd64
+    dockerfile: Dockerfile.slim
+    build_args:
+      - ARCH_IMG=phasecorex/user-python:3.7-alpine-amd64
+
+- name: docker-build-arm32v6
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    repo: phasecorex/red-discordbot
+    tags: slim-arm
+    dockerfile: Dockerfile.slim
+    build_args:
+      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm
+
+- name: docker-build-arm64v8
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    repo: phasecorex/red-discordbot
+    tags: slim-arm64
+    dockerfile: Dockerfile.slim
+    build_args:
+      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm64
+
+- name: docker-push-manifest
+  image: plugins/manifest:1
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    target: phasecorex/red-discordbot:slim
+    template: phasecorex/red-discordbot:slim-ARCH
+    platforms:
+      - linux/amd64
+      - linux/arm
+      - linux/arm64
+
