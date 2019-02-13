@@ -3,7 +3,7 @@ set -e
 
 mkdir -p /data/venv
 
-python -m venv --upgrade /data/venv
+python -m venv /data/venv
 
 source /data/venv/bin/activate
 
