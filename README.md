@@ -1,7 +1,8 @@
 # Red-Discordbot V3
 The newest Red-Discordbot in a convenient multi-arch container
 
-[![Build Status](https://ci.pcxserver.com/api/badges/PhasecoreX/docker-red-discordbot/status.svg)](https://ci.pcxserver.com/PhasecoreX/docker-red-discordbot)
+[![](https://ci.pcxserver.com/api/badges/PhasecoreX/docker-red-discordbot/status.svg)](https://ci.pcxserver.com/PhasecoreX/docker-red-discordbot)
+[![](https://images.microbadger.com/badges/image/phasecorex/red-discordbot.svg)](https://microbadger.com/images/phasecorex/red-discordbot)
 
 ## First Time Setup
 Simply run it like so:
