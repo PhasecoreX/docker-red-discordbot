@@ -18,11 +18,14 @@ After this initial setup, add the bot to your server with the displayed URL. Onc
 ## Subsequent Runs
 Once the initial setup is completed, you can run Red-Discordbot without `-it` or `--rm`. Just make sure you mount the same `/data` directory as before!
 ```
-docker run --name red-discordbot -d -v /local/folder/for/persistence:/data -e TZ=America/Detroit -e PUID=1000 phasecorex/red-discordbot
+docker run --name red-discordbot --restart always -d -v /local/folder/for/persistence:/data -e TZ=America/Detroit -e PUID=1000 phasecorex/red-discordbot
 ```
 You should see Red-Discordbot connect to the server that you set in the setup.
 
 Enjoy!
+
+## Updates
+If you hear that Red-Discordbot was updated, simply issue the `[p]restart` command. Red-Discordbot will gracefully shut down, and if you have set up your container to always restart (`--restart always`), it will come back up after updating to the latest version. If you do not have automatic restart enabled for the docker container, just rerun the above comand and Red-Discordbod will update itself and start.
 
 ## Notes
 This image will run Red-Discordbot as a non-root user. This is great, until you want to install any cogs that depend on external libraries or pip packages. To get around this, the image will run Red-Discordbot in a python virtual environment. You can see this in the directory `/data/venv`. This allows for Red-Discordbot to install any package it wants as the non-root user. This also allows for Red-Discordbot to always be up-to-date when it first launches.

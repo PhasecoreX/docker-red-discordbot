@@ -30,7 +30,7 @@ steps:
     repo: phasecorex/red-discordbot
     tags: latest-arm
     build_args:
-      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm
+      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm32v6
 
 - name: docker-build-arm64v8
   image: plugins/docker
@@ -42,21 +42,18 @@ steps:
     repo: phasecorex/red-discordbot
     tags: latest-arm64
     build_args:
-      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm64
+      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm64v8
 
 - name: docker-push-manifest
   image: plugins/manifest:1
+  environment:
+    DRONE_TAG: latest
   settings:
     username:
       from_secret: docker_username
     password:
       from_secret: docker_password
-    target: phasecorex/red-discordbot:latest
-    template: phasecorex/red-discordbot:latest-ARCH
-    platforms:
-      - linux/amd64
-      - linux/arm
-      - linux/arm64
+    spec: .manifest.tmpl
 
 ---
 kind: pipeline
@@ -92,7 +89,7 @@ steps:
     tags: slim-arm
     dockerfile: Dockerfile.slim
     build_args:
-      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm
+      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm32v6
 
 - name: docker-build-arm64v8
   image: plugins/docker
@@ -105,19 +102,16 @@ steps:
     tags: slim-arm64
     dockerfile: Dockerfile.slim
     build_args:
-      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm64
+      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm64v8
 
 - name: docker-push-manifest
   image: plugins/manifest:1
+  environment:
+    DRONE_TAG: slim
   settings:
     username:
       from_secret: docker_username
     password:
       from_secret: docker_password
-    target: phasecorex/red-discordbot:slim
-    template: phasecorex/red-discordbot:slim-ARCH
-    platforms:
-      - linux/amd64
-      - linux/arm
-      - linux/arm64
+    spec: .manifest.tmpl
 

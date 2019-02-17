@@ -1,0 +1,25 @@
+image: phasecorex/red-discordbot:{{#if build.tag}}{{trimPrefix build.tag "v"}}{{else}}latest{{/if}}
+{{#if build.tags}}
+tags:
+{{#each build.tags}}
+  - {{this}}
+{{/each}}
+{{/if}}
+manifests:
+  -
+    image: phasecorex/red-discordbot:{{#if build.tag}}{{trimPrefix build.tag "v"}}-{{/if}}amd64
+    platform:
+      architecture: amd64
+      os: linux
+  -
+    image: phasecorex/red-discordbot:{{#if build.tag}}{{trimPrefix build.tag "v"}}-{{/if}}arm32v6
+    platform:
+      architecture: arm
+      os: linux
+      variant: v6
+  -
+    image: phasecorex/red-discordbot:{{#if build.tag}}{{trimPrefix build.tag "v"}}-{{/if}}arm64v8
+    platform:
+      architecture: arm64
+      os: linux
+      variant: v8
