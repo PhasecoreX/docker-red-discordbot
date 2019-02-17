@@ -28,7 +28,7 @@ steps:
     password:
       from_secret: docker_password
     repo: phasecorex/red-discordbot
-    tags: latest-arm
+    tags: latest-arm32v6
     build_args:
       - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm32v6
 
@@ -40,7 +40,7 @@ steps:
     password:
       from_secret: docker_password
     repo: phasecorex/red-discordbot
-    tags: latest-arm64
+    tags: latest-arm64v8
     build_args:
       - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm64v8
 
@@ -86,7 +86,7 @@ steps:
     password:
       from_secret: docker_password
     repo: phasecorex/red-discordbot
-    tags: slim-arm
+    tags: slim-arm32v6
     dockerfile: Dockerfile.slim
     build_args:
       - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm32v6
@@ -99,7 +99,7 @@ steps:
     password:
       from_secret: docker_password
     repo: phasecorex/red-discordbot
-    tags: slim-arm64
+    tags: slim-arm64v8
     dockerfile: Dockerfile.slim
     build_args:
       - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm64v8
