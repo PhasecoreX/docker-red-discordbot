@@ -28,6 +28,8 @@ Enjoy!
 ## Updates
 If you hear that Red-Discordbot was updated, simply issue the `[p]restart` command. Red-Discordbot will gracefully shut down, and if you have set up your container to always restart (`--restart always`), it will come back up after updating to the latest version. If you do not have automatic restart enabled for the docker container, just rerun the above comand and Red-Discordbod will update itself and start.
 
+Alternatively, consider using the [UpdateNotify](https://github.com/PhasecoreX/PCXCogs) cog I created to get notifications when Red-Discordbot updates!
+
 ## Notes
 This image will run Red-Discordbot as a non-root user. This is great, until you want to install any cogs that depend on external libraries or pip packages. To get around this, the image will run Red-Discordbot in a python virtual environment. You can see this in the directory `/data/venv`. This allows for Red-Discordbot to install any package it wants as the non-root user. This also allows for Red-Discordbot to always be up-to-date when it first launches.
 
