@@ -11,7 +11,7 @@ RUN set -eux; \
         git \
         openjdk8-jre \
         unzip \
-# Popular cog dependencies
+# Popular cog dependencies (python)
     # matplotlib
         freetype-dev \
         libpng-dev \
@@ -20,8 +20,11 @@ RUN set -eux; \
     # lxml
         libxml2-dev \
         libxslt-dev \
-    # imagemagick
+# Popular cog dependencies (programs)
+        imagemagick \
         imagemagick-dev \
+        ffmpeg \
+        ffmpeg-dev \
     ;
 
 COPY root/ /
