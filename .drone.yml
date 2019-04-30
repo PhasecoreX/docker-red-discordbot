@@ -1,74 +1,5 @@
 ---
 kind: pipeline
-name: red-discordbot-latest
-trigger:
-  branch:
-  - master
-  event:
-  - push
-
-steps:
-- name: docker-build-arm64v8
-  image: plugins/docker
-  settings:
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
-    repo: phasecorex/red-discordbot
-    tags: latest-arm64v8
-    build_args:
-      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm64v8
-
-- name: docker-build-arm32v7
-  image: plugins/docker
-  settings:
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
-    repo: phasecorex/red-discordbot
-    tags: latest-arm32v7
-    build_args:
-      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm32v7
-
-- name: docker-build-arm32v6
-  image: plugins/docker
-  settings:
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
-    repo: phasecorex/red-discordbot
-    tags: latest-arm32v6
-    build_args:
-      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm32v6
-
-- name: docker-build-amd64
-  image: plugins/docker
-  settings:
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
-    repo: phasecorex/red-discordbot
-    tags: latest-amd64
-    build_args:
-      - ARCH_IMG=phasecorex/user-python:3.7-alpine-amd64
-
-- name: docker-push-manifest
-  image: plugins/manifest:1
-  environment:
-    DRONE_TAG: latest
-  settings:
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
-    spec: .manifest.tmpl
-
----
-kind: pipeline
 name: red-discordbot-slim
 trigger:
   branch:
@@ -142,6 +73,75 @@ steps:
 
 ---
 kind: pipeline
+name: red-discordbot-latest
+trigger:
+  branch:
+  - master
+  event:
+  - push
+
+steps:
+- name: docker-build-arm64v8
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    repo: phasecorex/red-discordbot
+    tags: latest-arm64v8
+    build_args:
+      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm64v8
+
+- name: docker-build-arm32v7
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    repo: phasecorex/red-discordbot
+    tags: latest-arm32v7
+    build_args:
+      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm32v7
+
+- name: docker-build-arm32v6
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    repo: phasecorex/red-discordbot
+    tags: latest-arm32v6
+    build_args:
+      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm32v6
+
+- name: docker-build-amd64
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    repo: phasecorex/red-discordbot
+    tags: latest-amd64
+    build_args:
+      - ARCH_IMG=phasecorex/user-python:3.7-alpine-amd64
+
+- name: docker-push-manifest
+  image: plugins/manifest:1
+  environment:
+    DRONE_TAG: latest
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    spec: .manifest.tmpl
+
+---
+kind: pipeline
 name: notify
 trigger:
   branch:
@@ -171,6 +171,6 @@ steps:
       {{/success}}
 
 depends_on:
-  - red-discordbot-latest
   - red-discordbot-slim
+  - red-discordbot-latest
 
