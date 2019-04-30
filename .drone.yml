@@ -8,7 +8,7 @@ trigger:
   - push
 
 steps:
-- name: docker-build-amd64
+- name: docker-build-arm64v8
   image: plugins/docker
   settings:
     username:
@@ -16,9 +16,21 @@ steps:
     password:
       from_secret: docker_password
     repo: phasecorex/red-discordbot
-    tags: latest-amd64
+    tags: latest-arm64v8
     build_args:
-      - ARCH_IMG=phasecorex/user-python:3.7-alpine-amd64
+      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm64v8
+
+- name: docker-build-arm32v7
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    repo: phasecorex/red-discordbot
+    tags: latest-arm32v7
+    build_args:
+      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm32v7
 
 - name: docker-build-arm32v6
   image: plugins/docker
@@ -32,7 +44,7 @@ steps:
     build_args:
       - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm32v6
 
-- name: docker-build-arm64v8
+- name: docker-build-amd64
   image: plugins/docker
   settings:
     username:
@@ -40,9 +52,9 @@ steps:
     password:
       from_secret: docker_password
     repo: phasecorex/red-discordbot
-    tags: latest-arm64v8
+    tags: latest-amd64
     build_args:
-      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm64v8
+      - ARCH_IMG=phasecorex/user-python:3.7-alpine-amd64
 
 - name: docker-push-manifest
   image: plugins/manifest:1
@@ -65,7 +77,7 @@ trigger:
   - push
 
 steps:
-- name: docker-build-amd64
+- name: docker-build-arm64v8
   image: plugins/docker
   settings:
     username:
@@ -73,10 +85,23 @@ steps:
     password:
       from_secret: docker_password
     repo: phasecorex/red-discordbot
-    tags: slim-amd64
+    tags: slim-arm64v8
     dockerfile: Dockerfile.slim
     build_args:
-      - ARCH_IMG=phasecorex/user-python:3.7-alpine-amd64
+      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm64v8
+
+- name: docker-build-arm32v7
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    repo: phasecorex/red-discordbot
+    tags: slim-arm32v7
+    dockerfile: Dockerfile.slim
+    build_args:
+      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm32v7
 
 - name: docker-build-arm32v6
   image: plugins/docker
@@ -91,7 +116,7 @@ steps:
     build_args:
       - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm32v6
 
-- name: docker-build-arm64v8
+- name: docker-build-amd64
   image: plugins/docker
   settings:
     username:
@@ -99,10 +124,10 @@ steps:
     password:
       from_secret: docker_password
     repo: phasecorex/red-discordbot
-    tags: slim-arm64v8
+    tags: slim-amd64
     dockerfile: Dockerfile.slim
     build_args:
-      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm64v8
+      - ARCH_IMG=phasecorex/user-python:3.7-alpine-amd64
 
 - name: docker-push-manifest
   image: plugins/manifest:1
@@ -114,4 +139,38 @@ steps:
     password:
       from_secret: docker_password
     spec: .manifest.tmpl
+
+---
+kind: pipeline
+name: notify
+trigger:
+  branch:
+  - master
+  event:
+  - push
+  status:
+  - success
+  - failure
+clone:
+  disable: true
+
+steps:
+- name: send-notification
+  image: appleboy/drone-discord
+  allow_failure: true
+  settings:
+    webhook_id:
+      from_secret: discord_webhook_id
+    webhook_token:
+      from_secret: discord_webhook_token
+    message: >
+      {{#success build.status}}
+        **{{repo.name}}**: Build #{{build.number}} on {{build.branch}} branch succeeded!
+      {{else}}
+        **{{repo.name}}**: Build #{{build.number}} on {{build.branch}} branch failed. Fix me please. {{build.link}}
+      {{/success}}
+
+depends_on:
+  - red-discordbot-latest
+  - red-discordbot-slim
 
