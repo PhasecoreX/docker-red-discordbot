@@ -2,8 +2,6 @@ ARG ARCH_IMG
 
 FROM ${ARCH_IMG}
 
-MAINTAINER Ryan Foster <phasecorex@gmail.com>
-
 RUN set -eux; \
     apk add --no-cache \
 # Redbot dependencies
@@ -32,3 +30,5 @@ COPY root/ /
 VOLUME /data
 
 CMD ["/start-redbot.sh"]
+
+LABEL maintainer="Ryan Foster <phasecorex@gmail.com>"
