@@ -1,6 +1,5 @@
 #!/usr/bin/env sh
 set -e
-export PCX_DISCORDBOT=true
 
 mkdir -p /data/venv
 python -m venv --upgrade /data/venv

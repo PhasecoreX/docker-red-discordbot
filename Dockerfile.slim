@@ -2,6 +2,8 @@ ARG ARCH_IMG
 
 FROM ${ARCH_IMG}
 
+ENV PCX_DISCORDBOT true
+
 RUN set -eux; \
     apk add --no-cache \
 # Redbot dependencies
