@@ -37,6 +37,7 @@ steps:
     dockerfile: Dockerfile.slim
     build_args:
       - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm64v8
+      - COMMIT_SHA=$DRONE_COMMIT_SHA
 
 - name: docker-build-arm32v7
   image: plugins/docker
@@ -50,6 +51,7 @@ steps:
     dockerfile: Dockerfile.slim
     build_args:
       - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm32v7
+      - COMMIT_SHA=$DRONE_COMMIT_SHA
 
 - name: docker-build-arm32v6
   image: plugins/docker
@@ -63,6 +65,7 @@ steps:
     dockerfile: Dockerfile.slim
     build_args:
       - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm32v6
+      - COMMIT_SHA=$DRONE_COMMIT_SHA
 
 - name: docker-build-amd64
   image: plugins/docker
@@ -76,6 +79,7 @@ steps:
     dockerfile: Dockerfile.slim
     build_args:
       - ARCH_IMG=phasecorex/user-python:3.7-alpine-amd64
+      - COMMIT_SHA=$DRONE_COMMIT_SHA
 
 - name: docker-push-manifest
   image: plugins/manifest:1
@@ -112,6 +116,7 @@ steps:
     tags: latest-arm64v8
     build_args:
       - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm64v8
+      - COMMIT_SHA=$DRONE_COMMIT_SHA
 
 - name: docker-build-arm32v7
   image: plugins/docker
@@ -124,6 +129,7 @@ steps:
     tags: latest-arm32v7
     build_args:
       - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm32v7
+      - COMMIT_SHA=$DRONE_COMMIT_SHA
 
 - name: docker-build-arm32v6
   image: plugins/docker
@@ -136,6 +142,7 @@ steps:
     tags: latest-arm32v6
     build_args:
       - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm32v6
+      - COMMIT_SHA=$DRONE_COMMIT_SHA
 
 - name: docker-build-amd64
   image: plugins/docker
@@ -148,6 +155,7 @@ steps:
     tags: latest-amd64
     build_args:
       - ARCH_IMG=phasecorex/user-python:3.7-alpine-amd64
+      - COMMIT_SHA=$DRONE_COMMIT_SHA
 
 - name: docker-push-manifest
   image: plugins/manifest:1

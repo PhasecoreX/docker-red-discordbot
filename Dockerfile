@@ -1,8 +1,12 @@
 ARG ARCH_IMG
 
-FROM ${ARCH_IMG}
+FROM alpine
+ARG COMMIT_SHA
+RUN : "${COMMIT_SHA:?Build argument 'COMMIT_SHA' needs to be set and non-empty.}"
 
-ENV PCX_DISCORDBOT true
+
+
+FROM ${ARCH_IMG}
 
 RUN set -eux; \
     apk add --no-cache \
@@ -28,6 +32,9 @@ RUN set -eux; \
     ;
 
 COPY root/ /
+
+ARG COMMIT_SHA
+ENV PCX_DISCORDBOT_COMMIT ${COMMIT_SHA}
 
 VOLUME /data
 
