@@ -1,8 +1,8 @@
 ARG ARCH_IMG
 
 FROM alpine
-ARG COMMIT_SHA
-RUN : "${COMMIT_SHA:?Build argument 'COMMIT_SHA' needs to be set and non-empty.}"
+ARG DRONE_COMMIT_SHA
+RUN : "${DRONE_COMMIT_SHA:?Build argument 'DRONE_COMMIT_SHA' needs to be set and non-empty.}"
 
 
 
@@ -33,8 +33,8 @@ RUN set -eux; \
 
 COPY root/ /
 
-ARG COMMIT_SHA
-ENV PCX_DISCORDBOT_COMMIT ${COMMIT_SHA}
+ARG DRONE_COMMIT_SHA
+ENV PCX_DISCORDBOT_COMMIT ${DRONE_COMMIT_SHA}
 
 VOLUME /data
 
