@@ -36,7 +36,7 @@ steps:
     tags: noaudio-arm64v8
     dockerfile: Dockerfile.noaudio
     build_args:
-      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm64v8
+      - ARCH_IMG=phasecorex/user-python:3.7-slim-arm64v8
     build_args_from_env:
       - DRONE_COMMIT_SHA
 
@@ -51,7 +51,7 @@ steps:
     tags: noaudio-arm32v7
     dockerfile: Dockerfile.noaudio
     build_args:
-      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm32v7
+      - ARCH_IMG=phasecorex/user-python:3.7-slim-arm32v7
     build_args_from_env:
       - DRONE_COMMIT_SHA
 
@@ -66,7 +66,7 @@ steps:
     tags: noaudio-arm32v6
     dockerfile: Dockerfile.noaudio
     build_args:
-      - ARCH_IMG=phasecorex/user-python:3.7-alpine-arm32v6
+      - ARCH_IMG=phasecorex/user-python:3.7-slim-arm32v6
     build_args_from_env:
       - DRONE_COMMIT_SHA
 
@@ -81,7 +81,7 @@ steps:
     tags: noaudio-amd64
     dockerfile: Dockerfile.noaudio
     build_args:
-      - ARCH_IMG=phasecorex/user-python:3.7-alpine-amd64
+      - ARCH_IMG=phasecorex/user-python:3.7-slim-amd64
     build_args_from_env:
       - DRONE_COMMIT_SHA
 
