@@ -38,16 +38,30 @@ Some pip packages will require external libraries, so some of the popular ones (
 ```
 FROM phasecorex/red-discordbot
 
-# matplotlib needs these
-RUN apk add --no-cache freetype-dev libpng-dev
+RUN apt-get update; \
+    apt-get install -y --no-install-recommends \
+        your \
+        packages \
+        here \
+    ; \
+    rm -rf /var/lib/apt/lists/*;
 ```
 
 No need to define anything else, as the VOLUME and CMD will be the defaults.
 
 ## Versions
 
-### latest
-The default version. It will be occasionally updated with more dependencies that popular cogs need. If you need another dependency for your cog, let me know.
+### latest/audio
+The default version. It contains Java so that you can use the Audio cog. You can extend this one (or any of the other versions) to add your own packages for your own 3rd party cogs.
 
-### slim
-This version only contains the bare minimum to run Red-Discordbot. The idea is that you extend this one and add pip dependencies that you need for your specific installation. See the notes section on how to extend this image.
+### noaudio
+This version only contains the bare minimum to run Red-Discordbot (no Java, so no Audio cog support).
+
+### full
+This is the version that I use. It is the same as the latest version, but with added packages. It will be occasionally updated with more dependencies that popular cogs need. If you need another dependency for your cog, let me know, and I'll consider adding it.
+
+
+
+
+
+

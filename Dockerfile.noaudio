@@ -9,12 +9,15 @@ RUN : "${DRONE_COMMIT_SHA:?Build argument 'DRONE_COMMIT_SHA' needs to be set and
 FROM ${ARCH_IMG}
 
 RUN set -eux; \
-    apk add --no-cache \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
 # Redbot dependencies
-        build-base \
+        libssl-dev \
+        libffi-dev \
         git \
-        openjdk8-jre \
-        unzip
+        unzip \
+    ; \
+    rm -rf /var/lib/apt/lists/*;
 
 COPY root/ /
 

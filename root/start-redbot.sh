@@ -11,7 +11,7 @@ fi
 mkdir -p /data/venv
 python -m venv --upgrade /data/venv
 python -m venv /data/venv
-source /data/venv/bin/activate
+. /data/venv/bin/activate
 
 python -m pip install --upgrade --no-cache-dir pip
 python -m pip install --upgrade --no-cache-dir Red-DiscordBot
