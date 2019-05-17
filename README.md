@@ -3,6 +3,7 @@ The newest Red-Discordbot in a convenient multi-arch container
 
 [![Build Status](https://ci.pcxserver.com/api/badges/PhasecoreX/docker-red-discordbot/status.svg)](https://ci.pcxserver.com/PhasecoreX/docker-red-discordbot)
 [![Image Size](https://images.microbadger.com/badges/image/phasecorex/red-discordbot.svg)](https://microbadger.com/images/phasecorex/red-discordbot)
+[![Donate to support my code](https://img.shields.io/badge/Paypal-Donate-blue.svg)](https://paypal.me/pcx)
 
 ## First Time Setup
 Simply run it like so:
@@ -59,9 +60,3 @@ This version only contains the bare minimum to run Red-Discordbot (no Java, so n
 
 ### full
 This is the version that I use. It is the same as the latest version, but with added packages. It will be occasionally updated with more dependencies that popular cogs need. If you need another dependency for your cog, let me know, and I'll consider adding it.
-
-
-
-
-
-
