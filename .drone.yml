@@ -55,21 +55,6 @@ steps:
     build_args_from_env:
       - DRONE_COMMIT_SHA
 
-- name: docker-build-arm32v6
-  image: plugins/docker
-  settings:
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
-    repo: phasecorex/red-discordbot
-    tags: noaudio-arm32v6
-    dockerfile: Dockerfile.noaudio
-    build_args:
-      - ARCH_IMG=phasecorex/user-python:3.7-slim-arm32v6
-    build_args_from_env:
-      - DRONE_COMMIT_SHA
-
 - name: docker-build-amd64
   image: plugins/docker
   settings:
@@ -138,22 +123,6 @@ steps:
       - latest-arm32v7
     build_args:
       - ARCH_IMG=phasecorex/red-discordbot:noaudio-arm32v7
-    build_args_from_env:
-      - DRONE_COMMIT_SHA
-
-- name: docker-build-arm32v6
-  image: plugins/docker
-  settings:
-    username:
-      from_secret: docker_username
-    password:
-      from_secret: docker_password
-    repo: phasecorex/red-discordbot
-    tags:
-      - audio-arm32v6
-      - latest-arm32v6
-    build_args:
-      - ARCH_IMG=phasecorex/red-discordbot:noaudio-arm32v6
     build_args_from_env:
       - DRONE_COMMIT_SHA
 
