@@ -169,6 +169,75 @@ depends_on:
 
 ---
 kind: pipeline
+name: red-discordbot-full
+trigger:
+  branch:
+  - master
+  event:
+  - push
+
+steps:
+- name: docker-build-arm64v8
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    repo: phasecorex/red-discordbot
+    tags: full-arm64v8
+    dockerfile: Dockerfile.full
+    build_args:
+      - ARCH_IMG=phasecorex/red-discordbot:audio-arm64v8
+    build_args_from_env:
+      - DRONE_COMMIT_SHA
+
+- name: docker-build-arm32v7
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    repo: phasecorex/red-discordbot
+    tags: full-arm32v7
+    dockerfile: Dockerfile.full
+    build_args:
+      - ARCH_IMG=phasecorex/red-discordbot:audio-arm32v7
+    build_args_from_env:
+      - DRONE_COMMIT_SHA
+
+- name: docker-build-amd64
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    repo: phasecorex/red-discordbot
+    tags: full-amd64
+    dockerfile: Dockerfile.full
+    build_args:
+      - ARCH_IMG=phasecorex/red-discordbot:audio-amd64
+    build_args_from_env:
+      - DRONE_COMMIT_SHA
+
+- name: docker-push-manifest-full
+  image: plugins/manifest:1
+  environment:
+    DRONE_TAG: full
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    spec: .manifest.tmpl
+
+depends_on:
+  - red-discordbot-audio
+
+---
+kind: pipeline
 name: notify
 trigger:
   branch:
@@ -200,4 +269,5 @@ steps:
 depends_on:
   - red-discordbot-noaudio
   - red-discordbot-audio
+  - red-discordbot-full
 
