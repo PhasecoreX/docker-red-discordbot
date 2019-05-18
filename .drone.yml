@@ -25,6 +25,15 @@ trigger:
   - push
 
 steps:
+- name: prepare
+  image: docker:git
+  commands:
+    - mkdir -p /cache/${DRONE_REPO}/docker
+    - echo "Enabled build caching"
+  volumes:
+    - name: cache
+      path: /cache
+
 - name: docker-build-arm64v8
   image: plugins/docker
   settings:
@@ -32,6 +41,8 @@ steps:
       from_secret: docker_username
     password:
       from_secret: docker_password
+    create_repository: true
+    use_cache: true
     repo: phasecorex/red-discordbot
     tags: noaudio-arm64v8
     dockerfile: Dockerfile.noaudio
@@ -39,6 +50,9 @@ steps:
       - ARCH_IMG=phasecorex/user-python:3.7-slim-arm64v8
     build_args_from_env:
       - DRONE_COMMIT_SHA
+  volumes:
+    - name: docker
+      path: /var/lib/docker
 
 - name: docker-build-arm32v7
   image: plugins/docker
@@ -47,6 +61,8 @@ steps:
       from_secret: docker_username
     password:
       from_secret: docker_password
+    create_repository: true
+    use_cache: true
     repo: phasecorex/red-discordbot
     tags: noaudio-arm32v7
     dockerfile: Dockerfile.noaudio
@@ -54,6 +70,9 @@ steps:
       - ARCH_IMG=phasecorex/user-python:3.7-slim-arm32v7
     build_args_from_env:
       - DRONE_COMMIT_SHA
+  volumes:
+    - name: docker
+      path: /var/lib/docker
 
 - name: docker-build-amd64
   image: plugins/docker
@@ -62,6 +81,8 @@ steps:
       from_secret: docker_username
     password:
       from_secret: docker_password
+    create_repository: true
+    use_cache: true
     repo: phasecorex/red-discordbot
     tags: noaudio-amd64
     dockerfile: Dockerfile.noaudio
@@ -69,6 +90,9 @@ steps:
       - ARCH_IMG=phasecorex/user-python:3.7-slim-amd64
     build_args_from_env:
       - DRONE_COMMIT_SHA
+  volumes:
+    - name: docker
+      path: /var/lib/docker
 
 - name: docker-push-manifest-noaudio
   image: plugins/manifest:1
@@ -80,6 +104,14 @@ steps:
     password:
       from_secret: docker_password
     spec: .manifest.tmpl
+
+volumes:
+- name: cache
+  host:
+    path: /var/cache
+- name: docker
+  host:
+    path: /var/cache/${DRONE_REPO}/docker
 
 depends_on:
   - prepare
@@ -94,6 +126,15 @@ trigger:
   - push
 
 steps:
+- name: prepare
+  image: docker:git
+  commands:
+    - mkdir -p /cache/${DRONE_REPO}/docker
+    - echo "Enabled build caching"
+  volumes:
+    - name: cache
+      path: /cache
+
 - name: docker-build-arm64v8
   image: plugins/docker
   settings:
@@ -101,6 +142,8 @@ steps:
       from_secret: docker_username
     password:
       from_secret: docker_password
+    create_repository: true
+    use_cache: true
     repo: phasecorex/red-discordbot
     tags:
       - audio-arm64v8
@@ -109,6 +152,9 @@ steps:
       - ARCH_IMG=phasecorex/red-discordbot:noaudio-arm64v8
     build_args_from_env:
       - DRONE_COMMIT_SHA
+  volumes:
+    - name: docker
+      path: /var/lib/docker
 
 - name: docker-build-arm32v7
   image: plugins/docker
@@ -117,6 +163,8 @@ steps:
       from_secret: docker_username
     password:
       from_secret: docker_password
+    create_repository: true
+    use_cache: true
     repo: phasecorex/red-discordbot
     tags:
       - audio-arm32v7
@@ -125,6 +173,9 @@ steps:
       - ARCH_IMG=phasecorex/red-discordbot:noaudio-arm32v7
     build_args_from_env:
       - DRONE_COMMIT_SHA
+  volumes:
+    - name: docker
+      path: /var/lib/docker
 
 - name: docker-build-amd64
   image: plugins/docker
@@ -133,6 +184,8 @@ steps:
       from_secret: docker_username
     password:
       from_secret: docker_password
+    create_repository: true
+    use_cache: true
     repo: phasecorex/red-discordbot
     tags:
       - audio-amd64
@@ -141,6 +194,9 @@ steps:
       - ARCH_IMG=phasecorex/red-discordbot:noaudio-amd64
     build_args_from_env:
       - DRONE_COMMIT_SHA
+  volumes:
+    - name: docker
+      path: /var/lib/docker
 
 - name: docker-push-manifest-audio
   image: plugins/manifest:1
@@ -163,6 +219,14 @@ steps:
     password:
       from_secret: docker_password
     spec: .manifest.tmpl
+
+volumes:
+- name: cache
+  host:
+    path: /var/cache
+- name: docker
+  host:
+    path: /var/cache/${DRONE_REPO}/docker
 
 depends_on:
   - red-discordbot-noaudio
