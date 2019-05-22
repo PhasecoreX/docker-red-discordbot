@@ -20,21 +20,33 @@ After this initial setup, add the bot to your server with the displayed URL. Onc
 ## Subsequent Runs
 Once the initial setup is completed, you can run Red-Discordbot without `-it` or `--rm`. Just make sure you mount the same `/data` directory as before!
 ```
-docker run --name red-discordbot --restart always -d -v /local/folder/for/persistence:/data -e TZ=America/Detroit -e PUID=1000 phasecorex/red-discordbot
+docker run --name red-discordbot -d -v /local/folder/for/persistence:/data -e TZ=America/Detroit -e PUID=1000 phasecorex/red-discordbot
 ```
+- `--name red-discordbot`: A nice name for the docker container, for easy management.
+- `-d`: Run container in the background. The name set above comes in handy for managing it.
+
 You should see Red-Discordbot connect to the server that you set in the setup.
 
 Enjoy!
 
 ## Updates
-If you hear that Red-Discordbot was updated, simply issue the `[p]restart` command. Red-Discordbot will gracefully shut down, and if you have set up your container to always restart (`--restart always`), it will come back up after updating to the latest version. If you do not have automatic restart enabled for the docker container, just rerun the above comand and Red-Discordbod will update itself and start.
+If you hear that Red-Discordbot was updated, simply issue the `[p]restart` command. Red-Discordbot will gracefully shut down, update itself, and then start back up.
 
-Alternatively, consider using the [UpdateNotify](https://github.com/PhasecoreX/PCXCogs) cog I created to get notifications when Red-Discordbot updates!
+Consider using the [UpdateNotify](https://github.com/PhasecoreX/PCXCogs) cog I created to get notifications when Red-Discordbot updates!
+
+## MongoDB Support
+By default, this docker image uses JSON files as the storage engine. If you need to use MongoDB, you can fill out these environment variables when doing the first time setup:
+- `STORAGE_TYPE`: Can either be `mongodb` or `mongodb+srv` (by default this is `json`)
+- `MONGODB_HOST`
+- `MONGODB_PORT`: Defaults to 27017
+- `MONGODB_USERNAME`
+- `MONGODB_PASSWORD`
+- `MONGODB_DB_NAME`
 
 ## Notes
 This image will run Red-Discordbot as a non-root user. This is great, until you want to install any cogs that depend on external libraries or pip packages. To get around this, the image will run Red-Discordbot in a python virtual environment. You can see this in the directory `/data/venv`. This allows for Red-Discordbot to install any package it wants as the non-root user. This also allows for Red-Discordbot to always be up-to-date when it first launches.
 
-Some pip packages will require external libraries, so some of the popular ones (the ones I need for my bot) are included. If you find that Red-Discordbot cannot install a popular cog, you can either let me know for including the package in this image, or you can extend this image, running `apk add --no-cache` to install your dependencies:
+Some pip packages will require external libraries, so some of the popular ones (the ones I need for my bot) are included in the `full` tag. If you find that Red-Discordbot cannot install a popular cog, you can either let me know for including the package in this tag, or you can extend this image, running `apt-get install -y --no-install-recommends` to install your dependencies:
 
 ```
 FROM phasecorex/red-discordbot
@@ -42,6 +54,7 @@ FROM phasecorex/red-discordbot
 RUN apt-get update; \
     apt-get install -y --no-install-recommends \
         your \
+        extra \
         packages \
         here \
     ; \

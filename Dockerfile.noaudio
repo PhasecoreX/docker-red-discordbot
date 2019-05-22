@@ -17,7 +17,14 @@ RUN set -eux; \
         git \
         unzip \
     ; \
-    rm -rf /var/lib/apt/lists/*;
+    rm -rf /var/lib/apt/lists/*; \
+# Set up all three config locations
+    mkdir -p /root/.config/Red-DiscordBot; \
+    ln -s /config/config.json /root/.config/Red-DiscordBot/config.json; \
+    mkdir -p /usr/local/share/Red-DiscordBot; \
+    ln -s /config/config.json /usr/local/share/Red-DiscordBot/config.json; \
+    mkdir -p /config/.config/Red-DiscordBot; \
+    ln -s /config/config.json /config/.config/Red-DiscordBot/config.json;
 
 COPY root/ /
 
