@@ -42,6 +42,7 @@ By default, this docker image uses JSON files as the storage engine. If you need
 - `MONGODB_USERNAME`
 - `MONGODB_PASSWORD`
 - `MONGODB_DB_NAME`
+
 You will need them set for the first time setup, as well as any subsequent runs. If you would like, you can volume mount `/config` so that you do not need to specify the above environment variables every subsequent run. If you are only interested in using JSON, you do not need to volume mount `/config` at all.
 
 ## Notes
