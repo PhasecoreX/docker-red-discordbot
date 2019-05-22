@@ -35,13 +35,14 @@ If you hear that Red-Discordbot was updated, simply issue the `[p]restart` comma
 Consider using the [UpdateNotify](https://github.com/PhasecoreX/PCXCogs) cog I created to get notifications when Red-Discordbot updates!
 
 ## MongoDB Support
-By default, this docker image uses JSON files as the storage engine. If you need to use MongoDB, you can fill out these environment variables when doing the first time setup:
+By default, this docker image uses JSON files as the storage engine. If you need to use MongoDB, you can fill out these environment variables:
 - `STORAGE_TYPE`: Can either be `mongodb` or `mongodb+srv` (by default this is `json`)
 - `MONGODB_HOST`
 - `MONGODB_PORT`: Defaults to 27017
 - `MONGODB_USERNAME`
 - `MONGODB_PASSWORD`
 - `MONGODB_DB_NAME`
+You will need them set for the first time setup, as well as any subsequent runs. If you would like, you can volume mount `/config` so that you do not need to specify the above environment variables every subsequent run. If you are only interested in using JSON, you do not need to volume mount `/config` at all.
 
 ## Notes
 This image will run Red-Discordbot as a non-root user. This is great, until you want to install any cogs that depend on external libraries or pip packages. To get around this, the image will run Red-Discordbot in a python virtual environment. You can see this in the directory `/data/venv`. This allows for Red-Discordbot to install any package it wants as the non-root user. This also allows for Red-Discordbot to always be up-to-date when it first launches.
