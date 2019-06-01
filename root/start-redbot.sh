@@ -89,10 +89,14 @@ do
         python -m pip install --upgrade --no-cache-dir Red-DiscordBot
     fi
 
+    # Until https://github.com/Cog-Creators/Red-DiscordBot/issues/2714 is resolved
+    rm -rf /data/.tmp
+    mkdir -p /data/.tmp
+
     echo "Starting Red-DiscordBot!"
     set +e
     prep_term
-    redbot docker &
+    TMPDIR=/data/.tmp redbot docker &
     wait_term
     RETURN_CODE=$?
     set -e
