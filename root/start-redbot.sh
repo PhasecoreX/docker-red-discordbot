@@ -94,10 +94,18 @@ do
     mkdir -p /data/.tmp
 
     echo "Starting Red-DiscordBot!"
-    set +e
-    prep_term
-    TMPDIR=/data/.tmp redbot docker &
-    wait_term
-    RETURN_CODE=$?
-    set -e
+
+    # If we are running in an interactive shell, we can't do any of the fancy interrupt catching
+    if [ -t 0 ]
+    then
+        TMPDIR=/data/.tmp redbot docker
+        RETURN_CODE=$?
+    else
+        set +e
+        prep_term
+        TMPDIR=/data/.tmp redbot docker &
+        wait_term
+        RETURN_CODE=$?
+        set -e
+    fi
 done

@@ -2,7 +2,7 @@ ARG ARCH_IMG
 
 FROM alpine
 ARG DRONE_COMMIT_SHA
-RUN : "${DRONE_COMMIT_SHA:?Build argument 'DRONE_COMMIT_SHA' needs to be set and non-empty.}"
+RUN if [ "x$DRONE_COMMIT_SHA" = "x" ] ; then echo Build argument 'DRONE_COMMIT_SHA' needs to be set and non-empty. ; exit 1 ; else echo DRONE_COMMIT_SHA=${DRONE_COMMIT_SHA} ; fi
 
 
 
