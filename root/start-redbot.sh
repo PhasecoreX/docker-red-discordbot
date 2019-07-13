@@ -98,12 +98,12 @@ do
     # If we are running in an interactive shell, we can't do any of the fancy interrupt catching
     if [ -t 0 ]
     then
-        TMPDIR=/data/.tmp redbot docker
+        TMPDIR=/data/.tmp redbot docker ${EXTRA_ARGS}
         RETURN_CODE=$?
     else
         set +e
         prep_term
-        TMPDIR=/data/.tmp redbot docker &
+        TMPDIR=/data/.tmp redbot docker ${EXTRA_ARGS} &
         wait_term
         RETURN_CODE=$?
         set -e

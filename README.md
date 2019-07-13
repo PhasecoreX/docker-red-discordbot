@@ -34,7 +34,9 @@ If you hear that Red-Discordbot was updated, simply issue the `[p]restart` comma
 
 Consider using the [UpdateNotify](https://github.com/PhasecoreX/PCXCogs) cog I created to get notifications when Red-Discordbot updates!
 
-## MongoDB Support
+## More Advanced Stuff
+
+### MongoDB Support
 By default, this docker image uses JSON files as the storage engine. If you need to use MongoDB, you can fill out these environment variables:
 - `STORAGE_TYPE`: Can either be `mongodb` or `mongodb+srv` (by default this is `json`)
 - `MONGODB_HOST`
@@ -44,6 +46,18 @@ By default, this docker image uses JSON files as the storage engine. If you need
 - `MONGODB_DB_NAME`
 
 You will need them set for the first time setup, as well as any subsequent runs. If you would like, you can volume mount `/config` so that you do not need to specify the above environment variables every subsequent run. If you are only interested in using JSON, you do not need to volume mount `/config` at all.
+
+### Extra Arguments
+The environment variable `EXTRA_ARGS` can be used to append extra arguments to the bots startup command. This can be used for a plethora of things, such as:
+- `--no-cogs`: Starts Red with no cogs loaded, only core
+- `--dry-run`: Makes Red quit with code 0 just before the login. This is useful for testing the boot process.
+- `--debug`: Sets the loggers level as debug
+- And many other, more powerful arguments.
+
+Specify multiple arguments at once by separating them with a space, as you would on a normal command line:
+- `EXTRA_ARGS=--no-cogs --dry-run --debug`
+
+The typical user will not need to use this environment variable.
 
 ## Notes
 This image will run Red-Discordbot as a non-root user. This is great, until you want to install any cogs that depend on external libraries or pip packages. To get around this, the image will run Red-Discordbot in a python virtual environment. You can see this in the directory `/data/venv`. This allows for Red-Discordbot to install any package it wants as the non-root user. This also allows for Red-Discordbot to always be up-to-date when it first launches.
