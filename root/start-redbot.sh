@@ -29,13 +29,8 @@ wait_term()
     wait ${term_child_pid}
 }
 
-# discord.py doesn't update properly to 1.0.1, so we are forced to delete the venv
-if ! [ -f "/data/venv/pcxupdates.txt" ]
-then
-    rm -rf /data/venv
-    mkdir -p /data/venv
-    echo "1" > "/data/venv/pcxupdates.txt"
-fi
+# Patch older versions of user data if needed
+/app/patch.sh
 
 # If config symlink doesn't exist because user mounted /config, make it
 if ! [ -L "/config/.config/Red-DiscordBot/config.json" ]
@@ -89,21 +84,17 @@ do
         python -m pip install --upgrade --no-cache-dir Red-DiscordBot
     fi
 
-    # Until https://github.com/Cog-Creators/Red-DiscordBot/issues/2714 is resolved
-    rm -rf /data/.tmp
-    mkdir -p /data/.tmp
-
     echo "Starting Red-DiscordBot!"
 
     # If we are running in an interactive shell, we can't do any of the fancy interrupt catching
     if [ -t 0 ]
     then
-        TMPDIR=/data/.tmp redbot docker ${EXTRA_ARGS}
+        redbot docker ${EXTRA_ARGS}
         RETURN_CODE=$?
     else
         set +e
         prep_term
-        TMPDIR=/data/.tmp redbot docker ${EXTRA_ARGS} &
+        redbot docker ${EXTRA_ARGS} &
         wait_term
         RETURN_CODE=$?
         set -e
