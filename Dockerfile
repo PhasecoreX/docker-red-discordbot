@@ -5,7 +5,7 @@ RUN set -eux; \
     mkdir -p /usr/share/man/man1/; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
-# Redbot dependencies
+# Redbot audio dependencies
         default-jre-headless \
     ; \
     rm -rf /var/lib/apt/lists/*;

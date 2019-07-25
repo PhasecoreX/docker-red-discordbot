@@ -233,6 +233,107 @@ depends_on:
 
 ---
 kind: pipeline
+name: red-discordbot-full
+trigger:
+  branch:
+  - master
+  event:
+  - push
+
+steps:
+- name: prepare
+  image: docker:git
+  commands:
+    - mkdir -p /cache/${DRONE_REPO}/docker
+    - echo "Enabled build caching"
+  volumes:
+    - name: cache
+      path: /cache
+
+- name: docker-build-arm64v8
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    create_repository: true
+    use_cache: true
+    repo: phasecorex/red-discordbot
+    tags: full-arm64v8
+    dockerfile: Dockerfile.full
+    build_args:
+      - ARCH_IMG=phasecorex/red-discordbot:audio-arm64v8
+    build_args_from_env:
+      - DRONE_COMMIT_SHA
+  volumes:
+    - name: docker
+      path: /var/lib/docker
+
+- name: docker-build-arm32v7
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    create_repository: true
+    use_cache: true
+    repo: phasecorex/red-discordbot
+    tags: full-arm32v7
+    dockerfile: Dockerfile.full
+    build_args:
+      - ARCH_IMG=phasecorex/red-discordbot:audio-arm32v7
+    build_args_from_env:
+      - DRONE_COMMIT_SHA
+  volumes:
+    - name: docker
+      path: /var/lib/docker
+
+- name: docker-build-amd64
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    create_repository: true
+    use_cache: true
+    repo: phasecorex/red-discordbot
+    tags: full-amd64
+    dockerfile: Dockerfile.full
+    build_args:
+      - ARCH_IMG=phasecorex/red-discordbot:audio-amd64
+    build_args_from_env:
+      - DRONE_COMMIT_SHA
+  volumes:
+    - name: docker
+      path: /var/lib/docker
+
+- name: docker-push-manifest-full
+  image: plugins/manifest:1
+  environment:
+    DRONE_TAG: full
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    spec: .manifest.tmpl
+
+volumes:
+- name: cache
+  host:
+    path: /var/cache
+- name: docker
+  host:
+    path: /var/cache/${DRONE_REPO}/docker
+
+depends_on:
+  - red-discordbot-audio
+
+---
+kind: pipeline
 name: notify
 trigger:
   branch:
@@ -264,4 +365,5 @@ steps:
 depends_on:
   - red-discordbot-noaudio
   - red-discordbot-audio
+  - red-discordbot-full
 
