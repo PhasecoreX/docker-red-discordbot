@@ -9,3 +9,5 @@ RUN set -eux; \
         default-jre-headless \
     ; \
     rm -rf /var/lib/apt/lists/*;
+
+ENV PCX_DISCORDBOT_TAG audio

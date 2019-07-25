@@ -13,3 +13,5 @@ RUN set -eux; \
         ffmpeg \
     ; \
     rm -rf /var/lib/apt/lists/*;
+
+ENV PCX_DISCORDBOT_TAG full
