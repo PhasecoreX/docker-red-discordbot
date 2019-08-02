@@ -1,0 +1,29 @@
+version: "3.2"
+
+networks:
+  internet:
+    external: true
+
+services:
+  redbot:
+    image: phasecorex/red-discordbot
+    container_name: redbot
+    networks:
+      - internet
+    environment:
+      - TZ=Europe/London
+      - PUID=${RED_USER}
+    volumes:
+      - ${STORAGE_CONTAINERS}/redbot:/data
+    restart: unless-stopped
+
+mongodb:
+    image: library/mongo
+    container_name: mongodb
+    volumes:
+      - ${STORAGE_CONTAINERS}/mongodb:/data/db
+    networks:
+      - internet
+    restart: unless-stopped
+
+
