@@ -16,14 +16,3 @@ services:
     volumes:
       - ${STORAGE_CONTAINERS}/redbot:/data
     restart: unless-stopped
-
-mongodb:
-    image: library/mongo
-    container_name: mongodb
-    volumes:
-      - ${STORAGE_CONTAINERS}/mongodb:/data/db
-    networks:
-      - internet
-    restart: unless-stopped
-
-
