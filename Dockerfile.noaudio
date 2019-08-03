@@ -34,6 +34,6 @@ ENV PCX_DISCORDBOT_TAG noaudio
 
 VOLUME /data
 
-CMD ["/start-redbot.sh"]
+CMD ["/app/start-redbot.sh"]
 
 LABEL maintainer="Ryan Foster <phasecorex@gmail.com>"

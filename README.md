@@ -5,34 +5,60 @@ The newest Red-Discordbot in a convenient multi-arch container
 [![Image Size](https://images.microbadger.com/badges/image/phasecorex/red-discordbot.svg)](https://microbadger.com/images/phasecorex/red-discordbot)
 [![Donate to support my code](https://img.shields.io/badge/Paypal-Donate-blue.svg)](https://paypal.me/pcx)
 
-## First Time Setup
-Simply run it like so:
-```
-docker run -it --rm -v /local/folder/for/persistence:/data -e TZ=America/Detroit -e PUID=1000 phasecorex/red-discordbot
-```
-- `-v /local/folder/for/persistence:/data`: Folder to persist data.
-- `-e TZ=America/Detroit`: Specify a timezone.
-- `-e PUID=1000`: Specify the user Red-Discordbot will run as. All files it creates will be owned by this user on the host.
-- `-e PGID=1000`: Can also be specified if you want a specific group. If not specified, the PUID will be used as the group.
+## Why This Image?
+There are many reasons that this image is better (or as good as) the others out there:
+- **Doesn't run as root**: You can specify exactly which user you want it to run as and create files as.
+- **Easy to set up**: Just one docker command and you will be running the bot.
+- **Always up-to-date**: Simply (re)starting the bot will always update itself to the latest PyPi release.
+- **Update notifications**: Integrates with [UpdateNotify](https://github.com/PhasecoreX/PCXCogs) to notify you when there is a Red-Discordbot or Docker image update ready.
 
-After this initial setup, add the bot to your server with the displayed URL. Once the bot joins, you are free to ctrl+c to kill Red-Discordbot.
+## How To Run
+Just do this:
+```
+docker run -v /local_folder_for_persistence:/data -e TOKEN=bot_token -e PREFIX=. phasecorex/red-discordbot
+```
+- `-v /local_folder_for_persistence:/data`: Folder to persist Red-Discordbot data. You could also use a named volume.
+- `-e TOKEN=bot_token`: The bot token you want Red-Discordbot to use.
+- `-e PREFIX=.`: The prefix you want Red-Discordbot to use.
 
-## Subsequent Runs
-Once the initial setup is completed, you can run Red-Discordbot without `-it` or `--rm`. Just make sure you mount the same `/data` directory as before!
-```
-docker run --name red-discordbot -d -v /local/folder/for/persistence:/data -e TZ=America/Detroit -e PUID=1000 phasecorex/red-discordbot
-```
+Optional environment variables to make you life easier:
+- `-e TZ=America/Detroit`: Specify a timezone. By default, this is UTC.
+- `-e PUID=1000`: Specify the user Red-Discordbot will run as. All files it creates will be owned by this user on the host. By default, this is 1000.
+- `-e PGID=1000`: Can also be specified if you want a specific group. By default, this is whatever PUID is set to (which by default, is 1000).
+
+Once you like how it's working, add these:
 - `--name red-discordbot`: A nice name for the docker container, for easy management.
 - `-d`: Run container in the background. The name set above comes in handy for managing it.
 
-You should see Red-Discordbot connect to the server that you set in the setup.
+Red-Discordbot will start up with the specified token and prefix, and after updating, it will show the invite URL. Use this to add the bot to your server.
 
 Enjoy!
 
-## Updates
-If you hear that Red-Discordbot was updated, simply issue the `[p]restart` command. Red-Discordbot will gracefully shut down, update itself, and then start back up.
+### Docker Compose
+As with any Docker run command, you can also specify it as a docker-compose.yml file for easier management. Check the examples folder for example docker-compose.yml files based on the run command above.
+
+### Updates
+If you find out that Red-Discordbot was updated, simply issue the `[p]restart` command. Red-Discordbot will gracefully shut down, update itself, and then start back up.
 
 Consider using the [UpdateNotify](https://github.com/PhasecoreX/PCXCogs) cog I created to get notifications when Red-Discordbot updates!
+
+## Some Extra Stuff
+
+### Multiple Prefixes
+You can specify more than one prefix by using the environment variables `PREFIX2`, `PREFIX3`, `PREFIX4`, and `PREFIX5`.
+
+### Complex Prefixes
+If you want to use a prefix that has spaces in it (such as "Red, "), you will need to set up the bot the traditional way. See below for that process. Once you have that set up, you will be able to edit the `/local_folder_for_persistence/core/settings.json` file and specify more complex prefixes. Restart your bot (`[p]restart`) to have these edits take effect.
+
+### The Traditional Setup Process
+If you don't like specifying the bot token as an environment variable, or you would like to have support for more complex prefixes, run the bot like this once (make sure to use your `/data` volume):
+```
+docker run -it --rm -v /local_folder_for_persistence:/data phasecorex/red-discordbot
+```
+This will guide you through a setup process that will ask you for a token and a prefix. Once these are set and your bot connects to your server, you can ctrl+c to kill the bot. Now, you can use the normal command/docker-compose for running your bot (see the How To Run section), but without specifying the TOKEN and PREFIX environment variables:
+```
+docker run -v /local_folder_for_persistence:/data phasecorex/red-discordbot
+```
 
 ## More Advanced Stuff
 
@@ -45,7 +71,7 @@ By default, this docker image uses JSON files as the storage engine. If you need
 - `MONGODB_PASSWORD`
 - `MONGODB_DB_NAME`
 
-You will need them set for the first time setup, as well as any subsequent runs. If you would like, you can volume mount `/config` so that you do not need to specify the above environment variables every subsequent run. If you are only interested in using JSON, you do not need to volume mount `/config` at all.
+If you would like, you can volume mount `/config` so that after the first run, you do not need to specify the above environment variables every subsequent run (you will see your values saved in the `/config` volume mount). An example docker-compose.yml file is available in the examples folder showing how to run both MongoDB and Red-Discordbot together. If you are only interested in using JSON, you do not need to volume mount `/config` at all.
 
 ### Extra Arguments
 The environment variable `EXTRA_ARGS` can be used to append extra arguments to the bots startup command. This can be used for a plethora of things, such as:
@@ -54,12 +80,12 @@ The environment variable `EXTRA_ARGS` can be used to append extra arguments to t
 - `--debug`: Sets the loggers level as debug
 - And many other, more powerful arguments.
 
-Specify multiple arguments at once by separating them with a space, as you would on a normal command line:
-- `EXTRA_ARGS=--no-cogs --dry-run --debug`
+Specify multiple arguments at once by surrounding them all with double quotes:
+- `EXTRA_ARGS="--no-cogs --dry-run --debug"`
 
 The typical user will not need to use this environment variable.
 
-## Notes
+## Extending This Image
 This image will run Red-Discordbot as a non-root user. This is great, until you want to install any cogs that depend on external libraries or pip packages. To get around this, the image will run Red-Discordbot in a python virtual environment. You can see this in the directory `/data/venv`. This allows for Red-Discordbot to install any package it wants as the non-root user. This also allows for Red-Discordbot to always be up-to-date when it first launches.
 
 Some pip packages will require external libraries, so some of the popular ones (the ones I need for my bot) are included in the `full` tag. If you find that Red-Discordbot cannot install a popular cog, you can either let me know for including the package in this tag, or you can extend this image, running `apt-get install -y --no-install-recommends` to install your dependencies:

@@ -64,6 +64,32 @@ else
     fi
 fi
 
+# Set up token and prefixes if supplied
+if ! [ -z ${TOKEN+x} ]
+then
+    EXTRA_ARGS="--token ${TOKEN} ${EXTRA_ARGS}"
+fi
+if ! [ -z ${PREFIX+x} ]
+then
+    EXTRA_ARGS="--prefix ${PREFIX} ${EXTRA_ARGS}"
+fi
+if ! [ -z ${PREFIX2+x} ]
+then
+    EXTRA_ARGS="--prefix ${PREFIX2} ${EXTRA_ARGS}"
+fi
+if ! [ -z ${PREFIX3+x} ]
+then
+    EXTRA_ARGS="--prefix ${PREFIX3} ${EXTRA_ARGS}"
+fi
+if ! [ -z ${PREFIX4+x} ]
+then
+    EXTRA_ARGS="--prefix ${PREFIX4} ${EXTRA_ARGS}"
+fi
+if ! [ -z ${PREFIX5+x} ]
+then
+    EXTRA_ARGS="--prefix ${PREFIX5} ${EXTRA_ARGS}"
+fi
+
 echo "Activating Python virtual environment..."
 mkdir -p /data/venv
 python -m venv --upgrade /data/venv
@@ -86,17 +112,17 @@ do
 
     echo "Starting Red-DiscordBot!"
 
+    set +e
     # If we are running in an interactive shell, we can't do any of the fancy interrupt catching
     if [ -t 0 ]
     then
         redbot docker ${EXTRA_ARGS}
         RETURN_CODE=$?
     else
-        set +e
         prep_term
         redbot docker ${EXTRA_ARGS} &
         wait_term
         RETURN_CODE=$?
-        set -e
     fi
+    set -e
 done

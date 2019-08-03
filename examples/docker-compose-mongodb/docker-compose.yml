@@ -1,0 +1,28 @@
+version: "3.2"
+services:
+  redbot:
+    container_name: redbot
+    image: phasecorex/red-discordbot
+    restart: unless-stopped
+    volumes:
+      - ./redbot:/data
+    environment:
+      - TOKEN=your_bot_token_goes_here
+      - PREFIX=.
+      - STORAGE_TYPE=mongodb
+      - MONGODB_HOST=mongodb
+      - MONGODB_PORT=27017
+      - MONGODB_USERNAME=root
+      - MONGODB_PASSWORD=example
+      - MONGODB_DB_NAME=redbot
+      - TZ=America/Detroit
+      - PUID=1000
+  mongodb:
+    container_name: mongodb
+    image: mongo
+    restart: unless-stopped
+    volumes:
+      - ./mongodb:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=example
