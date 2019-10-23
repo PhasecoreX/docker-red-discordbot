@@ -3,6 +3,7 @@ The newest Red-DiscordBot in a convenient multi-arch container
 
 [![Build Status](https://ci.pcxserver.com/api/badges/PhasecoreX/docker-red-discordbot/status.svg)](https://ci.pcxserver.com/PhasecoreX/docker-red-discordbot)
 [![Image Size](https://images.microbadger.com/badges/image/phasecorex/red-discordbot.svg)](https://microbadger.com/images/phasecorex/red-discordbot)
+[![Chat Support](https://img.shields.io/discord/608057344487849989](https://discord.gg/pdDj2dg)
 [![Donate to support my code](https://img.shields.io/badge/Paypal-Donate-blue.svg)](https://paypal.me/pcx)
 
 ## Why This Image?
@@ -22,7 +23,7 @@ docker run -v /local_folder_for_persistence:/data -e TOKEN=bot_token -e PREFIX=.
 - `-e TOKEN=bot_token`: The bot token you want Red-DiscordBot to use.
 - `-e PREFIX=.`: The prefix you want Red-DiscordBot to use.
 
-Optional environment variables to make you life easier:
+Optional environment variables to make your life easier:
 - `-e TZ=America/Detroit`: Specify a timezone. By default, this is UTC.
 - `-e PUID=1000`: Specify the user Red-DiscordBot will run as. All files it creates will be owned by this user on the host. By default, this is 1000.
 - `-e PGID=1000`: Can also be specified if you want a specific group. By default, this is whatever PUID is set to (which by default, is 1000).
