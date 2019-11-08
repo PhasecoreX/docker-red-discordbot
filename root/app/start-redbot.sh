@@ -56,38 +56,40 @@ else
     cp /defaults/config.${STORAGE_TYPE}.json /config/config.json
     if beginswith mongodb "${STORAGE_TYPE}"
     then
-        sed -i "s/MONGODB_HOST/${MONGODB_HOST}/g" /config/config.json
-        sed -i "s/MONGODB_PORT/${MONGODB_PORT:-27017}/g" /config/config.json
-        sed -i "s/MONGODB_USERNAME/${MONGODB_USERNAME}/g" /config/config.json
-        sed -i "s/MONGODB_PASSWORD/${MONGODB_PASSWORD}/g" /config/config.json
-        sed -i "s/MONGODB_DB_NAME/${MONGODB_DB_NAME}/g" /config/config.json
+        sed -i \
+        -e "s/MONGODB_HOST/${MONGODB_HOST}/g" \
+        -e "s/MONGODB_PORT/${MONGODB_PORT:-27017}/g" \
+        -e "s/MONGODB_USERNAME/${MONGODB_USERNAME}/g" \
+        -e "s/MONGODB_PASSWORD/${MONGODB_PASSWORD}/g" \
+        -e "s/MONGODB_DB_NAME/${MONGODB_DB_NAME}/g" \
+        /config/config.json
     fi
 fi
 
 # Set up token and prefixes if supplied
-if ! [ -z ${TOKEN+x} ]
+if ! [ -z ${PREFIX5+x} ]
 then
-    EXTRA_ARGS="--token ${TOKEN} ${EXTRA_ARGS}"
-fi
-if ! [ -z ${PREFIX+x} ]
-then
-    EXTRA_ARGS="--prefix ${PREFIX} ${EXTRA_ARGS}"
-fi
-if ! [ -z ${PREFIX2+x} ]
-then
-    EXTRA_ARGS="--prefix ${PREFIX2} ${EXTRA_ARGS}"
-fi
-if ! [ -z ${PREFIX3+x} ]
-then
-    EXTRA_ARGS="--prefix ${PREFIX3} ${EXTRA_ARGS}"
+    EXTRA_ARGS="--prefix ${PREFIX5} ${EXTRA_ARGS}"
 fi
 if ! [ -z ${PREFIX4+x} ]
 then
     EXTRA_ARGS="--prefix ${PREFIX4} ${EXTRA_ARGS}"
 fi
-if ! [ -z ${PREFIX5+x} ]
+if ! [ -z ${PREFIX3+x} ]
 then
-    EXTRA_ARGS="--prefix ${PREFIX5} ${EXTRA_ARGS}"
+    EXTRA_ARGS="--prefix ${PREFIX3} ${EXTRA_ARGS}"
+fi
+if ! [ -z ${PREFIX2+x} ]
+then
+    EXTRA_ARGS="--prefix ${PREFIX2} ${EXTRA_ARGS}"
+fi
+if ! [ -z ${PREFIX+x} ]
+then
+    EXTRA_ARGS="--prefix ${PREFIX} ${EXTRA_ARGS}"
+fi
+if ! [ -z ${TOKEN+x} ]
+then
+    EXTRA_ARGS="--token ${TOKEN} ${EXTRA_ARGS}"
 fi
 
 echo "Activating Python virtual environment..."
