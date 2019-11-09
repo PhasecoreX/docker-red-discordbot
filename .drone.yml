@@ -92,8 +92,8 @@ steps:
       from_secret: docker_password
     create_repository: true
     cache_from:
-      - phasecorex/red-discordbot:noaudio-arm64v8
       - phasecorex/red-discordbot:audio-arm64v8
+      - phasecorex/red-discordbot:noaudio-arm64v8
     repo: phasecorex/red-discordbot
     tags:
       - audio-arm64v8
@@ -112,8 +112,8 @@ steps:
       from_secret: docker_password
     create_repository: true
     cache_from:
-      - phasecorex/red-discordbot:noaudio-arm32v7
       - phasecorex/red-discordbot:audio-arm32v7
+      - phasecorex/red-discordbot:noaudio-arm32v7
     repo: phasecorex/red-discordbot
     tags:
       - audio-arm32v7
@@ -132,8 +132,8 @@ steps:
       from_secret: docker_password
     create_repository: true
     cache_from:
-      - phasecorex/red-discordbot:noaudio-amd64
       - phasecorex/red-discordbot:audio-amd64
+      - phasecorex/red-discordbot:noaudio-amd64
     repo: phasecorex/red-discordbot
     tags:
       - audio-amd64
@@ -187,8 +187,8 @@ steps:
       from_secret: docker_password
     create_repository: true
     cache_from:
-      - phasecorex/red-discordbot:audio-arm64v8
       - phasecorex/red-discordbot:full-arm64v8
+      - phasecorex/red-discordbot:audio-arm64v8
     repo: phasecorex/red-discordbot
     tags: full-arm64v8
     dockerfile: Dockerfile.full
@@ -206,8 +206,8 @@ steps:
       from_secret: docker_password
     create_repository: true
     cache_from:
-      - phasecorex/red-discordbot:audio-arm32v7
       - phasecorex/red-discordbot:full-arm32v7
+      - phasecorex/red-discordbot:audio-arm32v7
     repo: phasecorex/red-discordbot
     tags: full-arm32v7
     dockerfile: Dockerfile.full
@@ -225,8 +225,8 @@ steps:
       from_secret: docker_password
     create_repository: true
     cache_from:
-      - phasecorex/red-discordbot:audio-amd64
       - phasecorex/red-discordbot:full-amd64
+      - phasecorex/red-discordbot:audio-amd64
     repo: phasecorex/red-discordbot
     tags: full-amd64
     dockerfile: Dockerfile.full
