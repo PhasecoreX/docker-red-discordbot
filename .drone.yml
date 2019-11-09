@@ -1,22 +1,5 @@
 ---
 kind: pipeline
-name: prepare
-trigger:
-  branch:
-  - master
-  event:
-  - push
-clone:
-  disable: true
-
-steps:
-- name: register-qemu
-  image: multiarch/qemu-user-static:register
-  command: [ "--reset" ]
-  privileged: true
-
----
-kind: pipeline
 name: red-discordbot-noaudio
 trigger:
   branch:
