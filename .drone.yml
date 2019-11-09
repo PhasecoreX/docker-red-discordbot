@@ -25,15 +25,6 @@ trigger:
   - push
 
 steps:
-- name: prepare
-  image: docker:git
-  commands:
-    - mkdir -p /cache/${DRONE_REPO}/docker
-    - echo "Enabled build caching"
-  volumes:
-    - name: cache
-      path: /cache
-
 - name: docker-build-arm64v8
   image: plugins/docker
   settings:
@@ -42,7 +33,7 @@ steps:
     password:
       from_secret: docker_password
     create_repository: true
-    use_cache: true
+    cache_from: phasecorex/red-discordbot:noaudio-arm64v8
     repo: phasecorex/red-discordbot
     tags: noaudio-arm64v8
     dockerfile: Dockerfile.noaudio
@@ -50,9 +41,6 @@ steps:
       - ARCH_IMG=phasecorex/user-python:3.7-slim-arm64v8
     build_args_from_env:
       - DRONE_COMMIT_SHA
-  volumes:
-    - name: docker
-      path: /var/lib/docker
 
 - name: docker-build-arm32v7
   image: plugins/docker
@@ -62,7 +50,7 @@ steps:
     password:
       from_secret: docker_password
     create_repository: true
-    use_cache: true
+    cache_from: phasecorex/red-discordbot:noaudio-arm32v7
     repo: phasecorex/red-discordbot
     tags: noaudio-arm32v7
     dockerfile: Dockerfile.noaudio
@@ -70,9 +58,6 @@ steps:
       - ARCH_IMG=phasecorex/user-python:3.7-slim-arm32v7
     build_args_from_env:
       - DRONE_COMMIT_SHA
-  volumes:
-    - name: docker
-      path: /var/lib/docker
 
 - name: docker-build-amd64
   image: plugins/docker
@@ -82,7 +67,7 @@ steps:
     password:
       from_secret: docker_password
     create_repository: true
-    use_cache: true
+    cache_from: phasecorex/red-discordbot:noaudio-amd64
     repo: phasecorex/red-discordbot
     tags: noaudio-amd64
     dockerfile: Dockerfile.noaudio
@@ -90,9 +75,6 @@ steps:
       - ARCH_IMG=phasecorex/user-python:3.7-slim-amd64
     build_args_from_env:
       - DRONE_COMMIT_SHA
-  volumes:
-    - name: docker
-      path: /var/lib/docker
 
 - name: docker-push-manifest-noaudio
   image: plugins/manifest:1
@@ -104,14 +86,6 @@ steps:
     password:
       from_secret: docker_password
     spec: .manifest.tmpl
-
-volumes:
-- name: cache
-  host:
-    path: /var/cache
-- name: docker
-  host:
-    path: /var/cache/${DRONE_REPO}/docker
 
 depends_on:
   - prepare
@@ -126,15 +100,6 @@ trigger:
   - push
 
 steps:
-- name: prepare
-  image: docker:git
-  commands:
-    - mkdir -p /cache/${DRONE_REPO}/docker
-    - echo "Enabled build caching"
-  volumes:
-    - name: cache
-      path: /cache
-
 - name: docker-build-arm64v8
   image: plugins/docker
   settings:
@@ -143,18 +108,17 @@ steps:
     password:
       from_secret: docker_password
     create_repository: true
-    use_cache: true
+    cache_from:
+      - phasecorex/red-discordbot:noaudio-arm64v8
+      - phasecorex/red-discordbot:audio-arm64v8
     repo: phasecorex/red-discordbot
     tags:
       - audio-arm64v8
       - latest-arm64v8
     build_args:
-      - ARCH_IMG=phasecorex/red-discordbot:noaudio-arm64v8
+      - ARCH_IMG=phasecorex/user-python:3.7-slim-arm64v8
     build_args_from_env:
       - DRONE_COMMIT_SHA
-  volumes:
-    - name: docker
-      path: /var/lib/docker
 
 - name: docker-build-arm32v7
   image: plugins/docker
@@ -164,18 +128,17 @@ steps:
     password:
       from_secret: docker_password
     create_repository: true
-    use_cache: true
+    cache_from:
+      - phasecorex/red-discordbot:noaudio-arm32v7
+      - phasecorex/red-discordbot:audio-arm32v7
     repo: phasecorex/red-discordbot
     tags:
       - audio-arm32v7
       - latest-arm32v7
     build_args:
-      - ARCH_IMG=phasecorex/red-discordbot:noaudio-arm32v7
+      - ARCH_IMG=phasecorex/user-python:3.7-slim-arm32v7
     build_args_from_env:
       - DRONE_COMMIT_SHA
-  volumes:
-    - name: docker
-      path: /var/lib/docker
 
 - name: docker-build-amd64
   image: plugins/docker
@@ -185,18 +148,17 @@ steps:
     password:
       from_secret: docker_password
     create_repository: true
-    use_cache: true
+    cache_from:
+      - phasecorex/red-discordbot:noaudio-amd64
+      - phasecorex/red-discordbot:audio-amd64
     repo: phasecorex/red-discordbot
     tags:
       - audio-amd64
       - latest-amd64
     build_args:
-      - ARCH_IMG=phasecorex/red-discordbot:noaudio-amd64
+      - ARCH_IMG=phasecorex/user-python:3.7-slim-amd64
     build_args_from_env:
       - DRONE_COMMIT_SHA
-  volumes:
-    - name: docker
-      path: /var/lib/docker
 
 - name: docker-push-manifest-audio
   image: plugins/manifest:1
@@ -220,14 +182,6 @@ steps:
       from_secret: docker_password
     spec: .manifest.tmpl
 
-volumes:
-- name: cache
-  host:
-    path: /var/cache
-- name: docker
-  host:
-    path: /var/cache/${DRONE_REPO}/docker
-
 depends_on:
   - red-discordbot-noaudio
 
@@ -241,15 +195,6 @@ trigger:
   - push
 
 steps:
-- name: prepare
-  image: docker:git
-  commands:
-    - mkdir -p /cache/${DRONE_REPO}/docker
-    - echo "Enabled build caching"
-  volumes:
-    - name: cache
-      path: /cache
-
 - name: docker-build-arm64v8
   image: plugins/docker
   settings:
@@ -258,17 +203,16 @@ steps:
     password:
       from_secret: docker_password
     create_repository: true
-    use_cache: true
+    cache_from:
+      - phasecorex/red-discordbot:audio-arm64v8
+      - phasecorex/red-discordbot:full-arm64v8
     repo: phasecorex/red-discordbot
     tags: full-arm64v8
     dockerfile: Dockerfile.full
     build_args:
-      - ARCH_IMG=phasecorex/red-discordbot:audio-arm64v8
+      - ARCH_IMG=phasecorex/user-python:3.7-slim-arm64v8
     build_args_from_env:
       - DRONE_COMMIT_SHA
-  volumes:
-    - name: docker
-      path: /var/lib/docker
 
 - name: docker-build-arm32v7
   image: plugins/docker
@@ -278,17 +222,16 @@ steps:
     password:
       from_secret: docker_password
     create_repository: true
-    use_cache: true
+    cache_from:
+      - phasecorex/red-discordbot:audio-arm32v7
+      - phasecorex/red-discordbot:full-arm32v7
     repo: phasecorex/red-discordbot
     tags: full-arm32v7
     dockerfile: Dockerfile.full
     build_args:
-      - ARCH_IMG=phasecorex/red-discordbot:audio-arm32v7
+      - ARCH_IMG=phasecorex/user-python:3.7-slim-arm32v7
     build_args_from_env:
       - DRONE_COMMIT_SHA
-  volumes:
-    - name: docker
-      path: /var/lib/docker
 
 - name: docker-build-amd64
   image: plugins/docker
@@ -298,17 +241,16 @@ steps:
     password:
       from_secret: docker_password
     create_repository: true
-    use_cache: true
+    cache_from:
+      - phasecorex/red-discordbot:audio-amd64
+      - phasecorex/red-discordbot:full-amd64
     repo: phasecorex/red-discordbot
     tags: full-amd64
     dockerfile: Dockerfile.full
     build_args:
-      - ARCH_IMG=phasecorex/red-discordbot:audio-amd64
+      - ARCH_IMG=phasecorex/user-python:3.7-slim-amd64
     build_args_from_env:
       - DRONE_COMMIT_SHA
-  volumes:
-    - name: docker
-      path: /var/lib/docker
 
 - name: docker-push-manifest-full
   image: plugins/manifest:1
@@ -320,14 +262,6 @@ steps:
     password:
       from_secret: docker_password
     spec: .manifest.tmpl
-
-volumes:
-- name: cache
-  host:
-    path: /var/cache
-- name: docker
-  host:
-    path: /var/cache/${DRONE_REPO}/docker
 
 depends_on:
   - red-discordbot-audio

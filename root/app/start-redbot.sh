@@ -32,30 +32,31 @@ wait_term()
 # Patch older versions of user data if needed
 /app/patch.sh
 
-# If config symlink doesn't exist because user mounted /config, make it
-if ! [ -L "/config/.config/Red-DiscordBot/config.json" ]
-then
+# If config symlink is broken because user mounted /config, make it
+if [ $(readlink -f /config/.config/Red-DiscordBot/config.json) != "/config/config.json" ]; then
     rm -rf /config/.config/Red-DiscordBot
     mkdir -p /config/.config/Red-DiscordBot
     ln -s /config/config.json /config/.config/Red-DiscordBot/config.json
 fi
 
+# If the /config folder was not mounted (same filesystem as root directory), we want to always recreate /config/config.json (in case the user changes settings and doesn't delete the entire container)
+if [ $(stat -c "%d" /) -eq $(stat -c "%d" /config) ]; then
+    rm -rf /config/config.json
+fi
+
 # If config file does exist, skip all of this (user mounted the /config folder with a config.json in it)
-if [ -f "/config/config.json" ]
-then
+if [ -f "/config/config.json" ]; then
     echo "Using existing /config/config.json file for Red-DiscordBot storage settings"
 else
     STORAGE_TYPE=${STORAGE_TYPE:-json}
-    if ! [ -f "/defaults/config.${STORAGE_TYPE}.json" ]
-    then
+    if ! [ -f "/defaults/config.${STORAGE_TYPE}.json" ]; then
         echo "ERROR: The STORAGE_TYPE '${STORAGE_TYPE}' is not supported. Exiting..."
         exit 1
     fi
     echo "Using '${STORAGE_TYPE}' for Red-DiscordBot data storage"
 
     cp /defaults/config.${STORAGE_TYPE}.json /config/config.json
-    if beginswith mongodb "${STORAGE_TYPE}"
-    then
+    if beginswith mongodb "${STORAGE_TYPE}"; then
         sed -i \
         -e "s/MONGODB_HOST/${MONGODB_HOST}/g" \
         -e "s/MONGODB_PORT/${MONGODB_PORT:-27017}/g" \
@@ -67,28 +68,22 @@ else
 fi
 
 # Set up token and prefixes if supplied
-if ! [ -z ${PREFIX5+x} ]
-then
+if ! [ -z ${PREFIX5+x} ]; then
     EXTRA_ARGS="--prefix ${PREFIX5} ${EXTRA_ARGS}"
 fi
-if ! [ -z ${PREFIX4+x} ]
-then
+if ! [ -z ${PREFIX4+x} ]; then
     EXTRA_ARGS="--prefix ${PREFIX4} ${EXTRA_ARGS}"
 fi
-if ! [ -z ${PREFIX3+x} ]
-then
+if ! [ -z ${PREFIX3+x} ]; then
     EXTRA_ARGS="--prefix ${PREFIX3} ${EXTRA_ARGS}"
 fi
-if ! [ -z ${PREFIX2+x} ]
-then
+if ! [ -z ${PREFIX2+x} ]; then
     EXTRA_ARGS="--prefix ${PREFIX2} ${EXTRA_ARGS}"
 fi
-if ! [ -z ${PREFIX+x} ]
-then
+if ! [ -z ${PREFIX+x} ]; then
     EXTRA_ARGS="--prefix ${PREFIX} ${EXTRA_ARGS}"
 fi
-if ! [ -z ${TOKEN+x} ]
-then
+if ! [ -z ${TOKEN+x} ]; then
     EXTRA_ARGS="--token ${TOKEN} ${EXTRA_ARGS}"
 fi
 
@@ -100,13 +95,11 @@ python -m venv /data/venv
 
 # Return code of 26 means the bot should restart
 RETURN_CODE=26
-while [ ${RETURN_CODE} -eq 26 ]
-do
+while [ ${RETURN_CODE} -eq 26 ]; do
     echo "Updating Red-DiscordBot..."
     python -m pip install --upgrade --no-cache-dir pip
 
-    if beginswith mongodb "${STORAGE_TYPE}"
-    then
+    if beginswith mongodb "${STORAGE_TYPE}"; then
         python -m pip install --upgrade --no-cache-dir Red-DiscordBot[mongo]
     else
         python -m pip install --upgrade --no-cache-dir Red-DiscordBot
@@ -116,8 +109,7 @@ do
 
     set +e
     # If we are running in an interactive shell, we can't do any of the fancy interrupt catching
-    if [ -t 0 ]
-    then
+    if [ -t 0 ]; then
         redbot docker ${EXTRA_ARGS}
         RETURN_CODE=$?
     else
