@@ -230,7 +230,6 @@ def get_build_step(image_name, image_arch, arch_info, other_options):
             ),
             "repo": "{image_name}".format(image_name=image_name),
             "tags": [s + "-" + image_arch for s in image_tags],
-            "context": "docker-user-image",
             "dockerfile": "{dockerfile}".format(
                 dockerfile=dockerfile + (".qemu" if image_arch != "amd64" else "")
             ),
