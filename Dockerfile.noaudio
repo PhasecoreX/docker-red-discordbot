@@ -1,4 +1,4 @@
-ARG ARCH_IMG
+ARG BASE_IMG
 
 FROM alpine
 ARG DRONE_COMMIT_SHA
@@ -6,7 +6,7 @@ RUN if [ "x$DRONE_COMMIT_SHA" = "x" ] ; then echo Build argument 'DRONE_COMMIT_S
 
 
 
-FROM ${ARCH_IMG}
+FROM ${BASE_IMG}
 
 RUN set -eux; \
     apt-get update; \
