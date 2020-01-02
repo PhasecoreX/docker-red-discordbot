@@ -10,10 +10,10 @@ The newest Red-DiscordBot in a convenient multi-arch container
 ## Why This Image?
 There are many reasons that this image is better (or as good as) the others out there:
 - **Doesn't run as root**: You can specify exactly which user you want it to run as and create files as.
-- **Easy to set up**: Just one docker command and you will be running the bot.
-- **Always up-to-date**: Simply (re)starting the bot will always update itself to the latest PyPi release.
+- **Easy to set up**: Just run one docker command and your new bot will join your server.
+- **Always up-to-date**: The bot will always update itself to the latest PyPi release on every (re)start.
 - **Update notifications**: Integrates with [UpdateNotify](https://github.com/PhasecoreX/PCXCogs) to notify you when there is a Red-DiscordBot or Docker image update ready.
-- **It's pretty small**: Image size has been reduced as much as possible, only including the bare minimum to run Red-DiscordBot.
+- **It's pretty small**: Image size has been reduced as much as possible, only including the bare minimum to run Red-DiscordBot as well as a vast majority of 3rd party cogs.
 
 ## How To Run
 Just do this:
@@ -23,6 +23,8 @@ docker run -v /local_folder_for_persistence:/data -e TOKEN=bot_token -e PREFIX=.
 - `-v /local_folder_for_persistence:/data`: Folder to persist Red-DiscordBot data. You could also use a named volume.
 - `-e TOKEN=bot_token`: The bot token you want Red-DiscordBot to use.
 - `-e PREFIX=.`: The prefix you want Red-DiscordBot to use.
+
+Note: For the first run (with a new `/data` mount), the container might take a little bit longer to start while the Red-DiscordBot software is updated. Subsequent (re)starts will be pretty fast.
 
 Optional environment variables to make your life easier:
 - `-e TZ=America/Detroit`: Specify a timezone. By default, this is UTC.

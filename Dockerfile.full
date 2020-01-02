@@ -13,6 +13,7 @@ RUN set -eux; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
 # Redbot dependencies
+        build-essential \
         libssl-dev \
         libffi-dev \
         git \
