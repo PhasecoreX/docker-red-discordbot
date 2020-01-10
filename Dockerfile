@@ -1,18 +1,21 @@
 ARG BASE_IMG
+FROM ${BASE_IMG} as noaudio
 
-FROM alpine
 ARG DRONE_COMMIT_SHA
-RUN if [ "x$DRONE_COMMIT_SHA" = "x" ] ; then echo Build argument 'DRONE_COMMIT_SHA' needs to be set and non-empty. ; exit 1 ; else echo DRONE_COMMIT_SHA=${DRONE_COMMIT_SHA} ; fi
+ENV PCX_DISCORDBOT_COMMIT ${DRONE_COMMIT_SHA}
+ENV PCX_DISCORDBOT_TAG noaudio
 
-
-
-FROM ${BASE_IMG}
-
-# noaudio tag
 RUN set -eux; \
+# Check that DRONE_COMMIT_SHA exists
+    if [ "x$DRONE_COMMIT_SHA" = "x" ]; then \
+        echo Build argument 'DRONE_COMMIT_SHA' needs to be set and non-empty.; \
+        exit 1; \
+    else \
+        echo DRONE_COMMIT_SHA=${DRONE_COMMIT_SHA}; \
+    fi; \
+# Install redbot dependencies
     apt-get update; \
     apt-get install -y --no-install-recommends \
-# Redbot dependencies
         build-essential \
         libssl-dev \
         libffi-dev \
@@ -28,24 +31,45 @@ RUN set -eux; \
     mkdir -p /config/.config/Red-DiscordBot; \
     ln -s /config/config.json /config/.config/Red-DiscordBot/config.json;
 
-# audio tag
-RUN set -eux; \
-    mkdir -p /usr/share/man/man1/; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends \
-# Redbot audio dependencies
-        default-jre-headless \
-    ; \
-    rm -rf /var/lib/apt/lists/*;
-
 COPY root/ /
-
-ARG DRONE_COMMIT_SHA
-ENV PCX_DISCORDBOT_COMMIT ${DRONE_COMMIT_SHA}
-ENV PCX_DISCORDBOT_TAG audio
 
 VOLUME /data
 
 CMD ["/app/start-redbot.sh"]
 
 LABEL maintainer="Ryan Foster <phasecorex@gmail.com>"
+
+
+
+FROM noaudio as audio
+
+ENV PCX_DISCORDBOT_TAG audio
+
+RUN set -eux; \
+    mkdir -p /usr/share/man/man1/; \
+# Install redbot audio dependencies
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+        default-jre-headless \
+    ; \
+    rm -rf /var/lib/apt/lists/*;
+
+
+
+FROM audio as full
+
+ENV PCX_DISCORDBOT_TAG full
+
+RUN set -eux; \
+# Install popular cog dependencies
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+# Pip/Python
+    # wand
+        libmagickwand-dev \
+    # python-aalib
+        libaa1-dev \
+# Pprograms
+        ffmpeg \
+    ; \
+    rm -rf /var/lib/apt/lists/*;

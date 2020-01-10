@@ -1,20 +1,21 @@
 def main(ctx):
     image_name = "phasecorex/red-discordbot"
-    base_image_name = "phasecorex/user-python:3.7-slim"
+    base_image_name = "phasecorex/user-python:3.8-slim"
     all_image_tags_arches = [
         {
             "tags": ["noaudio"],
             "arches": ["arm64v8", "arm32v7", "arm32v5", "amd64"],
-            "dockerfile": "Dockerfile.noaudio",
+            "target": "noaudio",
         },
         {
             "tags": ["audio", "latest"],
             "arches": ["arm64v8", "arm32v7", "arm32v5", "amd64"],
+            "target": "audio",
         },
         {
             "tags": ["full"],
             "arches": ["arm64v8", "arm32v7", "arm32v5", "amd64"],
-            "dockerfile": "Dockerfile.full",
+            "target": "full",
         },
     ]
     other_options = {"build_args_from_env": ["DRONE_COMMIT_SHA"]}
@@ -83,6 +84,11 @@ def gather_all_pipeline_build(
                     else "Dockerfile"
                 ),
                 "tags": image_tags_arches["tags"],
+                "target": (
+                    image_tags_arches["target"]
+                    if "target" in image_tags_arches
+                    else ""
+                ),
             }
             if image_arch in all_arches:
                 all_arches[image_arch].append(arch_dict_value)
@@ -209,6 +215,7 @@ def get_build_step(image_name, image_arch, arch_info, other_options):
     image_tag = _correct_image_tag(image_tags)
     dockerfile = arch_info["dockerfile"]
     base_image = arch_info["base_image"]
+    target = arch_info["target"]
     build_args_from_env = (
         other_options["build_args_from_env"]
         if "build_args_from_env" in other_options
@@ -232,6 +239,7 @@ def get_build_step(image_name, image_arch, arch_info, other_options):
             "repo": "{image_name}".format(image_name=image_name),
             "tags": [s + "-" + image_arch for s in image_tags],
             "context": context,
+            "target": target,
             "dockerfile": "{dockerfile}".format(dockerfile=dockerfile),
             "build_args": [
                 "BASE_IMG={base_image}".format(base_image=base_image),
