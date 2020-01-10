@@ -48,23 +48,7 @@ fi
 if [ -f "/config/config.json" ]; then
     echo "Using existing /config/config.json file for Red-DiscordBot storage settings"
 else
-    STORAGE_TYPE=${STORAGE_TYPE:-json}
-    if ! [ -f "/defaults/config.${STORAGE_TYPE}.json" ]; then
-        echo "ERROR: The STORAGE_TYPE '${STORAGE_TYPE}' is not supported. Exiting..."
-        exit 1
-    fi
-    echo "Using '${STORAGE_TYPE}' for Red-DiscordBot data storage"
-
-    cp /defaults/config.${STORAGE_TYPE}.json /config/config.json
-    if beginswith mongodb "${STORAGE_TYPE}"; then
-        sed -i \
-        -e "s/MONGODB_HOST/${MONGODB_HOST}/g" \
-        -e "s/MONGODB_PORT/${MONGODB_PORT:-27017}/g" \
-        -e "s/MONGODB_USERNAME/${MONGODB_USERNAME}/g" \
-        -e "s/MONGODB_PASSWORD/${MONGODB_PASSWORD}/g" \
-        -e "s/MONGODB_DB_NAME/${MONGODB_DB_NAME}/g" \
-        /config/config.json
-    fi
+    cp /defaults/config.json.json /config/config.json
 fi
 
 # Set up token and prefixes if supplied
@@ -93,20 +77,36 @@ python -m venv --upgrade /data/venv
 python -m venv /data/venv
 . /data/venv/bin/activate
 
+# If this was a mongo install at some point, we need to convert it
+if beginswith mongodb "${STORAGE_TYPE}"; then
+    if ! [ -f "/data/venv/mongo_converted" ]; then
+        echo "Preparing to convert ${STORAGE_TYPE} storage to json..."
+        cp /defaults/config.${STORAGE_TYPE}.json /config/config.json
+        sed -i \
+        -e "s/MONGODB_HOST/${MONGODB_HOST}/g" \
+        -e "s/MONGODB_PORT/${MONGODB_PORT:-27017}/g" \
+        -e "s/MONGODB_USERNAME/${MONGODB_USERNAME}/g" \
+        -e "s/MONGODB_PASSWORD/${MONGODB_PASSWORD}/g" \
+        -e "s/MONGODB_DB_NAME/${MONGODB_DB_NAME}/g" \
+        /config/config.json
+        python -m pip install --upgrade --no-cache-dir Red-DiscordBot dnspython~=1.16.0 motor~=2.0.0 pymongo~=3.8.0
+        cd /config
+        redbot-setup convert docker json
+        echo "Be sure to remove all of your MONGODB_* environment variables!"
+        echo "1" > "/data/venv/mongo_converted"
+    else
+        echo "Ignoring STORAGE_TYPE and mongodb environment variables, you should clean that up!"
+    fi
+fi
+
 # Return code of 26 means the bot should restart
 RETURN_CODE=26
 while [ ${RETURN_CODE} -eq 26 ]; do
     echo "Updating Red-DiscordBot..."
     python -m pip install --upgrade --no-cache-dir pip
-
-    if beginswith mongodb "${STORAGE_TYPE}"; then
-        python -m pip install --upgrade --no-cache-dir Red-DiscordBot[mongo]
-    else
-        python -m pip install --upgrade --no-cache-dir Red-DiscordBot
-    fi
+    python -m pip install --upgrade --no-cache-dir Red-DiscordBot
 
     echo "Starting Red-DiscordBot!"
-
     set +e
     # If we are running in an interactive shell, we can't do any of the fancy interrupt catching
     if [ -t 0 ]; then

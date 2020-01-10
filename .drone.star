@@ -1,6 +1,6 @@
 def main(ctx):
     image_name = "phasecorex/red-discordbot"
-    base_image_name = "phasecorex/user-python:3.7-slim"
+    base_image_name = "phasecorex/user-python:3.8-slim"
     all_image_tags_arches = [
         {
             "tags": ["noaudio"],

@@ -67,16 +67,10 @@ docker run -v /local_folder_for_persistence:/data phasecorex/red-discordbot
 
 ## More Advanced Stuff
 
-### MongoDB Support
-By default, this docker image uses JSON files as the storage engine. If you need to use MongoDB, you can fill out these environment variables:
-- `STORAGE_TYPE`: Can either be `mongodb` or `mongodb+srv` (by default this is `json`)
-- `MONGODB_HOST`
-- `MONGODB_PORT`: Defaults to 27017
-- `MONGODB_USERNAME`
-- `MONGODB_PASSWORD`
-- `MONGODB_DB_NAME`
+### MongoDB Conversion
+If you used to use this container with MongoDB, it won't be used anymore with the latest Red-DiscordBot. Fortunately, the conversion from MongoDB to json should happen automatically when the bot starts. Once it has been converted, feel free to modify your Docker command/docker-compose.yml and remove the `STORAGE_TYPE` and all `MONGODB_*` environment variables, as they are no longer necessary. If you were volume mounting your `/config` folder, you don't really need to do that anymore either.
 
-If you would like, you can volume mount `/config` so that after the first run, you do not need to specify the above environment variables every subsequent run (you will see your values saved in the `/config` volume mount). An example docker-compose.yml file is available in the examples folder showing how to run both MongoDB and Red-DiscordBot together. If you are only interested in using JSON, you do not need to volume mount `/config` at all.
+As I (PhasecoreX) don't use MongoDB at all, I can only provide a limited amount of support for this. I assume if you're using MongoDB you already have a decent understanding on how things work. I wish you the best of luck.
 
 ### Extra Arguments
 The environment variable `EXTRA_ARGS` can be used to append extra arguments to the bots startup command. This can be used for a plethora of things, such as:
