@@ -49,6 +49,16 @@ if [ -f "/config/config.json" ]; then
     echo "Using existing /config/config.json file for Red-DiscordBot storage settings"
 else
     cp /defaults/config.json.json /config/config.json
+    if beginswith mongodb "${STORAGE_TYPE}"; then
+        cp /defaults/config.${STORAGE_TYPE}.json /config/config.json
+        sed -i \
+        -e "s/MONGODB_HOST/${MONGODB_HOST}/g" \
+        -e "s/MONGODB_PORT/${MONGODB_PORT:-27017}/g" \
+        -e "s/MONGODB_USERNAME/${MONGODB_USERNAME}/g" \
+        -e "s/MONGODB_PASSWORD/${MONGODB_PASSWORD}/g" \
+        -e "s/MONGODB_DB_NAME/${MONGODB_DB_NAME}/g" \
+        /config/config.json
+    fi
 fi
 
 # Set up token and prefixes if supplied
@@ -81,22 +91,18 @@ python -m venv /data/venv
 if beginswith mongodb "${STORAGE_TYPE}"; then
     if ! [ -f "/data/venv/mongo_converted" ]; then
         echo "Preparing to convert ${STORAGE_TYPE} storage to json..."
-        cp /defaults/config.${STORAGE_TYPE}.json /config/config.json
-        sed -i \
-        -e "s/MONGODB_HOST/${MONGODB_HOST}/g" \
-        -e "s/MONGODB_PORT/${MONGODB_PORT:-27017}/g" \
-        -e "s/MONGODB_USERNAME/${MONGODB_USERNAME}/g" \
-        -e "s/MONGODB_PASSWORD/${MONGODB_PASSWORD}/g" \
-        -e "s/MONGODB_DB_NAME/${MONGODB_DB_NAME}/g" \
-        /config/config.json
         python -m pip install --upgrade --no-cache-dir Red-DiscordBot dnspython~=1.16.0 motor~=2.0.0 pymongo~=3.8.0
         cd /config
         redbot-setup convert docker json
-        echo "Be sure to remove all of your MONGODB_* environment variables!"
+        echo "Be sure to remove STORAGE_TYPE and all MONGODB_* environment variables!"
         echo "1" > "/data/venv/mongo_converted"
+        exit 0
     else
-        echo "Ignoring STORAGE_TYPE and mongodb environment variables, you should clean that up!"
+        echo "Please remove STORAGE_TYPE and all MONGODB_* environment variables!"
+        exit 1
     fi
+else
+    rm -rf /data/venv/mongo_converted
 fi
 
 # Return code of 26 means the bot should restart
