@@ -29,7 +29,7 @@ wait_term()
     wait ${term_child_pid}
 }
 
-# Patch older versions of user data if needed
+# Patch older versions of data if needed
 /app/patch.sh
 
 # If config symlink is broken because user mounted /config, make it
@@ -61,25 +61,23 @@ else
     fi
 fi
 
-# Set up token and prefixes if supplied
+# Gather prefixes if supplied
 if ! [ -z ${PREFIX5+x} ]; then
-    EXTRA_ARGS="--prefix ${PREFIX5} ${EXTRA_ARGS}"
+    PREFIXES="--prefix ${PREFIX5} ${PREFIXES}"
 fi
 if ! [ -z ${PREFIX4+x} ]; then
-    EXTRA_ARGS="--prefix ${PREFIX4} ${EXTRA_ARGS}"
+    PREFIXES="--prefix ${PREFIX4} ${PREFIXES}"
 fi
 if ! [ -z ${PREFIX3+x} ]; then
-    EXTRA_ARGS="--prefix ${PREFIX3} ${EXTRA_ARGS}"
+    PREFIXES="--prefix ${PREFIX3} ${PREFIXES}"
 fi
 if ! [ -z ${PREFIX2+x} ]; then
-    EXTRA_ARGS="--prefix ${PREFIX2} ${EXTRA_ARGS}"
+    PREFIXES="--prefix ${PREFIX2} ${PREFIXES}"
 fi
 if ! [ -z ${PREFIX+x} ]; then
-    EXTRA_ARGS="--prefix ${PREFIX} ${EXTRA_ARGS}"
+    PREFIXES="--prefix ${PREFIX} ${PREFIXES}"
 fi
-if ! [ -z ${TOKEN+x} ]; then
-    EXTRA_ARGS="--token ${TOKEN} ${EXTRA_ARGS}"
-fi
+
 
 echo "Activating Python virtual environment..."
 mkdir -p /data/venv
@@ -89,20 +87,21 @@ python -m venv /data/venv
 
 # If this was a mongo install at some point, we need to convert it
 if beginswith mongodb "${STORAGE_TYPE}"; then
-    if ! [ -f "/data/venv/mongo_converted" ]; then
+    if ! [ -f "/data/venv/.mongo_converted" ]; then
         echo "Preparing to convert ${STORAGE_TYPE} storage to json..."
         python -m pip install --upgrade --no-cache-dir Red-DiscordBot dnspython~=1.16.0 motor~=2.0.0 pymongo~=3.8.0
         cd /config
         redbot-setup convert docker json
+        python -m pip uninstall -y dnspython motor pymongo
         echo "Be sure to remove STORAGE_TYPE and all MONGODB_* environment variables!"
-        echo "1" > "/data/venv/mongo_converted"
+        echo "1" > "/data/venv/.mongo_converted"
         exit 0
     else
         echo "Please remove STORAGE_TYPE and all MONGODB_* environment variables!"
         exit 1
     fi
 else
-    rm -rf /data/venv/mongo_converted
+    rm -rf /data/venv/.mongo_converted
 fi
 
 # Return code of 26 means the bot should restart
@@ -111,16 +110,26 @@ while [ ${RETURN_CODE} -eq 26 ]; do
     echo "Updating Red-DiscordBot..."
     python -m pip install --upgrade --no-cache-dir pip
     python -m pip install --upgrade --no-cache-dir Red-DiscordBot
+    
+    if ! [ -z ${TOKEN+x} ]; then
+        echo "Setting bot token..."
+        redbot docker --edit --no-prompt --token ${TOKEN}
+    fi
 
+    if ! [ -z ${PREFIXES+x} ]; then
+        echo "Setting bot prefix(es)..."
+        redbot docker --edit --no-prompt ${PREFIXES}
+    fi
+    
     echo "Starting Red-DiscordBot!"
     set +e
     # If we are running in an interactive shell, we can't do any of the fancy interrupt catching
     if [ -t 0 ]; then
-        redbot docker ${EXTRA_ARGS}
+        redbot docker
         RETURN_CODE=$?
     else
         prep_term
-        redbot docker ${EXTRA_ARGS} &
+        redbot docker &
         wait_term
         RETURN_CODE=$?
     fi
