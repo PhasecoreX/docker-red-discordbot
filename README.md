@@ -12,9 +12,10 @@ The newest Red-DiscordBot in a convenient multi-arch container
 
 There are many reasons that this image is better (or as good as) the others out there:
 
-- **Doesn't run as root**: You can specify exactly which user you want it to run as and create files as.
-- **Easy to set up**: Just run one docker command and your new bot can join your server.
+- **Doesn't run as root**: You can specify exactly which user you want the bot to run and create files as.
+- **Easy to set up**: Just run one docker command and your new bot is ready to join your server.
 - **Always up-to-date**: The bot will always update itself to the latest PyPi release on every (re)start.
+- **Runs on most servers**: Can run on a normal x86-64 server, as well as arm(64) devices (Raspberry Pi).
 - **Update notifications**: Integrates with [UpdateNotify](https://github.com/PhasecoreX/PCXCogs) to notify you when there is a Red-DiscordBot or Docker image update ready.
 - **It's pretty small**: Image size has been reduced as much as possible, only including the bare minimum to run Red-DiscordBot as well as a vast majority of 3rd party cogs.
 
@@ -59,7 +60,7 @@ Enjoy!
 
 As with any Docker run command, you can also specify it as a docker-compose.yml file for easier management. Here is an example:
 
-```
+```yaml
 version: "3.2"
 services:
   redbot:
@@ -74,6 +75,8 @@ services:
       - TZ=America/Detroit
       - PUID=1000
 ```
+
+And again, subsequent runs you can omit the `TOKEN` and `PREFIX`es from the docker-compose.yml file.
 
 ### Updates
 
@@ -118,7 +121,7 @@ This image will run Red-DiscordBot as a non-root user. This is great, until you 
 
 Some pip packages will require external libraries, so some of the popular ones (the ones I need for my bot) are included in the `full` tag. If you find that Red-DiscordBot cannot install a popular cog, you can either let me know for including the package in this tag, or you can extend this image, running `apt-get install -y --no-install-recommends` to install your dependencies:
 
-```
+```dockerfile
 FROM phasecorex/red-discordbot
 
 RUN apt-get update; \
