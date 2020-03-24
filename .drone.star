@@ -11,11 +11,13 @@ def main(ctx):
             "tags": ["audio", "latest"],
             "arches": ["arm64v8", "arm32v7", "arm32v5", "amd64"],
             "target": "audio",
+            "cache_from_tag": "noaudio",
         },
         {
             "tags": ["full"],
             "arches": ["arm64v8", "arm32v7", "arm32v5", "amd64"],
             "target": "full",
+            "cache_from_tag": "audio",
         },
     ]
     other_options = {"build_args_from_env": ["DRONE_COMMIT_SHA"]}
@@ -37,10 +39,7 @@ def generate(image_name, base_image_name, all_image_tags_arches, other_options):
         + gather_all_pipeline_manifest(image_name, all_image_tags_arches)
         + [pipeline_notify(depends_on_manifests)]
     )
-    if (
-        "downstream_builds" in other_options
-        and other_options["downstream_builds"] != None
-    ):
+    if "downstream_builds" in other_options and other_options["downstream_builds"]:
         result.append(
             pipeline_downstream_build(
                 depends_on_manifests, other_options["downstream_builds"]
@@ -78,6 +77,11 @@ def gather_all_pipeline_build(
                 base_image += "-" + image_arch
             arch_dict_value = {
                 "base_image": base_image,
+                "cache_from_tag": (
+                    image_tags_arches["cache_from_tag"]
+                    if "cache_from_tag" in image_tags_arches
+                    else ""
+                ),
                 "dockerfile": (
                     image_tags_arches["dockerfile"]
                     if "dockerfile" in image_tags_arches
@@ -85,9 +89,7 @@ def gather_all_pipeline_build(
                 ),
                 "tags": image_tags_arches["tags"],
                 "target": (
-                    image_tags_arches["target"]
-                    if "target" in image_tags_arches
-                    else ""
+                    image_tags_arches["target"] if "target" in image_tags_arches else ""
                 ),
             }
             if image_arch in all_arches:
@@ -216,6 +218,12 @@ def get_build_step(image_name, image_arch, arch_info, other_options):
     dockerfile = arch_info["dockerfile"]
     base_image = arch_info["base_image"]
     target = arch_info["target"]
+    cache_from_tag = image_tag
+    if arch_info["cache_from_tag"]:
+        cache_from_tag = arch_info["cache_from_tag"]
+    cache_from = "{image_name}:{image_tag}-{arch}".format(
+        image_name=image_name, image_tag=cache_from_tag, arch=image_arch
+    )
     build_args_from_env = (
         other_options["build_args_from_env"]
         if "build_args_from_env" in other_options
@@ -233,9 +241,7 @@ def get_build_step(image_name, image_arch, arch_info, other_options):
             "username": {"from_secret": "docker_username"},
             "password": {"from_secret": "docker_password"},
             "create_repository": True,
-            "cache_from": "{image_name}:{image_tag}-{arch}".format(
-                image_name=image_name, image_tag=image_tag, arch=image_arch
-            ),
+            "cache_from": cache_from,
             "repo": "{image_name}".format(image_name=image_name),
             "tags": [s + "-" + image_arch for s in image_tags],
             "context": context,
