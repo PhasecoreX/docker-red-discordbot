@@ -54,6 +54,8 @@ RUN set -eux; \
     ; \
     rm -rf /var/lib/apt/lists/*;
 
+CMD ["/app/start-redbot.sh"]
+
 
 
 FROM audio as full
@@ -73,3 +75,5 @@ RUN set -eux; \
         ffmpeg \
     ; \
     rm -rf /var/lib/apt/lists/*;
+
+CMD ["/app/start-redbot.sh"]
