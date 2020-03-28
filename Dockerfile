@@ -48,11 +48,13 @@ ENV PCX_DISCORDBOT_TAG audio
 RUN set -eux; \
     mkdir -p /usr/share/man/man1/; \
 # Install redbot audio dependencies
+    echo "deb http://deb.debian.org/debian bullseye main" >> /etc/apt/sources.list; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
-        default-jre-headless \
+        openjdk-13-jre-headless \
     ; \
-    rm -rf /var/lib/apt/lists/*;
+    rm -rf /var/lib/apt/lists/*; \
+    rm -rf /usr/share/man/man1/;
 
 CMD ["/app/start-redbot.sh"]
 
@@ -64,16 +66,31 @@ ENV PCX_DISCORDBOT_TAG full
 
 RUN set -eux; \
 # Install popular cog dependencies
+    buildDeps=' \
+        wget \
+    '; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
-# Pip/Python
-    # wand
-        libmagickwand-dev \
+# Build deps
+        $buildDeps \
+# Python
     # python-aalib
         libaa1-dev \
-# Pprograms
+# Programs
         ffmpeg \
     ; \
+# Build latest ImageMagick (Python wand)
+    wget ftp://ftp.imagemagick.org/pub/ImageMagick/ImageMagick.tar.gz; \
+    tar xvfz ImageMagick.tar.gz; \
+    cd ImageMagick-*; \
+    ./configure --disable-shared; \
+    make; \
+    make install; \
+    ldconfig /usr/local/lib; \
+    cd ..; \
+    rm -rf ImageMagick*; \
+# Clean up
+    apt-get purge -y --auto-remove $buildDeps; \
     rm -rf /var/lib/apt/lists/*;
 
 CMD ["/app/start-redbot.sh"]
