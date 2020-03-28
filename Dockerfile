@@ -83,7 +83,7 @@ RUN set -eux; \
     wget ftp://ftp.imagemagick.org/pub/ImageMagick/ImageMagick.tar.gz; \
     tar xvfz ImageMagick.tar.gz; \
     cd ImageMagick-*; \
-    ./configure --disable-shared; \
+    ./configure; \
     make; \
     make install; \
     ldconfig /usr/local/lib; \
@@ -91,6 +91,7 @@ RUN set -eux; \
     rm -rf ImageMagick*; \
 # Clean up
     apt-get purge -y --auto-remove $buildDeps; \
-    rm -rf /var/lib/apt/lists/*;
+    rm -rf /var/lib/apt/lists/*; \
+    rm -rf /usr/local/share/doc/ImageMagick*;
 
 CMD ["/app/start-redbot.sh"]
