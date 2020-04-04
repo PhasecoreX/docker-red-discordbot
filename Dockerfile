@@ -1,6 +1,8 @@
 ARG BASE_IMG
 FROM ${BASE_IMG} as noaudio
 
+LABEL maintainer="Ryan Foster <phasecorex@gmail.com>"
+
 ARG DRONE_COMMIT_SHA
 ENV PCX_DISCORDBOT_COMMIT ${DRONE_COMMIT_SHA}
 ENV PCX_DISCORDBOT_TAG noaudio
@@ -16,10 +18,17 @@ RUN set -eux; \
 # Install redbot dependencies
     apt-get update; \
     apt-get install -y --no-install-recommends \
+        # 228 MB, 39 packages
         build-essential \
+        # 8072 kB
         libssl-dev \
+        # 369 kB
         libffi-dev \
+        # 43 MB, 18 packages
         git \
+        # 4083 kB, 3 packages
+        openssh-client \
+        # 580 kB
         unzip \
     ; \
     rm -rf /var/lib/apt/lists/*; \
@@ -36,8 +45,6 @@ COPY root/ /
 VOLUME /data
 
 CMD ["/app/start-redbot.sh"]
-
-LABEL maintainer="Ryan Foster <phasecorex@gmail.com>"
 
 
 

@@ -109,7 +109,7 @@ RETURN_CODE=26
 while [ ${RETURN_CODE} -eq 26 ]; do
     echo "Updating Red-DiscordBot..."
     python -m pip install --upgrade --no-cache-dir pip
-    python -m pip install --upgrade --no-cache-dir Red-DiscordBot
+    python -m pip install --upgrade --no-cache-dir Red-DiscordBot${REDBOT_VERSION}
     
     if ! [ -z ${TOKEN+x} ]; then
         echo "Setting bot token..."

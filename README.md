@@ -86,11 +86,13 @@ Consider using the [UpdateNotify](https://github.com/PhasecoreX/PCXCogs) cog I c
 
 ## More Advanced Stuff
 
-### MongoDB Conversion
+### Niceness
 
-If you used to use this container with MongoDB, it won't be used anymore with the latest Red-DiscordBot. Fortunately, the conversion from MongoDB to json should happen automatically when the bot starts. Once it has been converted, feel free to modify your Docker command/docker-compose.yml and remove the `STORAGE_TYPE` and all `MONGODB_*` environment variables, as they are no longer necessary. If you were volume mounting your `/config` folder, you don't really need to do that anymore either.
+By default, Red-DiscordBot (and the Lavalink audio server) will run at the niceness that Docker itself is running at (usually zero). If you would like to change that, simply define the `NICENESS` environment variable:
 
-As I (PhasecoreX) don't use MongoDB at all, I can only provide a limited amount of support for this. I assume if you're using MongoDB you already have a decent understanding on how things work. I wish you the best of luck.
+- `NICENESS=10`
+
+Niceness has a range of -20 (highest priority, least nice to other processes) to 19 (lowest priority, very nice to other processes). Setting this to a value less than the default (higher priority) will require that you start the container with `--cap-add=SYS_NICE`. Setting it above the default will not need that capability set. If you are on a lower powered device or shared VPS that allows it, this option may help with audio stuttering when set to a lower (negative) value.
 
 ### Extra Arguments
 
@@ -107,13 +109,18 @@ Specify multiple arguments at once by surrounding them all with double quotes:
 
 The typical user will not need to use this environment variable.
 
-### Niceness
+### Version Freeze
 
-By default, Red-DiscordBot (and the Lavalink audio server) will run at the niceness that Docker itself is running at (usually zero). If you would like to change that, simply define the `NICENESS` environment variable:
+By default, Red-DiscordBot will check for updates on each (re)start of the container. If for some reason you want to have Red-DiscordBot stay at a certain version, you can use the `REDBOT_VERSION` environment variable to specify this. The format is the same as a [version specifier](https://www.python.org/dev/peps/pep-0440/#id53) for a pip package:
 
-- `NICENESS=10`
+- `REDBOT_VERSION="==3.2.1"`: Version Matching. Must be version 3.2.1
+- `REDBOT_VERSION="~=3.2.1"`: Compatible release. Same as >= 3.2.1, == 3.2.*
 
-Niceness has a range of -20 (highest priority, least nice to other processes) to 19 (lowest priority, very nice to other processes). Setting this to a value less than the default (higher priority) will require that you start the container with `--cap-add=SYS_NICE`. Setting it above the default will not need that capability set. If you are on a lower powered device or shared VPS that allows it, this option may help with audio stuttering when set to a lower (negative) value.
+### MongoDB Conversion
+
+If you used to use this container with MongoDB, it won't be used anymore with the latest Red-DiscordBot. Fortunately, the conversion from MongoDB to json should happen automatically when the bot starts. Once it has been converted, feel free to modify your Docker command/docker-compose.yml and remove the `STORAGE_TYPE` and all `MONGODB_*` environment variables, as they are no longer necessary. If you were volume mounting your `/config` folder, you don't really need to do that anymore either.
+
+As I (PhasecoreX) don't use MongoDB at all, I can only provide a limited amount of support for this. I assume if you're using MongoDB you already have a decent understanding on how things work. I wish you the best of luck.
 
 ## Extending This Image
 
