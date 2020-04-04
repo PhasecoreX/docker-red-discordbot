@@ -111,7 +111,7 @@ The typical user will not need to use this environment variable.
 
 ### Version Freeze
 
-By default, Red-DiscordBot will check for updates on each (re)start of the container. If for some reason you want to have Red-DiscordBot stay at a certain version, you can use the `REDBOT_VERSION` environment variable to specify this. The format is the same as a [version specifier](https://www.python.org/dev/peps/pep-0440/#version-specifiershttps://www.python.org/dev/peps/pep-0440/#version-specifiers) for a pip package:
+By default, Red-DiscordBot will check for updates on each (re)start of the container. If for some reason you want to have Red-DiscordBot stay at a certain version, you can use the `REDBOT_VERSION` environment variable to specify this. The format is the same as a [version specifier](https://www.python.org/dev/peps/pep-0440/#version-specifiers) for a pip package:
 
 - `REDBOT_VERSION="==3.2.1"`: Version Matching. Must be version 3.2.1
 - `REDBOT_VERSION="~=3.2.1"`: Compatible release. Same as >= 3.2.1, == 3.2.*
