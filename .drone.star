@@ -3,7 +3,7 @@ def main(ctx):
     base_image_name = "phasecorex/user-python:3.8-slim"
     all_image_tags_arches = [
         {
-            "tags": ["noaudio"],
+            "tags": ["noaudio", "convert-mongo-to-json"],
             "arches": ["arm64v8", "arm32v7", "arm32v5", "amd64"],
             "target": "noaudio",
         },

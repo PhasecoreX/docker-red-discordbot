@@ -89,7 +89,7 @@ python -m venv /data/venv
 if beginswith mongodb "${STORAGE_TYPE}"; then
     if ! [ -f "/data/venv/.mongo_converted" ]; then
         echo "Preparing to convert ${STORAGE_TYPE} storage to json..."
-        python -m pip install --upgrade --no-cache-dir Red-DiscordBot dnspython~=1.16.0 motor~=2.0.0 pymongo~=3.8.0
+        python -m pip install --upgrade --no-cache-dir Red-DiscordBot~=3.3.0 dnspython~=1.16.0 motor~=2.0.0 pymongo~=3.8.0
         cd /config
         redbot-setup convert docker json
         python -m pip uninstall -y dnspython motor pymongo
