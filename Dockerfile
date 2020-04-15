@@ -15,30 +15,26 @@ RUN set -eux; \
     else \
         echo DRONE_COMMIT_SHA=${DRONE_COMMIT_SHA}; \
     fi; \
-# Install redbot dependencies
+# Install Red-DiscordBot dependencies
     apt-get update; \
     apt-get install -y --no-install-recommends \
-        # 228 MB, 39 packages
+        # Red-DiscordBot
         build-essential \
-        # 8072 kB
-        libssl-dev \
-        # 369 kB
-        libffi-dev \
-        # 43 MB, 18 packages
         git \
-        # 4083 kB, 3 packages
         openssh-client \
-        # 580 kB
-        unzip \
+        libssl-dev \
+        libffi-dev \
+        # start-redbot.sh
+        jq \
     ; \
     rm -rf /var/lib/apt/lists/*; \
 # Set up all three config locations
     mkdir -p /root/.config/Red-DiscordBot; \
-    ln -s /config/config.json /root/.config/Red-DiscordBot/config.json; \
+    ln -s /data/config.json /root/.config/Red-DiscordBot/config.json; \
     mkdir -p /usr/local/share/Red-DiscordBot; \
-    ln -s /config/config.json /usr/local/share/Red-DiscordBot/config.json; \
+    ln -s /data/config.json /usr/local/share/Red-DiscordBot/config.json; \
     mkdir -p /config/.config/Red-DiscordBot; \
-    ln -s /config/config.json /config/.config/Red-DiscordBot/config.json;
+    ln -s /data/config.json /config/.config/Red-DiscordBot/config.json;
 
 COPY root/ /
 

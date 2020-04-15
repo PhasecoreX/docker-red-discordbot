@@ -1,0 +1,26 @@
+#!/usr/bin/env sh
+set -e
+
+if ! [ -t 0 ]; then
+    echo "redbot-setup needs to be run in an interactive shell (docker run -it)"
+    exit 1
+fi
+
+# Setup environment
+. /app/functions/setup-env.sh
+
+# Update redbot if needed
+/app/functions/update-redbot.sh
+
+# Let the user know what the bot instance name is
+echo "o--------------------------------------------o"
+echo "|                                            |"
+echo "|                    NOTE                    |"
+echo "|                                            |"
+echo "|      When asked for an instance name,      |"
+echo "|           you MUST use \"docker\"            |"
+echo "|                                            |"
+echo "o--------------------------------------------o"
+
+# Run the command
+/data/venv/bin/redbot-setup $@

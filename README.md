@@ -94,6 +94,43 @@ By default, Red-DiscordBot (and the Lavalink audio server) will run at the nicen
 
 Niceness has a range of -20 (highest priority, least nice to other processes) to 19 (lowest priority, very nice to other processes). Setting this to a value less than the default (higher priority) will require that you start the container with `--cap-add=SYS_NICE`. Setting it above the default will not need that capability set. If you are on a lower powered device or shared VPS that allows it, this option may help with audio stuttering when set to a lower (negative) value.
 
+### redbot-setup
+
+`redbot-setup` can be run manually, in case you want to set up the bot yourself or to convert it's datastore. It can only be run in interactive mode, like so:
+
+```
+docker run -it --rm -v /local_folder_for_persistence:/data phasecorex/red-discordbot redbot-setup [OPTIONS] COMMAND [ARGS]...
+```
+
+By default, Red-DiscordBot will use the JSON datastore. If you would like to use a different datastore (Postgres for example), specify it in the `STORAGE_TYPE` environment variable:
+
+```
+docker run -it --rm -v /local_folder_for_persistence:/data -e STORAGE_TYPE=postgres phasecorex/red-discordbot redbot-setup [OPTIONS] COMMAND [ARGS]...
+```
+
+You can [check the official Red-DiscordBot documentation](https://docs.discord.red/en/latest/install_linux_mac.html#installing-red) to find out what datastores are available. The example on the page looks like this:
+
+```
+python -m pip install -U Red-DiscordBot[postgres]
+                                        ^^^^^^^^
+                                        Set STORAGE_TYPE to this value
+```
+
+You can also do this on your first run if you want to set up the bot to use a non-JSON datastore right off the bat. Do note that you MUST use the instance name of `docker` for things to work properly.
+
+### Migrating From a Non-Docker Environment
+
+Migrating to this container should be fairly easy. Simply copy your `cogs` and `core` folder into the `/data` folder that is to be mounted.
+
+If you were using a non-JSON datastore, you will need to copy your `config.json` file (usually found in `~/.config/Red-DiscordBot/config.json`) into the `/data` folder. Be sure to set the `DATA_PATH` to `/data`, and double check if you need to update the `STORAGE_DETAILS` `host` value.
+
+### Version Freeze
+
+By default, Red-DiscordBot will check for updates on each (re)start of the container. If for some reason you want to have Red-DiscordBot stay at a certain version, you can use the `REDBOT_VERSION` environment variable to specify this. The format is the same as a [version specifier](https://www.python.org/dev/peps/pep-0440/#version-specifiers) for a pip package:
+
+- `REDBOT_VERSION="==3.2.1"`: Version Matching. Must be version 3.2.1
+- `REDBOT_VERSION="~=3.2.1"`: Compatible release. Same as >= 3.2.1, == 3.2.*
+
 ### Extra Arguments
 
 The environment variable `EXTRA_ARGS` can be used to append extra arguments to the bots startup command. This can be used for a plethora of things, such as:
@@ -108,19 +145,6 @@ Specify multiple arguments at once by surrounding them all with double quotes:
 - `EXTRA_ARGS="--no-cogs --dry-run --debug"`
 
 The typical user will not need to use this environment variable.
-
-### Version Freeze
-
-By default, Red-DiscordBot will check for updates on each (re)start of the container. If for some reason you want to have Red-DiscordBot stay at a certain version, you can use the `REDBOT_VERSION` environment variable to specify this. The format is the same as a [version specifier](https://www.python.org/dev/peps/pep-0440/#version-specifiers) for a pip package:
-
-- `REDBOT_VERSION="==3.2.1"`: Version Matching. Must be version 3.2.1
-- `REDBOT_VERSION="~=3.2.1"`: Compatible release. Same as >= 3.2.1, == 3.2.*
-
-### MongoDB Conversion
-
-If you used to use this container with MongoDB, it won't be used anymore with the latest Red-DiscordBot. Fortunately, the conversion from MongoDB to json should happen automatically when the bot starts. Once it has been converted, feel free to modify your Docker command/docker-compose.yml and remove the `STORAGE_TYPE` and all `MONGODB_*` environment variables, as they are no longer necessary. If you were volume mounting your `/config` folder, you don't really need to do that anymore either.
-
-As I (PhasecoreX) don't use MongoDB at all, I can only provide a limited amount of support for this. I assume if you're using MongoDB you already have a decent understanding on how things work. I wish you the best of luck.
 
 ## Extending This Image
 
