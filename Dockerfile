@@ -21,9 +21,8 @@ RUN set -eux; \
         # Red-DiscordBot
         build-essential \
         git \
+        # ssh repo support
         openssh-client \
-        libssl-dev \
-        libffi-dev \
         # start-redbot.sh
         jq \
     ; \
@@ -51,10 +50,9 @@ ENV PCX_DISCORDBOT_TAG audio
 RUN set -eux; \
     mkdir -p /usr/share/man/man1/; \
 # Install redbot audio dependencies
-    echo "deb http://deb.debian.org/debian bullseye main" >> /etc/apt/sources.list; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
-        openjdk-13-jre-headless \
+        openjdk-11-jre-headless \
     ; \
     rm -rf /var/lib/apt/lists/*; \
     rm -rf /usr/share/man/man1/;
