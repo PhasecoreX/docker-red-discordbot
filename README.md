@@ -179,4 +179,9 @@ This version only contains the bare minimum to run Red-DiscordBot (no Java, so n
 
 ### full
 
-This is the version that I use. It is the same as the latest version, but with added packages. It will be occasionally updated with more dependencies that popular cogs need. If you need another dependency for your cog, let me know, and I'll consider adding it.
+This is the version that I use. It is the same as the latest version, but with added packages that at least make these cogs work:
+
+- CrabRave
+- NotSoBot
+
+It will be occasionally updated with more dependencies that popular cogs need. If you need another dependency for your cog, let me know, and I'll consider adding it.

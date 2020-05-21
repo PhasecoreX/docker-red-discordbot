@@ -67,32 +67,17 @@ ENV PCX_DISCORDBOT_TAG full
 
 RUN set -eux; \
 # Install popular cog dependencies
-    buildDeps=' \
-        wget \
-    '; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
-# Build deps
-        $buildDeps \
-# Python
-    # python-aalib
+        # NotSoBot
+        libmagickwand-dev \
         libaa1-dev \
-# Programs
+        # CrabRave
         ffmpeg \
+        imagemagick \
     ; \
-# Build latest ImageMagick (Python wand)
-    wget ftp://ftp.imagemagick.org/pub/ImageMagick/ImageMagick.tar.gz; \
-    tar xvfz ImageMagick.tar.gz; \
-    cd ImageMagick-*; \
-    ./configure; \
-    make; \
-    make install; \
-    ldconfig /usr/local/lib; \
-    cd ..; \
-    rm -rf ImageMagick*; \
-# Clean up
-    apt-get purge -y --auto-remove $buildDeps; \
-    rm -rf /var/lib/apt/lists/*; \
-    rm -rf /usr/local/share/doc/ImageMagick*;
+    # CrabRave needs this policy removed
+    sed -i '/@\*/d' /etc/ImageMagick-6/policy.xml; \
+    rm -rf /var/lib/apt/lists/*;
 
 CMD ["/app/start-redbot.sh"]
