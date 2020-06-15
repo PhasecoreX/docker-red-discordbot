@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-set -e
+set -ef
 
 # Make sure we are in the venv
 [ -n "${VIRTUAL_ENV}" ]

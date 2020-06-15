@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-set -e
+set -ef
 
 # Python 3.8, remove mongo dependencies
 if ! [ -f "/data/venv/.pcxversion" ]

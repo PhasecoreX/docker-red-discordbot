@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-set -e
+set -ef
 
 # Patch older versions of data if needed
 /app/functions/patch.sh
