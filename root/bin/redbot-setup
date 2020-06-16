@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-set -ef
+set -euf
 
 if ! [ -t 0 ]; then
     echo "redbot-setup needs to be run in an interactive shell (docker run -it)"
@@ -23,4 +23,4 @@ echo "|                                            |"
 echo "o--------------------------------------------o"
 
 # Run the command
-/data/venv/bin/redbot-setup $@
+/data/venv/bin/redbot-setup "$@"

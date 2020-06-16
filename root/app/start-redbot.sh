@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-set -ef
+set -euf
 
 # Setup environment
 . /app/functions/setup-env.sh

@@ -1,11 +1,11 @@
-#!/bin/sh
+#!/usr/bin/env sh
 # Generate manifest.tmpl
+set -euf
 
-docker_image=${1}
+docker_image=$1
 shift
-archs_filtered=${@}
 
-cat << EOF > ./manifest.tmpl
+cat <<EOF >./manifest.tmpl
 image: phasecorex/${docker_image}:{{#if build.tag}}{{trimPrefix "v" build.tag}}{{else}}latest{{/if}}
 {{#if build.tags}}
 tags:
@@ -16,18 +16,39 @@ tags:
 manifests:
 EOF
 
-for arch in ${archs_filtered}; do
+for arch in "$@"; do
     case ${arch} in
-        amd64   ) tag_arch="amd64"; os="linux"; variant="" ;;
-        arm32v5 ) tag_arch="arm"; os="linux"; variant="v5" ;;
-        arm32v6 ) tag_arch="arm"; os="linux"; variant="v6" ;;
-        arm32v7 ) tag_arch="arm"; os="linux"; variant="v7" ;;
-        arm64v8 ) tag_arch="arm64"; os="linux"; variant="v8" ;;
-        *)
-            echo ERROR: Unknown tag arch.
-            exit 1
+    amd64)
+        tag_arch="amd64"
+        os="linux"
+        variant=""
+        ;;
+    arm32v5)
+        tag_arch="arm"
+        os="linux"
+        variant="v5"
+        ;;
+    arm32v6)
+        tag_arch="arm"
+        os="linux"
+        variant="v6"
+        ;;
+    arm32v7)
+        tag_arch="arm"
+        os="linux"
+        variant="v7"
+        ;;
+    arm64v8)
+        tag_arch="arm64"
+        os="linux"
+        variant="v8"
+        ;;
+    *)
+        echo ERROR: Unknown tag arch.
+        exit 1
+        ;;
     esac
-    cat << EOF >> ./manifest.tmpl
+    cat <<EOF >>./manifest.tmpl
   -
     image: phasecorex/${docker_image}:{{#if build.tag}}{{trimPrefix "v" build.tag}}-{{/if}}${arch}
     platform:
@@ -35,8 +56,8 @@ for arch in ${archs_filtered}; do
       os: ${os}
 EOF
 
-    if [[ ! -z ${variant} ]]; then
-        cat << EOF >> ./manifest.tmpl
+    if [ -n "${variant}" ]; then
+        cat <<EOF >>./manifest.tmpl
       variant: ${variant}
 EOF
     fi

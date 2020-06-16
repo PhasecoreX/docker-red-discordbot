@@ -1,12 +1,12 @@
 #!/usr/bin/env sh
-set -ef
+set -euf
 
 # Make sure we are in the venv
-[ -n "${VIRTUAL_ENV}" ]
+[ -n "${VIRTUAL_ENV:-}" ]
 
 # Determine if we need SetupTools Extras
-if [ -z "${STORAGE_TYPE}" ]; then
-    STORAGE_TYPE=$(jq -r .docker.STORAGE_TYPE /data/config.json | tr '[A-Z]' '[a-z]')
+if [ -z "${STORAGE_TYPE:-}" ]; then
+    STORAGE_TYPE=$(jq -r .docker.STORAGE_TYPE /data/config.json | tr '[:upper:]' '[:lower:]')
 fi
 SETUPTOOLS_EXTRAS=""
 if [ "${STORAGE_TYPE}" != "json" ]; then
@@ -14,7 +14,7 @@ if [ "${STORAGE_TYPE}" != "json" ]; then
 fi
 
 # Update redbot
-REDBOT_PACKAGE_NAME=Red-DiscordBot${SETUPTOOLS_EXTRAS}${REDBOT_VERSION}
+REDBOT_PACKAGE_NAME="Red-DiscordBot${SETUPTOOLS_EXTRAS}${REDBOT_VERSION:-}"
 echo "Updating ${REDBOT_PACKAGE_NAME}..."
 python -m pip install --upgrade --no-cache-dir pip setuptools wheel
-python -m pip install --upgrade --no-cache-dir ${REDBOT_PACKAGE_NAME}
+python -m pip install --upgrade --no-cache-dir "${REDBOT_PACKAGE_NAME}"
