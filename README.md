@@ -146,9 +146,18 @@ Specify multiple arguments at once by surrounding them all with double quotes:
 
 The typical user will not need to use this environment variable.
 
+### Custom Red-DiscordBot Package
+
+Intended for developers or users who know what they're doing, the `CUSTOM_REDBOT_PACKAGE` environment variable allows for specifying exactly what package pip should install. Specifying this environment variable will also ignore the `STORAGE_TYPE` and `REDBOT_VERSION` variables, as it's assumed you will provide any of that information in this environment variable. This can be useful for testing the bleeding edge Red-DiscordBot updates from GitHub:
+
+- `CUSTOM_REDBOT_PACKAGE=git+https://github.com/Cog-Creators/Red-DiscordBot.git`
+- `CUSTOM_REDBOT_PACKAGE=git+https://github.com/Cog-Creators/Red-DiscordBot.git@7d30e3de14264b86b5d18bac619ad476473d4467`
+
+The typical user SHOULD NOT use this. If you do use this environment variable, little to no support will be provided, as I assume you know what you are doing. If you want to switch back to a regular Red-DiscordBot install, you will need remove this environment variable, and you most likely will need to delete the `venv` folder inside the `/data` folder. If you don't, it may see that your custom version is newer than the PyPi official release, and it will not downgrade automatically.
+
 ## Extending This Image
 
-This image will run Red-DiscordBot as a non-root user. This is great, until you want to install any cogs that depend on external libraries or pip packages. To get around this, the image will run Red-DiscordBot in a python virtual environment. You can see this in the directory `/data/venv`. This allows for Red-DiscordBot to install any package it wants as the non-root user. This also allows for Red-DiscordBot to always be up-to-date when it first launches.
+This image will run Red-DiscordBot as a non-root user. This is great, until you want to install any cogs that depend on external libraries or pip packages. To get around this, the image will run Red-DiscordBot in a python virtual environment. You can see this in the folder `/data/venv`. This allows for Red-DiscordBot to install any package it wants as the non-root user. This also allows for Red-DiscordBot to always be up-to-date when it first launches.
 
 Some pip packages will require external libraries, so some of the popular ones (the ones I need for my bot) are included in the `full` tag. If you find that Red-DiscordBot cannot install a popular cog, you can either let me know for including the package in this tag, or you can extend this image, running `apt-get install -y --no-install-recommends` to install your dependencies:
 
