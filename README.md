@@ -1,12 +1,12 @@
 # Red-DiscordBot V3
-
 The newest Red-DiscordBot in a convenient multi-arch container
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/phasecorex/red-discordbot)](https://hub.docker.com/r/phasecorex/red-discordbot)
 [![Image Size](https://images.microbadger.com/badges/image/phasecorex/red-discordbot.svg)](https://microbadger.com/images/phasecorex/red-discordbot)
 [![Build Status](https://cloud.drone.io/api/badges/PhasecoreX/docker-red-discordbot/status.svg)](https://cloud.drone.io/PhasecoreX/docker-red-discordbot)
 [![Chat Support](https://img.shields.io/discord/608057344487849989)](https://discord.gg/QzdPp2b)
-[![Donate to support my code](https://img.shields.io/badge/Paypal-Donate-blue.svg)](https://paypal.me/pcx)
+[![BuyMeACoffee](https://img.shields.io/badge/buy%20me%20a%20coffee-donate-orange)](https://buymeacoff.ee/phasecorex)
+[![PayPal](https://img.shields.io/badge/paypal-donate-blue)](https://paypal.me/pcx)
 
 ## Why This Image?
 
