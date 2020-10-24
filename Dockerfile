@@ -1,20 +1,6 @@
-ARG BASE_IMG
-FROM ${BASE_IMG} as noaudio
-
-LABEL maintainer="Ryan Foster <phasecorex@gmail.com>"
-
-ARG DRONE_COMMIT_SHA
-ENV PCX_DISCORDBOT_COMMIT ${DRONE_COMMIT_SHA}
-ENV PCX_DISCORDBOT_TAG noaudio
+FROM phasecorex/user-python:3.8-slim as noaudio-build
 
 RUN set -eux; \
-# Check that DRONE_COMMIT_SHA exists
-    if [ "x$DRONE_COMMIT_SHA" = "x" ]; then \
-        echo Build argument 'DRONE_COMMIT_SHA' needs to be set and non-empty.; \
-        exit 1; \
-    else \
-        echo DRONE_COMMIT_SHA=${DRONE_COMMIT_SHA}; \
-    fi; \
 # Install Red-DiscordBot dependencies
     apt-get update; \
     apt-get install -y --no-install-recommends \
@@ -35,17 +21,11 @@ RUN set -eux; \
     mkdir -p /config/.config/Red-DiscordBot; \
     ln -s /data/config.json /config/.config/Red-DiscordBot/config.json;
 
-COPY root/ /
-
 VOLUME /data
 
-CMD ["/app/start-redbot.sh"]
 
 
-
-FROM noaudio as audio
-
-ENV PCX_DISCORDBOT_TAG audio
+FROM noaudio-build as audio-build
 
 RUN set -eux; \
     mkdir -p /usr/share/man/man1/; \
@@ -57,13 +37,9 @@ RUN set -eux; \
     rm -rf /var/lib/apt/lists/*; \
     rm -rf /usr/share/man/man1/;
 
-CMD ["/app/start-redbot.sh"]
 
 
-
-FROM audio as full
-
-ENV PCX_DISCORDBOT_TAG full
+FROM audio-build as full-build
 
 RUN set -eux; \
 # Install popular cog dependencies
@@ -79,5 +55,42 @@ RUN set -eux; \
     # CrabRave needs this policy removed
     sed -i '/@\*/d' /etc/ImageMagick-6/policy.xml; \
     rm -rf /var/lib/apt/lists/*;
+
+
+
+FROM noaudio-build as noaudio
+
+ARG PCX_DISCORDBOT_COMMIT
+
+ENV PCX_DISCORDBOT_COMMIT ${PCX_DISCORDBOT_COMMIT}
+ENV PCX_DISCORDBOT_TAG noaudio
+
+COPY root/ /
+
+CMD ["/app/start-redbot.sh"]
+
+
+
+FROM audio-build as audio
+
+ARG PCX_DISCORDBOT_COMMIT
+
+ENV PCX_DISCORDBOT_COMMIT ${PCX_DISCORDBOT_COMMIT}
+ENV PCX_DISCORDBOT_TAG audio
+
+COPY root/ /
+
+CMD ["/app/start-redbot.sh"]
+
+
+
+FROM full-build as full
+
+ARG PCX_DISCORDBOT_COMMIT
+
+ENV PCX_DISCORDBOT_COMMIT ${PCX_DISCORDBOT_COMMIT}
+ENV PCX_DISCORDBOT_TAG full
+
+COPY root/ /
 
 CMD ["/app/start-redbot.sh"]
