@@ -70,7 +70,6 @@ jobs:
             linux/arm/v7
             linux/arm64
             linux/386
-            linux/ppc64le
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
             ${{ env.GHCR_SLUG }}:noaudio
@@ -98,7 +97,6 @@ jobs:
             linux/arm/v7
             linux/arm64
             linux/386
-            linux/ppc64le
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
             ${{ env.GHCR_SLUG }}:audio
@@ -129,7 +127,6 @@ jobs:
             linux/arm/v7
             linux/arm64
             linux/386
-            linux/ppc64le
           push: ${{ github.event_name != 'pull_request' }}
           tags: 
             ${{ env.GHCR_SLUG }}:full
