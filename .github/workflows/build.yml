@@ -128,7 +128,7 @@ jobs:
             linux/arm64
             linux/386
           push: ${{ github.event_name != 'pull_request' }}
-          tags: 
+          tags: |
             ${{ env.GHCR_SLUG }}:full
             ${{ env.DOCK_SLUG }}:full
           build-args: |
