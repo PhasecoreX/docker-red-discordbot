@@ -25,6 +25,19 @@ VOLUME /data
 
 
 
+FROM noaudio-build as noaudio
+
+ARG PCX_DISCORDBOT_COMMIT
+
+ENV PCX_DISCORDBOT_COMMIT ${PCX_DISCORDBOT_COMMIT}
+ENV PCX_DISCORDBOT_TAG noaudio
+
+COPY root/ /
+
+CMD ["/app/start-redbot.sh"]
+
+
+
 FROM noaudio-build as audio-build
 
 RUN set -eux; \
@@ -36,6 +49,19 @@ RUN set -eux; \
     ; \
     rm -rf /var/lib/apt/lists/*; \
     rm -rf /usr/share/man/man1/;
+
+
+
+FROM audio-build as audio
+
+ARG PCX_DISCORDBOT_COMMIT
+
+ENV PCX_DISCORDBOT_COMMIT ${PCX_DISCORDBOT_COMMIT}
+ENV PCX_DISCORDBOT_TAG audio
+
+COPY root/ /
+
+CMD ["/app/start-redbot.sh"]
 
 
 
@@ -55,32 +81,6 @@ RUN set -eux; \
     # CrabRave needs this policy removed
     sed -i '/@\*/d' /etc/ImageMagick-6/policy.xml; \
     rm -rf /var/lib/apt/lists/*;
-
-
-
-FROM noaudio-build as noaudio
-
-ARG PCX_DISCORDBOT_COMMIT
-
-ENV PCX_DISCORDBOT_COMMIT ${PCX_DISCORDBOT_COMMIT}
-ENV PCX_DISCORDBOT_TAG noaudio
-
-COPY root/ /
-
-CMD ["/app/start-redbot.sh"]
-
-
-
-FROM audio-build as audio
-
-ARG PCX_DISCORDBOT_COMMIT
-
-ENV PCX_DISCORDBOT_COMMIT ${PCX_DISCORDBOT_COMMIT}
-ENV PCX_DISCORDBOT_TAG audio
-
-COPY root/ /
-
-CMD ["/app/start-redbot.sh"]
 
 
 

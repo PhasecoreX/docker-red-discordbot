@@ -3,20 +3,29 @@ name: build
 on:
   push:
     branches:
-      - 'master'
-    paths-ignore:
-      - '**.md'
+      - master
+    paths:
+      - Dockerfile
+      - .github/workflows/build.yml
+      - root/
   pull_request:
     branches:
-      - 'master'
-    paths-ignore:
-      - '**.md'
+      - master
+    paths:
+      - Dockerfile
+      - .github/workflows/build.yml
+      - root/
   repository_dispatch:
-    types: [upstream_image_update]
+    types:
+      - upstream_image_update
 
 jobs:
   docker:
     runs-on: ubuntu-latest
+    env:
+      TITLE: Red-DiscordBot
+      GHCR_SLUG: ghcr.io/phasecorex/red-discordbot
+      DOCK_SLUG: docker.io/phasecorex/red-discordbot
     steps:
       -
         name: Checkout
@@ -30,25 +39,11 @@ jobs:
             const repo = await github.repos.get(context.repo)
             return repo.data
       -
-        name: Prepare
-        id: prep
-        run: |
-          DOCKER_IMAGE=phasecorex/red-discordbot
-          echo ::set-output name=docker_image::${DOCKER_IMAGE}
-          echo ::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-      -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-      -
-        name: Login to DockerHub
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
         name: Login to GitHub Container Registry
         if: github.event_name != 'pull_request'
@@ -58,25 +53,39 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GHCR_TOKEN }}
       -
+        name: Login to DockerHub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
         name: Build and push noaudio
         uses: docker/build-push-action@v2
         with:
           target: noaudio
-          platforms: linux/amd64,linux/arm/v5,linux/arm/v6,linux/arm/v7,linux/arm64
+          platforms: |
+            linux/amd64
+            linux/arm/v6
+            linux/arm/v7
+            linux/arm64
+            linux/386
+            linux/ppc64le
+            linux/s390x
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.prep.outputs.docker_image }}:noaudio,ghcr.io/${{ steps.prep.outputs.docker_image }}:noaudio
+          tags: |
+            ${{ env.GHCR_SLUG }}:noaudio
+            ${{ env.DOCK_SLUG }}:noaudio
           build-args: |
             PCX_DISCORDBOT_COMMIT=${{ github.sha }}
           cache-from: |
-            ${{ steps.prep.outputs.docker_image }}:noaudio
+            ${{ env.GHCR_SLUG }}:noaudio
           labels: |
-            maintainer=Ryan Foster <phasecorex@gmail.com>
-            org.opencontainers.image.title=${{ fromJson(steps.repo.outputs.result).name }}
+            maintainer=${{ github.repository_owner }}
+            org.opencontainers.image.vendor=${{ github.repository_owner }}
+            org.opencontainers.image.title=${{ env.TITLE }}
             org.opencontainers.image.description=${{ fromJson(steps.repo.outputs.result).description }}
-            org.opencontainers.image.url=${{ fromJson(steps.repo.outputs.result).html_url }}
-            org.opencontainers.image.source=${{ fromJson(steps.repo.outputs.result).clone_url }}
-            org.opencontainers.image.version=noaudio
-            org.opencontainers.image.created=${{ steps.prep.outputs.created }}
+            org.opencontainers.image.source=${{ fromJson(steps.repo.outputs.result).html_url }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.licenses=${{ fromJson(steps.repo.outputs.result).license.spdx_id }}
       -
@@ -84,22 +93,31 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           target: audio
-          platforms: linux/amd64,linux/arm/v5,linux/arm/v6,linux/arm/v7,linux/arm64
+          platforms: |
+            linux/amd64
+            linux/arm/v6
+            linux/arm/v7
+            linux/arm64
+            linux/386
+            linux/ppc64le
+            linux/s390x
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.prep.outputs.docker_image }}:audio,ghcr.io/${{ steps.prep.outputs.docker_image }}:audio,${{ steps.prep.outputs.docker_image }}:latest,ghcr.io/${{ steps.prep.outputs.docker_image }}:latest
+          tags: |
+            ${{ env.GHCR_SLUG }}:audio
+            ${{ env.GHCR_SLUG }}:latest
+            ${{ env.DOCK_SLUG }}:audio
+            ${{ env.DOCK_SLUG }}:latest
           build-args: |
             PCX_DISCORDBOT_COMMIT=${{ github.sha }}
           cache-from: |
-            ${{ steps.prep.outputs.docker_image }}:noaudio
-            ${{ steps.prep.outputs.docker_image }}:audio
+            ${{ env.GHCR_SLUG }}:noaudio
+            ${{ env.GHCR_SLUG }}:audio
           labels: |
-            maintainer=Ryan Foster <phasecorex@gmail.com>
-            org.opencontainers.image.title=${{ fromJson(steps.repo.outputs.result).name }}
+            maintainer=${{ github.repository_owner }}
+            org.opencontainers.image.vendor=${{ github.repository_owner }}
+            org.opencontainers.image.title=${{ env.TITLE }}
             org.opencontainers.image.description=${{ fromJson(steps.repo.outputs.result).description }}
-            org.opencontainers.image.url=${{ fromJson(steps.repo.outputs.result).html_url }}
-            org.opencontainers.image.source=${{ fromJson(steps.repo.outputs.result).clone_url }}
-            org.opencontainers.image.version=audio
-            org.opencontainers.image.created=${{ steps.prep.outputs.created }}
+            org.opencontainers.image.source=${{ fromJson(steps.repo.outputs.result).html_url }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.licenses=${{ fromJson(steps.repo.outputs.result).license.spdx_id }}
       -
@@ -107,38 +125,54 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           target: full
-          platforms: linux/amd64,linux/arm/v5,linux/arm/v6,linux/arm/v7,linux/arm64
+          platforms: |
+            linux/amd64
+            linux/arm/v6
+            linux/arm/v7
+            linux/arm64
+            linux/386
+            linux/ppc64le
+            linux/s390x
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.prep.outputs.docker_image }}:full,ghcr.io/${{ steps.prep.outputs.docker_image }}:full
+          tags: 
+            ${{ env.GHCR_SLUG }}:full
+            ${{ env.DOCK_SLUG }}:full
           build-args: |
             PCX_DISCORDBOT_COMMIT=${{ github.sha }}
           cache-from: |
-            ${{ steps.prep.outputs.docker_image }}:audio
-            ${{ steps.prep.outputs.docker_image }}:full
+            ${{ env.GHCR_SLUG }}:audio
+            ${{ env.GHCR_SLUG }}:full
           labels: |
-            maintainer=Ryan Foster <phasecorex@gmail.com>
-            org.opencontainers.image.title=${{ fromJson(steps.repo.outputs.result).name }}
+            maintainer=${{ github.repository_owner }}
+            org.opencontainers.image.vendor=${{ github.repository_owner }}
+            org.opencontainers.image.title=${{ env.TITLE }}
             org.opencontainers.image.description=${{ fromJson(steps.repo.outputs.result).description }}
-            org.opencontainers.image.url=${{ fromJson(steps.repo.outputs.result).html_url }}
-            org.opencontainers.image.source=${{ fromJson(steps.repo.outputs.result).clone_url }}
-            org.opencontainers.image.version=full
-            org.opencontainers.image.created=${{ steps.prep.outputs.created }}
+            org.opencontainers.image.source=${{ fromJson(steps.repo.outputs.result).html_url }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.licenses=${{ fromJson(steps.repo.outputs.result).license.spdx_id }}
       -
         name: Check manifest
         if: github.event_name != 'pull_request'
         run: |
-          docker buildx imagetools inspect ${{ steps.prep.outputs.docker_image }}:noaudio
-          docker buildx imagetools inspect ${{ steps.prep.outputs.docker_image }}:audio
-          docker buildx imagetools inspect ${{ steps.prep.outputs.docker_image }}:full
+          docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:noaudio
+          docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:audio
+          docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:full
+          docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:noaudio
+          docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:audio
+          docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:full
       -
         name: Check pull
         if: github.event_name != 'pull_request'
         run: |
-          docker pull ${{ steps.prep.outputs.docker_image }}:noaudio
-          docker pull ${{ steps.prep.outputs.docker_image }}:audio
-          docker pull ${{ steps.prep.outputs.docker_image }}:full
-          docker pull ghcr.io/${{ steps.prep.outputs.docker_image }}:noaudio
-          docker pull ghcr.io/${{ steps.prep.outputs.docker_image }}:audio
-          docker pull ghcr.io/${{ steps.prep.outputs.docker_image }}:full
+          docker pull ${{ env.GHCR_SLUG }}:noaudio
+          docker pull ${{ env.GHCR_SLUG }}:audio
+          docker pull ${{ env.GHCR_SLUG }}:full
+          docker image inspect ${{ env.GHCR_SLUG }}:noaudio
+          docker image inspect ${{ env.GHCR_SLUG }}:audio
+          docker image inspect ${{ env.GHCR_SLUG }}:full
+          docker pull ${{ env.DOCK_SLUG }}:noaudio
+          docker pull ${{ env.DOCK_SLUG }}:audio
+          docker pull ${{ env.DOCK_SLUG }}:full
+          docker image inspect ${{ env.DOCK_SLUG }}:noaudio
+          docker image inspect ${{ env.DOCK_SLUG }}:audio
+          docker image inspect ${{ env.DOCK_SLUG }}:full
