@@ -71,7 +71,6 @@ jobs:
             linux/arm64
             linux/386
             linux/ppc64le
-            linux/s390x
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
             ${{ env.GHCR_SLUG }}:noaudio
@@ -100,7 +99,6 @@ jobs:
             linux/arm64
             linux/386
             linux/ppc64le
-            linux/s390x
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
             ${{ env.GHCR_SLUG }}:audio
@@ -132,7 +130,6 @@ jobs:
             linux/arm64
             linux/386
             linux/ppc64le
-            linux/s390x
           push: ${{ github.event_name != 'pull_request' }}
           tags: 
             ${{ env.GHCR_SLUG }}:full
