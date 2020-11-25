@@ -7,14 +7,14 @@ on:
     paths:
       - Dockerfile
       - .github/workflows/build.yml
-      - root/
+      - root/**
   pull_request:
     branches:
       - master
     paths:
       - Dockerfile
       - .github/workflows/build.yml
-      - root/
+      - root/**
   repository_dispatch:
     types:
       - upstream_image_update
