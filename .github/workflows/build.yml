@@ -75,6 +75,7 @@ jobs:
             ${{ env.GHCR_SLUG }}:noaudio
             ${{ env.DOCK_SLUG }}:noaudio
           build-args: |
+            PCX_DISCORDBOT_BUILD=${{ github.run_id }}
             PCX_DISCORDBOT_COMMIT=${{ github.sha }}
           cache-from: |
             ${{ env.GHCR_SLUG }}:noaudio
@@ -104,6 +105,7 @@ jobs:
             ${{ env.DOCK_SLUG }}:audio
             ${{ env.DOCK_SLUG }}:latest
           build-args: |
+            PCX_DISCORDBOT_BUILD=${{ github.run_id }}
             PCX_DISCORDBOT_COMMIT=${{ github.sha }}
           cache-from: |
             ${{ env.GHCR_SLUG }}:noaudio
@@ -132,6 +134,7 @@ jobs:
             ${{ env.GHCR_SLUG }}:full
             ${{ env.DOCK_SLUG }}:full
           build-args: |
+            PCX_DISCORDBOT_BUILD=${{ github.run_id }}
             PCX_DISCORDBOT_COMMIT=${{ github.sha }}
           cache-from: |
             ${{ env.GHCR_SLUG }}:audio
