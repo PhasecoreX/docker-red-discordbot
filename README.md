@@ -18,7 +18,7 @@ There are many reasons that this image is better (or as good as) the others out 
 - **Update notifications**: Integrates with [UpdateNotify](https://github.com/PhasecoreX/PCXCogs) to notify you when there is a Red-DiscordBot or Docker image update ready.
 - **It's pretty small**: Image size has been reduced as much as possible, only including the bare minimum to run Red-DiscordBot as well as a vast majority of 3rd party cogs.
 
-## How To Run
+## Quick Start
 
 Just do this:
 
@@ -47,13 +47,31 @@ Once you like how it's working, you can add these:
 - `--name red-discordbot`: A nice name for the docker container, for easy management.
 - `-d`: Run container in the background. The name set above comes in handy for managing it.
 
-You can also remove the `TOKEN` and `PREFIX`es after the initial run, as they are saved to the bots config. This allows for you to use the `[p]set prefix` command, and makes subsequent runs as simple as:
+You can also remove the `OWNER`, `TOKEN`, and `PREFIX`es after the initial run, as they are saved to the bots config. This allows for you to use the `[p]set prefix` command, and makes subsequent runs as simple as:
 
 ```
 docker run -v /local_folder_for_persistence:/data phasecorex/red-discordbot
 ```
 
 Enjoy!
+
+### One Time Configurations
+
+A few of the environment variables can be used to configure Red-DiscordBot, but are persisted to the bots internal configuration. Thus, once they are used once, you are free to remove them from your Docker run command or Docker compose file. These are the environment variables:
+
+- `OWNER`: To set a new owner of the bot
+- `TOKEN`: To set a new token for the bot
+- `PREFIX` (as well as `PREFIX2`-`PREFIX5`): To set new prefixes for the bot
+
+If you see any of the following messages, you know that the setting were applied successfully, and you're free to remove the environment variable from your setup:
+
+```
+Setting bot owner...
+Setting bot token...
+Setting bot prefix(es)...
+```
+
+You can of course just leave the environment variables in place, but if you want a faster startup, you can remove the environment variables.
 
 ### Docker Compose
 
@@ -75,7 +93,7 @@ services:
       - PUID=1000
 ```
 
-And again, subsequent runs you can omit the `TOKEN` and `PREFIX`es from the docker-compose.yml file.
+And again, subsequent runs you can omit the `OWNER`, `TOKEN`, and `PREFIX`es from the docker-compose.yml file.
 
 ### Updates
 

@@ -52,6 +52,11 @@ while [ "${RETURN_CODE}" -eq 26 ]; do
     # Update redbot if needed
     /app/functions/update-redbot.sh
 
+    if [ -n "${OWNER:-}" ]; then
+        echo "Setting bot owner..."
+        redbot docker --edit --no-prompt --owner "${OWNER}"
+    fi
+
     if [ -n "${TOKEN:-}" ]; then
         echo "Setting bot token..."
         redbot docker --edit --no-prompt --token "${TOKEN}"
