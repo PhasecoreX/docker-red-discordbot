@@ -28,43 +28,16 @@ wait_term() {
     wait "${term_child_pid}"
 }
 
-# Gather prefixes if supplied
-PREFIXES=""
-if [ -n "${PREFIX5:-}" ]; then
-    PREFIXES="--prefix ${PREFIX5} ${PREFIXES}"
-fi
-if [ -n "${PREFIX4:-}" ]; then
-    PREFIXES="--prefix ${PREFIX4} ${PREFIXES}"
-fi
-if [ -n "${PREFIX3:-}" ]; then
-    PREFIXES="--prefix ${PREFIX3} ${PREFIXES}"
-fi
-if [ -n "${PREFIX2:-}" ]; then
-    PREFIXES="--prefix ${PREFIX2} ${PREFIXES}"
-fi
-if [ -n "${PREFIX:-}" ]; then
-    PREFIXES="--prefix ${PREFIX} ${PREFIXES}"
-fi
-
 # Main loop
+FIRST_RUN=1
 RETURN_CODE=26
 while [ "${RETURN_CODE}" -eq 26 ]; do
     # Update redbot if needed
     /app/functions/update-redbot.sh
 
-    if [ -n "${OWNER:-}" ]; then
-        echo "Setting bot owner..."
-        redbot docker --edit --no-prompt --owner "${OWNER}"
-    fi
-
-    if [ -n "${TOKEN:-}" ]; then
-        echo "Setting bot token..."
-        redbot docker --edit --no-prompt --token "${TOKEN}"
-    fi
-
-    if [ -n "${PREFIXES}" ]; then
-        echo "Setting bot prefix(es)..."
-        redbot docker --edit --no-prompt ${PREFIXES}
+    # Only configure bot if this is the first run
+    if [ "${FIRST_RUN}" -eq 1 ]; then
+        . /app/functions/configure-redbot.sh
     fi
 
     echo "Starting Red-DiscordBot!"
@@ -80,4 +53,6 @@ while [ "${RETURN_CODE}" -eq 26 ]; do
         RETURN_CODE=$?
     fi
     set -e
+
+    FIRST_RUN=0
 done
