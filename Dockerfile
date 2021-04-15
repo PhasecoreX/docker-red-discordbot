@@ -6,6 +6,7 @@ RUN set -eux; \
     apt-get install -y --no-install-recommends \
         # Red-DiscordBot
         build-essential \
+        libffi-dev \
         git \
         # ssh repo support
         openssh-client \
