@@ -22,6 +22,8 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
     env:
       TITLE: Red-DiscordBot
       GHCR_SLUG: ghcr.io/phasecorex/red-discordbot
@@ -51,7 +53,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.GHCR_TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       -
         name: Login to DockerHub
         if: github.event_name != 'pull_request'
