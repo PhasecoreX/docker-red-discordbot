@@ -63,7 +63,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
         name: Build and push noaudio
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v2.4.0
         with:
           target: noaudio
           platforms: |
@@ -90,7 +90,7 @@ jobs:
             org.opencontainers.image.licenses=${{ fromJson(steps.repo.outputs.result).license.spdx_id }}
       -
         name: Build and push audio
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v2.4.0
         with:
           target: audio
           platforms: |
@@ -120,7 +120,7 @@ jobs:
             org.opencontainers.image.licenses=${{ fromJson(steps.repo.outputs.result).license.spdx_id }}
       -
         name: Build and push full
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v2.4.0
         with:
           target: full
           platforms: |
