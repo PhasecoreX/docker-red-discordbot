@@ -35,7 +35,7 @@ jobs:
       -
         name: Repo metadata
         id: repo
-        uses: actions/github-script@v3
+        uses: actions/github-script@v4
         with:
           script: |
             const repo = await github.repos.get(context.repo)
@@ -62,6 +62,33 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
+        name: Build and push full
+        uses: docker/build-push-action@v2
+        with:
+          target: full
+          platforms: |
+            linux/amd64
+            linux/arm/v7
+            linux/arm64
+            linux/386
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: |
+            ${{ env.GHCR_SLUG }}:full
+            ${{ env.DOCK_SLUG }}:full
+          build-args: |
+            PCX_DISCORDBOT_BUILD=${{ github.run_id }}
+            PCX_DISCORDBOT_COMMIT=${{ github.sha }}
+          cache-from: |
+            ${{ env.GHCR_SLUG }}:full
+          labels: |
+            maintainer=${{ github.repository_owner }}
+            org.opencontainers.image.vendor=${{ github.repository_owner }}
+            org.opencontainers.image.title=${{ env.TITLE }}
+            org.opencontainers.image.description=${{ fromJson(steps.repo.outputs.result).description }}
+            org.opencontainers.image.source=${{ fromJson(steps.repo.outputs.result).html_url }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.licenses=${{ fromJson(steps.repo.outputs.result).license.spdx_id }}
+      -
         name: Build and push noaudio
         uses: docker/build-push-action@v2
         with:
@@ -79,7 +106,7 @@ jobs:
             PCX_DISCORDBOT_BUILD=${{ github.run_id }}
             PCX_DISCORDBOT_COMMIT=${{ github.sha }}
           cache-from: |
-            ${{ env.GHCR_SLUG }}:noaudio
+            ${{ env.GHCR_SLUG }}:full
           labels: |
             maintainer=${{ github.repository_owner }}
             org.opencontainers.image.vendor=${{ github.repository_owner }}
@@ -108,35 +135,6 @@ jobs:
             PCX_DISCORDBOT_BUILD=${{ github.run_id }}
             PCX_DISCORDBOT_COMMIT=${{ github.sha }}
           cache-from: |
-            ${{ env.GHCR_SLUG }}:noaudio
-            ${{ env.GHCR_SLUG }}:audio
-          labels: |
-            maintainer=${{ github.repository_owner }}
-            org.opencontainers.image.vendor=${{ github.repository_owner }}
-            org.opencontainers.image.title=${{ env.TITLE }}
-            org.opencontainers.image.description=${{ fromJson(steps.repo.outputs.result).description }}
-            org.opencontainers.image.source=${{ fromJson(steps.repo.outputs.result).html_url }}
-            org.opencontainers.image.revision=${{ github.sha }}
-            org.opencontainers.image.licenses=${{ fromJson(steps.repo.outputs.result).license.spdx_id }}
-      -
-        name: Build and push full
-        uses: docker/build-push-action@v2
-        with:
-          target: full
-          platforms: |
-            linux/amd64
-            linux/arm/v7
-            linux/arm64
-            linux/386
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: |
-            ${{ env.GHCR_SLUG }}:full
-            ${{ env.DOCK_SLUG }}:full
-          build-args: |
-            PCX_DISCORDBOT_BUILD=${{ github.run_id }}
-            PCX_DISCORDBOT_COMMIT=${{ github.sha }}
-          cache-from: |
-            ${{ env.GHCR_SLUG }}:audio
             ${{ env.GHCR_SLUG }}:full
           labels: |
             maintainer=${{ github.repository_owner }}

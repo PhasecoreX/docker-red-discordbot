@@ -82,6 +82,8 @@ RUN set -eux; \
         # CrabRave
         ffmpeg \
         imagemagick \
+        # RSS (SciPy has no wheels for armv7)
+        $([ "$(uname --machine)" = "armv7l" ] && echo "gfortran libopenblas-dev liblapack-dev") \
     ; \
     # CrabRave needs this policy removed
     sed -i '/@\*/d' /etc/ImageMagick-6/policy.xml; \
