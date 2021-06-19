@@ -7,6 +7,7 @@ RUN set -eux; \
         # Red-DiscordBot
         build-essential \
         libffi-dev \
+        libsodium-dev \
         git \
         # ssh repo support
         openssh-client \
@@ -23,6 +24,8 @@ RUN set -eux; \
     ln -s /data/config.json /config/.config/Red-DiscordBot/config.json;
 
 VOLUME /data
+
+ENV SODIUM_INSTALL system
 
 
 
