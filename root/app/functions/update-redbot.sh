@@ -18,12 +18,12 @@ if [ -n "${CUSTOM_REDBOT_PACKAGE:-}" ]; then
     echo "Updating Red-DiscordBot with \"${CUSTOM_REDBOT_PACKAGE}\"..."
     python -m pip install --upgrade --no-cache-dir pip
     python -m pip install --upgrade --no-cache-dir setuptools wheel
-    python -m pip install --upgrade --no-cache-dir "${CUSTOM_REDBOT_PACKAGE}"
+    python -m pip install --upgrade --upgrade-strategy eager --no-cache-dir "${CUSTOM_REDBOT_PACKAGE}"
 else
     # Update redbot
     REDBOT_PACKAGE_NAME="Red-DiscordBot${SETUPTOOLS_EXTRAS}${REDBOT_VERSION:-}"
     echo "Updating ${REDBOT_PACKAGE_NAME}..."
     python -m pip install --upgrade --no-cache-dir pip
     python -m pip install --upgrade --no-cache-dir setuptools wheel
-    python -m pip install --upgrade --no-cache-dir "${REDBOT_PACKAGE_NAME}"
+    python -m pip install --upgrade --upgrade-strategy eager --no-cache-dir "${REDBOT_PACKAGE_NAME}"
 fi
