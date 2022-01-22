@@ -75,6 +75,8 @@ jobs:
           tags: |
             ${{ env.GHCR_SLUG }}:full
             ${{ env.DOCK_SLUG }}:full
+            ${{ env.GHCR_SLUG }}:full-py38
+            ${{ env.DOCK_SLUG }}:full-py38
           build-args: |
             PCX_DISCORDBOT_BUILD=${{ github.run_id }}
             PCX_DISCORDBOT_COMMIT=${{ github.sha }}
@@ -102,6 +104,8 @@ jobs:
           tags: |
             ${{ env.GHCR_SLUG }}:noaudio
             ${{ env.DOCK_SLUG }}:noaudio
+            ${{ env.GHCR_SLUG }}:noaudio-py38
+            ${{ env.DOCK_SLUG }}:noaudio-py38
           build-args: |
             PCX_DISCORDBOT_BUILD=${{ github.run_id }}
             PCX_DISCORDBOT_COMMIT=${{ github.sha }}
@@ -131,6 +135,8 @@ jobs:
             ${{ env.GHCR_SLUG }}:latest
             ${{ env.DOCK_SLUG }}:audio
             ${{ env.DOCK_SLUG }}:latest
+            ${{ env.GHCR_SLUG }}:audio-py38
+            ${{ env.DOCK_SLUG }}:audio-py38
           build-args: |
             PCX_DISCORDBOT_BUILD=${{ github.run_id }}
             PCX_DISCORDBOT_COMMIT=${{ github.sha }}
@@ -154,6 +160,12 @@ jobs:
           docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:noaudio
           docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:audio
           docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:full
+          docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:noaudio-py38
+          docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:audio-py38
+          docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:full-py38
+          docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:noaudio-py38
+          docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:audio-py38
+          docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:full-py38
       -
         name: Check pull
         if: github.event_name != 'pull_request'
@@ -170,3 +182,15 @@ jobs:
           docker image inspect ${{ env.DOCK_SLUG }}:noaudio
           docker image inspect ${{ env.DOCK_SLUG }}:audio
           docker image inspect ${{ env.DOCK_SLUG }}:full
+          docker pull ${{ env.GHCR_SLUG }}:noaudio-py38
+          docker pull ${{ env.GHCR_SLUG }}:audio-py38
+          docker pull ${{ env.GHCR_SLUG }}:full-py38
+          docker image inspect ${{ env.GHCR_SLUG }}:noaudio-py38
+          docker image inspect ${{ env.GHCR_SLUG }}:audio-py38
+          docker image inspect ${{ env.GHCR_SLUG }}:full-py38
+          docker pull ${{ env.DOCK_SLUG }}:noaudio-py38
+          docker pull ${{ env.DOCK_SLUG }}:audio-py38
+          docker pull ${{ env.DOCK_SLUG }}:full-py38
+          docker image inspect ${{ env.DOCK_SLUG }}:noaudio-py38
+          docker image inspect ${{ env.DOCK_SLUG }}:audio-py38
+          docker image inspect ${{ env.DOCK_SLUG }}:full-py38

@@ -152,6 +152,8 @@ By default, Red-DiscordBot will check for updates on each (re)start of the conta
 - `REDBOT_VERSION="==3.2.1"`: Version Matching. Must be version 3.2.1
 - `REDBOT_VERSION="~=3.2.1"`: Compatible release. Same as >= 3.2.1, == 3.2.*
 
+Do note: If you need to use a version of Red-DiscordBot that is below 3.4.13, you will need to use the images tagged with `*-py38`, as those are the last ones that use Python 3.8. Also note that those tagged images are no longer updated, and you really should be using the latest Red-DiscordBot and not using this `REDBOT_VERSION` environment variable at all.
+
 ### Extra Arguments
 
 The environment variable `EXTRA_ARGS` can be used to append extra arguments to the bots startup command. This can be used for a plethora of things, such as:
