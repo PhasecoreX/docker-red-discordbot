@@ -7,6 +7,8 @@ RUN set -eux; \
         # Red-DiscordBot
         build-essential \
         git \
+        # Required for PyNaCl building
+        libsodium-dev \
         # start-redbot.sh
         jq \
         # ssh repo support
