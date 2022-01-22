@@ -1,4 +1,4 @@
-FROM phasecorex/user-python:3.8-slim as noaudio-build
+FROM phasecorex/user-python:3.9-slim as noaudio-build
 
 RUN set -eux; \
 # Install Red-DiscordBot dependencies
@@ -6,13 +6,11 @@ RUN set -eux; \
     apt-get install -y --no-install-recommends \
         # Red-DiscordBot
         build-essential \
-        libffi-dev \
-        libsodium-dev \
         git \
-        # ssh repo support
-        openssh-client \
         # start-redbot.sh
         jq \
+        # ssh repo support
+        openssh-client \
     ; \
     rm -rf /var/lib/apt/lists/*; \
 # Set up all three config locations
@@ -47,14 +45,12 @@ CMD ["/app/start-redbot.sh"]
 FROM noaudio-build as audio-build
 
 RUN set -eux; \
-    mkdir -p /usr/share/man/man1/; \
 # Install redbot audio dependencies
     apt-get update; \
     apt-get install -y --no-install-recommends \
         openjdk-11-jre-headless \
     ; \
-    rm -rf /var/lib/apt/lists/*; \
-    rm -rf /usr/share/man/man1/;
+    rm -rf /var/lib/apt/lists/*;
 
 
 

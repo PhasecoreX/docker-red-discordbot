@@ -26,6 +26,6 @@ fi
 # Prepare and activate venv
 echo "Activating Python virtual environment..."
 mkdir -p /data/venv
-python -m venv --upgrade /data/venv
+python -m venv --upgrade --upgrade-deps /data/venv
 python -m venv /data/venv
 . /data/venv/bin/activate
