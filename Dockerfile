@@ -1,4 +1,4 @@
-FROM phasecorex/user-python:3.9-slim as noaudio-build
+FROM phasecorex/user-python:3.9-slim as core-build
 
 RUN set -eux; \
 # Install Red-DiscordBot dependencies
@@ -7,8 +7,10 @@ RUN set -eux; \
         # Red-DiscordBot
         build-essential \
         git \
-        # Required for PyNaCl building
+        # Required for building PyNaCl
         libsodium-dev \
+        # Required for building CFFI
+        libffi-dev \
         # start-redbot.sh
         jq \
         # ssh repo support
@@ -29,49 +31,22 @@ ENV SODIUM_INSTALL system
 
 
 
-FROM noaudio-build as noaudio
+FROM core-build as core
 
 ARG PCX_DISCORDBOT_BUILD
 ARG PCX_DISCORDBOT_COMMIT
 
 ENV PCX_DISCORDBOT_BUILD ${PCX_DISCORDBOT_BUILD}
 ENV PCX_DISCORDBOT_COMMIT ${PCX_DISCORDBOT_COMMIT}
-ENV PCX_DISCORDBOT_TAG noaudio
+ENV PCX_DISCORDBOT_TAG core
 
 COPY root/ /
 
 CMD ["/app/start-redbot.sh"]
 
+#######################################################################################
 
-
-FROM noaudio-build as audio-build
-
-RUN set -eux; \
-# Install redbot audio dependencies
-    apt-get update; \
-    apt-get install -y --no-install-recommends \
-        openjdk-11-jre-headless \
-    ; \
-    rm -rf /var/lib/apt/lists/*;
-
-
-
-FROM audio-build as audio
-
-ARG PCX_DISCORDBOT_BUILD
-ARG PCX_DISCORDBOT_COMMIT
-
-ENV PCX_DISCORDBOT_BUILD ${PCX_DISCORDBOT_BUILD}
-ENV PCX_DISCORDBOT_COMMIT ${PCX_DISCORDBOT_COMMIT}
-ENV PCX_DISCORDBOT_TAG audio
-
-COPY root/ /
-
-CMD ["/app/start-redbot.sh"]
-
-
-
-FROM audio-build as full-build
+FROM core-build as extra-build
 
 RUN set -eux; \
 # Install popular cog dependencies
@@ -94,14 +69,68 @@ RUN set -eux; \
 
 
 
-FROM full-build as full
+FROM extra-build as extra
 
 ARG PCX_DISCORDBOT_BUILD
 ARG PCX_DISCORDBOT_COMMIT
 
 ENV PCX_DISCORDBOT_BUILD ${PCX_DISCORDBOT_BUILD}
 ENV PCX_DISCORDBOT_COMMIT ${PCX_DISCORDBOT_COMMIT}
-ENV PCX_DISCORDBOT_TAG full
+ENV PCX_DISCORDBOT_TAG extra
+
+COPY root/ /
+
+CMD ["/app/start-redbot.sh"]
+
+#######################################################################################
+
+FROM core-build as core-audio-build
+
+RUN set -eux; \
+# Install redbot audio dependencies
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+        openjdk-11-jre-headless \
+    ; \
+    rm -rf /var/lib/apt/lists/*;
+
+
+
+FROM core-audio-build as core-audio
+
+ARG PCX_DISCORDBOT_BUILD
+ARG PCX_DISCORDBOT_COMMIT
+
+ENV PCX_DISCORDBOT_BUILD ${PCX_DISCORDBOT_BUILD}
+ENV PCX_DISCORDBOT_COMMIT ${PCX_DISCORDBOT_COMMIT}
+ENV PCX_DISCORDBOT_TAG core-audio
+
+COPY root/ /
+
+CMD ["/app/start-redbot.sh"]
+
+#######################################################################################
+
+FROM extra-build as extra-audio-build
+
+RUN set -eux; \
+# Install redbot audio dependencies
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+        openjdk-11-jre-headless \
+    ; \
+    rm -rf /var/lib/apt/lists/*;
+
+
+
+FROM extra-audio-build as extra-audio
+
+ARG PCX_DISCORDBOT_BUILD
+ARG PCX_DISCORDBOT_COMMIT
+
+ENV PCX_DISCORDBOT_BUILD ${PCX_DISCORDBOT_BUILD}
+ENV PCX_DISCORDBOT_COMMIT ${PCX_DISCORDBOT_COMMIT}
+ENV PCX_DISCORDBOT_TAG extra-audio
 
 COPY root/ /
 

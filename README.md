@@ -182,7 +182,7 @@ The typical user SHOULD NOT use this. If you do use this environment variable, l
 
 This image will run Red-DiscordBot as a non-root user. This is great, until you want to install any cogs that depend on external libraries or pip packages. To get around this, the image will run Red-DiscordBot in a python virtual environment. You can see this in the folder `/data/venv`. This allows for Red-DiscordBot to install any package it wants as the non-root user. This also allows for Red-DiscordBot to always be up-to-date when it first launches.
 
-Some pip packages will require external libraries, so some of the popular ones (the ones I need for my bot) are included in the `full` tag. If you find that Red-DiscordBot cannot install a popular cog, you can either let me know for including the package in this tag, or you can extend this image, running `apt-get install -y --no-install-recommends` to install your dependencies:
+Some pip packages will require external libraries, so some of the popular ones (the ones I need for my bot) are included in the `extra`/`extra-audio` tag. If you find that Red-DiscordBot cannot install a popular cog, you can either let me know for including the package in this tag, or you can extend this image, running `apt-get install -y --no-install-recommends` to install your dependencies:
 
 ```dockerfile
 FROM phasecorex/red-discordbot
@@ -199,21 +199,28 @@ RUN apt-get update; \
 
 No need to define anything else, as the VOLUME and CMD will be the defaults.
 
-## Versions
+## Image Tags
 
-### latest/audio
+### core (Alias: noaudio)
 
-The default version. It contains Java so that you can use the Audio cog. You can extend this one (or any of the other versions) to add your own packages for your own 3rd party cogs.
+This tag contains the bare minimum to run Red-DiscordBot (no Java, so no Audio cog support).
 
-### noaudio
+### core-audio (Aliases: latest, audio)
 
-This version only contains the bare minimum to run Red-DiscordBot (no Java, so no Audio cog support).
+The default version. It's the same as core, but with Java included so that you can use the Audio cog.
 
-### full
+### extra
 
-This is the version that I use. It is the same as the latest version, but with added packages that at least make these cogs work:
+Same as core, but it has added packages that at least make these cogs work:
 
 - CrabRave
 - NotSoBot
+- ReTrigger (OCR feature)
 
-It will be occasionally updated with more dependencies that popular cogs need. If you need another dependency for your cog, let me know, and I'll consider adding it.
+But remember, no Java, so no Audio cog support.
+
+### extra-audio (Alias: full)
+
+Same as extra, but with Java included so that you can use the Audio cog.
+
+Basically, pick if you want bare minimum (core) or extra 3rd party cog support (extra), then add the "-audio" to the tag if you want the Audio cog to work.
