@@ -23,4 +23,4 @@ echo "|                                            |"
 echo "o--------------------------------------------o"
 
 # Run the command
-/data/venv/bin/redbot-setup "$@"
+python -m redbot.setup "$@"

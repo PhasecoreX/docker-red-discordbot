@@ -44,11 +44,11 @@ while [ "${RETURN_CODE}" -eq 26 ]; do
     set +e
     # If we are running in an interactive shell, we can't (and don't need to) do any of the fancy interrupt catching
     if [ -t 0 ]; then
-        redbot docker ${EXTRA_ARGS:-}
+        python -O -m redbot docker ${EXTRA_ARGS:-}
         RETURN_CODE=$?
     else
         prep_term
-        redbot docker ${EXTRA_ARGS:-} &
+        python -O -m redbot docker ${EXTRA_ARGS:-} &
         wait_term
         RETURN_CODE=$?
     fi

@@ -30,18 +30,18 @@ fi
 # Set configurations
 if [ -n "${OWNER:-}" ]; then
     echo "Setting bot owner..."
-    redbot docker --edit --no-prompt --owner "${OWNER}"
+    python -O -m redbot docker --edit --no-prompt --owner "${OWNER}"
     unset OWNER
 fi
 
 if [ -n "${TOKEN:-}" ]; then
     echo "Setting bot token..."
-    redbot docker --edit --no-prompt --token "${TOKEN}"
+    python -O -m redbot docker --edit --no-prompt --token "${TOKEN}"
     unset TOKEN
 fi
 
 if [ -n "${PREFIXES}" ]; then
     echo "Setting bot prefix(es)..."
-    redbot docker --edit --no-prompt ${PREFIXES}
+    python -O -m redbot docker --edit --no-prompt ${PREFIXES}
     unset PREFIXES
 fi
