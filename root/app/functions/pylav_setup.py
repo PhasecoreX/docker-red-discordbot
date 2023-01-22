@@ -167,6 +167,7 @@ if __name__ == "__main__":
         create_or_update_repo_manager_setting()
         update_existing_commit(current_commit)
         if process is not None:
+            log.info("Waiting for requirements to finish installing")
             process.wait()
         log.info("PyLav setup and update finished")
     except Exception as e:
