@@ -178,7 +178,7 @@ ENV PCX_DISCORDBOT_BUILD ${PCX_DISCORDBOT_BUILD}
 ENV PCX_DISCORDBOT_COMMIT ${PCX_DISCORDBOT_COMMIT}
 ENV PCX_DISCORDBOT_TAG core-pylav
 ENV PYLAV__DATA_FOLDER /data/pylav
-ENV PYLAV__YAML_CONFIG /data/pylav/config.yaml
+ENV PYLAV__YAML_CONFIG /data/pylav/pylav.yaml
 
 COPY root/ /
 
@@ -206,8 +206,7 @@ RUN set -eux; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
         zulu19-ca-jdk-headless; \
-    rm -rf /var/lib/apt/lists/* \
-    ; \
+    rm -rf /var/lib/apt/lists/*; \
     rm /etc/apt/sources.list.d/zulu.list; \
     rm /usr/share/keyrings/azul.gpg; \
     mkdir -p /data/pylav;
@@ -222,7 +221,7 @@ ENV PCX_DISCORDBOT_BUILD ${PCX_DISCORDBOT_BUILD}
 ENV PCX_DISCORDBOT_COMMIT ${PCX_DISCORDBOT_COMMIT}
 ENV PCX_DISCORDBOT_TAG extra-pylav
 ENV PYLAV__DATA_FOLDER /data/pylav
-ENV PYLAV__YAML_CONFIG /data/pylav/config.yaml
+ENV PYLAV__YAML_CONFIG /data/pylav/pylav.yaml
 
 COPY root/ /
 
