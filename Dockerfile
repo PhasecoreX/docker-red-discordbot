@@ -144,7 +144,7 @@ CMD ["/app/start-redbot.sh"]
 
 #######################################################################################
 
-FROM core-build as pylav-core-build
+FROM core-audio-build as core-pylav-build
 
 RUN set -eux; \
 # Install redbot audio dependencies
@@ -152,31 +152,19 @@ RUN set -eux; \
     apt-get install -y --no-install-recommends \
         libaio1  \
         libaio-dev \
-        gnupg \
-        ca-certificates \
-        curl \
     ; \
-    # Users should be using a docker container ghcr.io/drapersniper/pylav-node:master instead of a manage node
-    #  But not all users will be aware of this to lets install java for them
-    curl -s https://repos.azul.com/azul-repo.key | gpg --dearmor -o /usr/share/keyrings/azul.gpg; \
-    echo "deb [signed-by=/usr/share/keyrings/azul.gpg] https://repos.azul.com/zulu/deb stable main" | tee /etc/apt/sources.list.d/zulu.list; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends \
-        zulu19-ca-jdk-headless; \
     rm -rf /var/lib/apt/lists/*; \
-    rm /etc/apt/sources.list.d/zulu.list; \
-    rm /usr/share/keyrings/azul.gpg; \
     mkdir -p /data/pylav;
 
 
-FROM pylav-core-build as pylav-core
+FROM core-pylav-build as core-pylav
 
 ARG PCX_DISCORDBOT_BUILD
 ARG PCX_DISCORDBOT_COMMIT
 
 ENV PCX_DISCORDBOT_BUILD ${PCX_DISCORDBOT_BUILD}
 ENV PCX_DISCORDBOT_COMMIT ${PCX_DISCORDBOT_COMMIT}
-ENV PCX_DISCORDBOT_TAG pylav-core
+ENV PCX_DISCORDBOT_TAG core-pylav
 ENV PYLAV__DATA_FOLDER /data/pylav
 ENV PYLAV__YAML_CONFIG /data/pylav/pylav.yaml
 
@@ -187,7 +175,7 @@ CMD ["/app/start-redbot.sh"]
 
 #######################################################################################
 
-FROM extra-build as pylav-extra-build
+FROM extra-audio-build as extra-pylav-build
 
 RUN set -eux; \
 # Install redbot audio dependencies
@@ -195,31 +183,19 @@ RUN set -eux; \
     apt-get install -y --no-install-recommends \
         libaio1  \
         libaio-dev \
-        gnupg \
-        ca-certificates \
-        curl \
     ; \
-    # Users should be using a docker container ghcr.io/drapersniper/pylav-node:master instead of a manage node
-    #  But not all users will be aware of this to lets install java for them
-    curl -s https://repos.azul.com/azul-repo.key | gpg --dearmor -o /usr/share/keyrings/azul.gpg; \
-    echo "deb [signed-by=/usr/share/keyrings/azul.gpg] https://repos.azul.com/zulu/deb stable main" | tee /etc/apt/sources.list.d/zulu.list; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends \
-        zulu19-ca-jdk-headless; \
     rm -rf /var/lib/apt/lists/*; \
-    rm /etc/apt/sources.list.d/zulu.list; \
-    rm /usr/share/keyrings/azul.gpg; \
     mkdir -p /data/pylav;
 
 
-FROM pylav-extra-build as pylav-extra
+FROM extra-pylav-build as extra-pylav
 
 ARG PCX_DISCORDBOT_BUILD
 ARG PCX_DISCORDBOT_COMMIT
 
 ENV PCX_DISCORDBOT_BUILD ${PCX_DISCORDBOT_BUILD}
 ENV PCX_DISCORDBOT_COMMIT ${PCX_DISCORDBOT_COMMIT}
-ENV PCX_DISCORDBOT_TAG pylav-extra
+ENV PCX_DISCORDBOT_TAG extra-pylav
 ENV PYLAV__DATA_FOLDER /data/pylav
 ENV PYLAV__YAML_CONFIG /data/pylav/pylav.yaml
 
