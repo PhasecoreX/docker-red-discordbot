@@ -150,7 +150,7 @@ CMD ["/app/start-redbot.sh"]
 
 #######################################################################################
 
-FROM core-build as core-pylav-build
+FROM core-build as pylav-core-build
 
 RUN set -eux; \
 # Install pylav dependencies
@@ -163,14 +163,14 @@ RUN set -eux; \
     mkdir -p /data/pylav;
 
 
-FROM core-pylav-build as core-pylav
+FROM pylav-core-build as pylav-core
 
 ARG PCX_DISCORDBOT_BUILD
 ARG PCX_DISCORDBOT_COMMIT
 
 ENV PCX_DISCORDBOT_BUILD ${PCX_DISCORDBOT_BUILD}
 ENV PCX_DISCORDBOT_COMMIT ${PCX_DISCORDBOT_COMMIT}
-ENV PCX_DISCORDBOT_TAG core-pylav
+ENV PCX_DISCORDBOT_TAG pylav-core
 ENV PYLAV__DATA_FOLDER /data/pylav
 ENV PYLAV__YAML_CONFIG /data/pylav/pylav.yaml
 ENV PYLAV__IN_CONTAINER 1
@@ -182,7 +182,7 @@ CMD ["/app/start-redbot.sh"]
 
 #######################################################################################
 
-FROM extra-build as extra-pylav-build
+FROM extra-build as pylav-extra-build
 
 RUN set -eux; \
 # Install pylav dependencies
@@ -195,14 +195,14 @@ RUN set -eux; \
     mkdir -p /data/pylav;
 
 
-FROM extra-pylav-build as extra-pylav
+FROM pylav-extra-build as pylav-extra
 
 ARG PCX_DISCORDBOT_BUILD
 ARG PCX_DISCORDBOT_COMMIT
 
 ENV PCX_DISCORDBOT_BUILD ${PCX_DISCORDBOT_BUILD}
 ENV PCX_DISCORDBOT_COMMIT ${PCX_DISCORDBOT_COMMIT}
-ENV PCX_DISCORDBOT_TAG extra-pylav
+ENV PCX_DISCORDBOT_TAG pylav-extra
 ENV PYLAV__DATA_FOLDER /data/pylav
 ENV PYLAV__YAML_CONFIG /data/pylav/pylav.yaml
 ENV PYLAV__IN_CONTAINER 1
