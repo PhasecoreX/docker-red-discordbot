@@ -220,14 +220,14 @@ jobs:
           docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:extra
           docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:core-audio
           docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:extra-audio
-          docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:extra-pylav
-          docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:core-pylav
+          docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:pylav-extra
+          docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:pylav-core
           docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:core
           docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:extra
           docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:core-audio
           docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:extra-audio
-          docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:extra-pylav
-          docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:core-pylav
+          docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:pylav-extra
+          docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:pylav-core
       -
         name: Check pull
         if: github.event_name != 'pull_request'
@@ -236,23 +236,23 @@ jobs:
           docker pull ${{ env.GHCR_SLUG }}:extra
           docker pull ${{ env.GHCR_SLUG }}:core-audio
           docker pull ${{ env.GHCR_SLUG }}:extra-audio
-          docker pull ${{ env.GHCR_SLUG }}:core-pylav
-          docker pull ${{ env.GHCR_SLUG }}:extra-pylav
+          docker pull ${{ env.GHCR_SLUG }}:pylav-core
+          docker pull ${{ env.GHCR_SLUG }}:pylav-extra
           docker image inspect ${{ env.GHCR_SLUG }}:core
           docker image inspect ${{ env.GHCR_SLUG }}:extra
           docker image inspect ${{ env.GHCR_SLUG }}:core-audio
           docker image inspect ${{ env.GHCR_SLUG }}:extra-audio
-          docker image inspect ${{ env.GHCR_SLUG }}:core-pylav
-          docker image inspect ${{ env.GHCR_SLUG }}:extra-pylav
+          docker image inspect ${{ env.GHCR_SLUG }}:pylav-core
+          docker image inspect ${{ env.GHCR_SLUG }}:pylav-extra
           docker pull ${{ env.DOCK_SLUG }}:core
           docker pull ${{ env.DOCK_SLUG }}:extra
           docker pull ${{ env.DOCK_SLUG }}:core-audio
           docker pull ${{ env.DOCK_SLUG }}:extra-audio
-          docker pull ${{ env.DOCK_SLUG }}:core-pylav
-          docker pull ${{ env.DOCK_SLUG }}:extra-pylav
+          docker pull ${{ env.DOCK_SLUG }}:pylav-core
+          docker pull ${{ env.DOCK_SLUG }}:pylav-extra
           docker image inspect ${{ env.DOCK_SLUG }}:core
           docker image inspect ${{ env.DOCK_SLUG }}:extra
           docker image inspect ${{ env.DOCK_SLUG }}:core-audio
           docker image inspect ${{ env.DOCK_SLUG }}:extra-audio
-          docker image inspect ${{ env.DOCK_SLUG }}:core-pylav
-          docker image inspect ${{ env.DOCK_SLUG }}:extra-pylav
+          docker image inspect ${{ env.DOCK_SLUG }}:pylav-core
+          docker image inspect ${{ env.DOCK_SLUG }}:pylav-extra
