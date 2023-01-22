@@ -165,10 +165,10 @@ jobs:
             ${{ env.GHCR_SLUG }}:core-audio
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Build and push core-pylav
+      - name: Build and push pylav-core
         uses: docker/build-push-action@v3
         with:
-          target: core-pylav
+          target: pylav-core
           platforms: |
             linux/amd64
             linux/arm/v7
@@ -178,8 +178,8 @@ jobs:
           tags: |
             ${{ env.GHCR_SLUG }}:pylav
             ${{ env.DOCK_SLUG }}:pylav
-            ${{ env.GHCR_SLUG }}:core-pylav
-            ${{ env.DOCK_SLUG }}:core-pylav
+            ${{ env.GHCR_SLUG }}:pylav-core
+            ${{ env.DOCK_SLUG }}:pylav-core
             ${{ env.GHCR_SLUG }}:pylav-latest
             ${{ env.DOCK_SLUG }}:pylav-latest
           build-args: |
@@ -187,9 +187,9 @@ jobs:
             PCX_DISCORDBOT_COMMIT=${{ github.sha }}
           cache-from: |
             ${{ env.GHCR_SLUG }}:core
-            ${{ env.GHCR_SLUG }}:core-pylav
+            ${{ env.GHCR_SLUG }}:pylav-core
           labels: ${{ steps.meta.outputs.labels }}
-      - name: Build and push extra-pylav
+      - name: Build and push pylav-extra
         uses: docker/build-push-action@v3
         with:
           target: extra-pylav
@@ -202,13 +202,15 @@ jobs:
           tags: |
             ${{ env.GHCR_SLUG }}:pylav-full
             ${{ env.DOCK_SLUG }}:pylav-full
-            ${{ env.GHCR_SLUG }}:extra-pylav
-            ${{ env.DOCK_SLUG }}:extra-pylav
+            ${{ env.GHCR_SLUG }}:pylav-extra
+            ${{ env.DOCK_SLUG }}:pylav-extra
           build-args: |
             PCX_DISCORDBOT_BUILD=${{ github.run_id }}
             PCX_DISCORDBOT_COMMIT=${{ github.sha }}
           cache-from: |
-            ${{ env.GHCR_SLUG }}:extra-pylav
+            ${{ env.GHCR_SLUG }}:extra-audio
+            ${{ env.GHCR_SLUG }}:pylav-core
+            ${{ env.GHCR_SLUG }}:pylav-extra
           labels: ${{ steps.meta.outputs.labels }}
       -
         name: Check manifest
