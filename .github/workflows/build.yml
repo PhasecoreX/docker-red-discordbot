@@ -88,7 +88,9 @@ jobs:
           build-args: |
             PCX_DISCORDBOT_BUILD=${{ github.run_id }}
             PCX_DISCORDBOT_COMMIT=${{ github.sha }}
-          cache-from: |
+          cache-from: type=gha
+          cache-to: |  
+            type=gha,mode=max
             ${{ env.GHCR_SLUG }}:extra-audio
           labels: ${{ steps.meta.outputs.labels }}
       -
