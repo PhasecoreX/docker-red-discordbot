@@ -164,6 +164,52 @@ jobs:
             ${{ env.GHCR_SLUG }}:core
             ${{ env.GHCR_SLUG }}:core-audio
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Build and push core-pylav
+        uses: docker/build-push-action@v3
+        with:
+          target: core-pylav
+          platforms: |
+            linux/amd64
+            linux/arm/v7
+            linux/arm64
+            linux/386
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: |
+            ${{ env.GHCR_SLUG }}:pylav
+            ${{ env.DOCK_SLUG }}:pylav
+            ${{ env.GHCR_SLUG }}:core-pylav
+            ${{ env.DOCK_SLUG }}:core-pylav
+            ${{ env.GHCR_SLUG }}:pylav-latest
+            ${{ env.DOCK_SLUG }}:pylav-latest
+          build-args: |
+            PCX_DISCORDBOT_BUILD=${{ github.run_id }}
+            PCX_DISCORDBOT_COMMIT=${{ github.sha }}
+          cache-from: |
+            ${{ env.GHCR_SLUG }}:core
+            ${{ env.GHCR_SLUG }}:core-pylav
+          labels: ${{ steps.meta.outputs.labels }}
+      - name: Build and push extra-pylav
+        uses: docker/build-push-action@v3
+        with:
+          target: extra-pylav
+          platforms: |
+            linux/amd64
+            linux/arm/v7
+            linux/arm64
+            linux/386
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: |
+            ${{ env.GHCR_SLUG }}:pylav-full
+            ${{ env.DOCK_SLUG }}:pylav-full
+            ${{ env.GHCR_SLUG }}:extra-pylav
+            ${{ env.DOCK_SLUG }}:extra-pylav
+          build-args: |
+            PCX_DISCORDBOT_BUILD=${{ github.run_id }}
+            PCX_DISCORDBOT_COMMIT=${{ github.sha }}
+          cache-from: |
+            ${{ env.GHCR_SLUG }}:extra-pylav
+          labels: ${{ steps.meta.outputs.labels }}
       -
         name: Check manifest
         if: github.event_name != 'pull_request'
@@ -172,10 +218,14 @@ jobs:
           docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:extra
           docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:core-audio
           docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:extra-audio
+          docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:extra-pylav
+          docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:core-pylav
           docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:core
           docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:extra
           docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:core-audio
           docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:extra-audio
+          docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:extra-pylav
+          docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:core-pylav
       -
         name: Check pull
         if: github.event_name != 'pull_request'
@@ -184,15 +234,23 @@ jobs:
           docker pull ${{ env.GHCR_SLUG }}:extra
           docker pull ${{ env.GHCR_SLUG }}:core-audio
           docker pull ${{ env.GHCR_SLUG }}:extra-audio
+          docker pull ${{ env.GHCR_SLUG }}:core-pylav
+          docker pull ${{ env.GHCR_SLUG }}:extra-pylav
           docker image inspect ${{ env.GHCR_SLUG }}:core
           docker image inspect ${{ env.GHCR_SLUG }}:extra
           docker image inspect ${{ env.GHCR_SLUG }}:core-audio
           docker image inspect ${{ env.GHCR_SLUG }}:extra-audio
+          docker image inspect ${{ env.GHCR_SLUG }}:core-pylav
+          docker image inspect ${{ env.GHCR_SLUG }}:extra-pylav
           docker pull ${{ env.DOCK_SLUG }}:core
           docker pull ${{ env.DOCK_SLUG }}:extra
           docker pull ${{ env.DOCK_SLUG }}:core-audio
           docker pull ${{ env.DOCK_SLUG }}:extra-audio
+          docker pull ${{ env.DOCK_SLUG }}:core-pylav
+          docker pull ${{ env.DOCK_SLUG }}:extra-pylav
           docker image inspect ${{ env.DOCK_SLUG }}:core
           docker image inspect ${{ env.DOCK_SLUG }}:extra
           docker image inspect ${{ env.DOCK_SLUG }}:core-audio
           docker image inspect ${{ env.DOCK_SLUG }}:extra-audio
+          docker image inspect ${{ env.DOCK_SLUG }}:core-pylav
+          docker image inspect ${{ env.DOCK_SLUG }}:extra-pylav
