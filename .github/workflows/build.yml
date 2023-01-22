@@ -173,6 +173,52 @@ jobs:
             linux/amd64
             linux/arm/v7
             linux/arm64
+            linux/386
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: |
+            ${{ env.GHCR_SLUG }}:extra
+            ${{ env.DOCK_SLUG }}:extra
+          build-args: |
+            PCX_DISCORDBOT_BUILD=${{ github.run_id }}
+            PCX_DISCORDBOT_COMMIT=${{ github.sha }}
+          cache-from: |
+            ${{ env.GHCR_SLUG }}:extra-audio
+          labels: ${{ steps.meta.outputs.labels }}
+      -
+        name: Build and push core-audio
+        uses: docker/build-push-action@v3
+        with:
+          target: core-audio
+          platforms: |
+            linux/amd64
+            linux/arm/v7
+            linux/arm64
+            linux/386
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: |
+            ${{ env.GHCR_SLUG }}:audio
+            ${{ env.DOCK_SLUG }}:audio
+            ${{ env.GHCR_SLUG }}:core-audio
+            ${{ env.DOCK_SLUG }}:core-audio
+            ${{ env.GHCR_SLUG }}:latest
+            ${{ env.DOCK_SLUG }}:latest
+          build-args: |
+            PCX_DISCORDBOT_BUILD=${{ github.run_id }}
+            PCX_DISCORDBOT_COMMIT=${{ github.sha }}
+          cache-from: |
+            ${{ env.GHCR_SLUG }}:core
+            ${{ env.GHCR_SLUG }}:core-audio
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Build and push pylav-core
+        uses: docker/build-push-action@v3
+        with:
+          target: core-pylav
+          platforms: |
+            linux/amd64
+            linux/arm/v7
+            linux/arm64
+            linux/386
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
             ${{ env.GHCR_SLUG }}:pylav
