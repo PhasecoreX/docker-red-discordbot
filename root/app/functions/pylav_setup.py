@@ -1,14 +1,11 @@
 import logging
 import pathlib
 import os
-import shlex
 import shutil
 import subprocess
 import sys
 import json
 from typing import Set, Dict, Union
-
-import select
 
 RepoManagerSetting = pathlib.Path("/data/cogs/RepoManager/settings.json")
 DownloaderSetting = pathlib.Path("/data/cogs/Downloader/settings.json")
@@ -18,7 +15,7 @@ CogManagerCogFolder = pathlib.Path("/data/cogs/CogManager/cogs")
 CogRepoURL = "https://github.com/Drapersniper/PyLav-Cogs"
 PyLavHashFile = pathlib.Path("/data/pylav/.hashfile")
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)5s: %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
 
 log = logging.getLogger("PyLavSetup")
 
@@ -106,10 +103,10 @@ def get_requirements_for_all_cogs(cogs: Dict[str, pathlib.Path]) -> Set[str]:
     return requirements
 
 
-def install_requirements(cogs: Dict[str, pathlib.Path]) -> None:
+def install_requirements(cogs: Dict[str, pathlib.Path]) -> None | subprocess.Popen[str]:
     if requirements := get_requirements_for_all_cogs(cogs):
         log.info("Installing requirements: %s", requirements)
-        proc = subprocess.Popen(["/data/venv/bin/pip", "install", "--upgrade", "--no-input", "--no-warn-conflicts", "--require-virtualenv", "--target",  DownloaderLibFolder, *requirements], env=get_git_env(), stdout=subprocess.PIPE, universal_newlines=True)
+        proc = subprocess.Popen(["/data/venv/bin/pip", "install", "--upgrade", "--no-input", "--no-warn-conflicts", "--require-virtualenv", "--upgrade-strategy", "eager", "--target",  DownloaderLibFolder, *requirements], env=get_git_env(), stdout=subprocess.PIPE, universal_newlines=True)
         while True:
             line = proc.stdout.readline()
             if not line:
@@ -117,8 +114,7 @@ def install_requirements(cogs: Dict[str, pathlib.Path]) -> None:
             log.info(line.strip("\n"))
             if line.startswith("Successfully installed"):
                 break
-        proc.kill()
-        proc.terminate()
+        return proc
     log.info("Requirements installed")
 
 
@@ -162,7 +158,7 @@ if __name__ == "__main__":
         sys.exit(0)
     else:
         install_or_update_pylav_cogs(cogs_mapping)
-        install_requirements(cogs_mapping)
+        process = install_requirements(cogs_mapping)
     try:
         log.info("Current PyLav-Cogs Commit: %s", current_commit)
         downloader_data = generate_updated_downloader_setting(cogs_mapping, current_commit)
@@ -170,9 +166,13 @@ if __name__ == "__main__":
         create_or_update_downloader_setting(downloader_data)
         create_or_update_repo_manager_setting()
         update_existing_commit(current_commit)
+        if process is not None:
+            process.wait()
         log.info("PyLav setup and update finished")
-
     except Exception as e:
         log.info("PyLav setup and update failed: %s", e, exc_info=e)
     finally:
+        if process is not None:
+            process.kill()
+            process.terminate()
         sys.exit(0)
