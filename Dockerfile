@@ -144,7 +144,7 @@ CMD ["/app/start-redbot.sh"]
 
 #######################################################################################
 
-FROM core-build as pylav-core-build
+FROM core-audio-build as pylav-core-build
 
 RUN set -eux; \
 # Install redbot audio dependencies
@@ -152,20 +152,8 @@ RUN set -eux; \
     apt-get install -y --no-install-recommends \
         libaio1  \
         libaio-dev \
-        gnupg \
-        ca-certificates \
-        curl \
     ; \
-    # Users should be using a docker container ghcr.io/drapersniper/pylav-node:master instead of a manage node
-    #  But not all users will be aware of this to lets install java for them
-    curl -s https://repos.azul.com/azul-repo.key | gpg --dearmor -o /usr/share/keyrings/azul.gpg; \
-    echo "deb [signed-by=/usr/share/keyrings/azul.gpg] https://repos.azul.com/zulu/deb stable main" | tee /etc/apt/sources.list.d/zulu.list; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends \
-        zulu19-ca-jdk-headless; \
     rm -rf /var/lib/apt/lists/*; \
-    rm /etc/apt/sources.list.d/zulu.list; \
-    rm /usr/share/keyrings/azul.gpg; \
     mkdir -p /data/pylav;
 
 
@@ -187,7 +175,7 @@ CMD ["/app/start-redbot.sh"]
 
 #######################################################################################
 
-FROM extra-build as pylav-extra-build
+FROM audio-extra-build as pylav-extra-build
 
 RUN set -eux; \
 # Install redbot audio dependencies
@@ -195,20 +183,8 @@ RUN set -eux; \
     apt-get install -y --no-install-recommends \
         libaio1  \
         libaio-dev \
-        gnupg \
-        ca-certificates \
-        curl \
     ; \
-    # Users should be using a docker container ghcr.io/drapersniper/pylav-node:master instead of a manage node
-    #  But not all users will be aware of this to lets install java for them
-    curl -s https://repos.azul.com/azul-repo.key | gpg --dearmor -o /usr/share/keyrings/azul.gpg; \
-    echo "deb [signed-by=/usr/share/keyrings/azul.gpg] https://repos.azul.com/zulu/deb stable main" | tee /etc/apt/sources.list.d/zulu.list; \
-    apt-get update; \
-    apt-get install -y --no-install-recommends \
-        zulu19-ca-jdk-headless; \
     rm -rf /var/lib/apt/lists/*; \
-    rm /etc/apt/sources.list.d/zulu.list; \
-    rm /usr/share/keyrings/azul.gpg; \
     mkdir -p /data/pylav;
 
 

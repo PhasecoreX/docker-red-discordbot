@@ -186,7 +186,7 @@ jobs:
             PCX_DISCORDBOT_BUILD=${{ github.run_id }}
             PCX_DISCORDBOT_COMMIT=${{ github.sha }}
           cache-from: |
-            ${{ env.GHCR_SLUG }}:core
+            ${{ env.GHCR_SLUG }}:core-audio
             ${{ env.GHCR_SLUG }}:pylav-core
           labels: ${{ steps.meta.outputs.labels }}
       - name: Build and push pylav-extra
