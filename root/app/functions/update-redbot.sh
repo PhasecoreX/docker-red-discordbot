@@ -11,6 +11,9 @@ fi
 SETUPTOOLS_EXTRAS=""
 if [ "${STORAGE_TYPE}" != "json" ]; then
     SETUPTOOLS_EXTRAS="[${STORAGE_TYPE}]"
+else
+  # Install/Update PyLav for JSON configs
+  python /app/functions/pylav_setup.py
 fi
 # Clone/Pull/Install/Update PyLav Cogs
 python /app/functions/pylav_setup.py
