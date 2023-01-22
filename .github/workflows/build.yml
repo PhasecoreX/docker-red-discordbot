@@ -27,8 +27,8 @@ jobs:
       packages: write
     env:
       TITLE: Red-DiscordBot
-      GHCR_SLUG: ghcr.io/phasecorex/red-discordbot
-      DOCK_SLUG: docker.io/phasecorex/red-discordbot
+      GHCR_SLUG: ghcr.io/Drapersniper/red-discordbot
+      DOCK_SLUG: docker.io/Drapersniper/red-discordbot
     steps:
       -
         name: Checkout
