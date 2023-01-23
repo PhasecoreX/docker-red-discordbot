@@ -171,9 +171,7 @@ jobs:
           target: core-pylav
           platforms: |
             linux/amd64
-            linux/arm/v7
             linux/arm64
-            linux/386
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
             ${{ env.GHCR_SLUG }}:extra
