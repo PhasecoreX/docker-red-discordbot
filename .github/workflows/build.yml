@@ -194,7 +194,6 @@ jobs:
           target: extra-pylav
           platforms: |
             linux/amd64
-            linux/arm/v7
             linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
