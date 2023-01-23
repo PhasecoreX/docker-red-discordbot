@@ -124,7 +124,7 @@ def generate_updated_downloader_setting(cogs: Dict[str, pathlib.Path], commit_ha
             "repo_name": "pylav",
             "module_name": cog.name,
             "commit": commit_hash,
-            "pinned": False,
+            "pinned": True,
         }
         for cog in cogs.values()
     }
