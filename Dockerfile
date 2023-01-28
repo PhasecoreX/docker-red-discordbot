@@ -44,6 +44,7 @@ ARG PCX_DISCORDBOT_COMMIT
 ENV PCX_DISCORDBOT_BUILD ${PCX_DISCORDBOT_BUILD}
 ENV PCX_DISCORDBOT_COMMIT ${PCX_DISCORDBOT_COMMIT}
 ENV PCX_DISCORDBOT_TAG core
+ENV PYLAV__IN_CONTAINER 1
 
 COPY root/ /
 
@@ -82,6 +83,7 @@ ARG PCX_DISCORDBOT_COMMIT
 ENV PCX_DISCORDBOT_BUILD ${PCX_DISCORDBOT_BUILD}
 ENV PCX_DISCORDBOT_COMMIT ${PCX_DISCORDBOT_COMMIT}
 ENV PCX_DISCORDBOT_TAG extra
+ENV PYLAV__IN_CONTAINER 1
 
 COPY root/ /
 
@@ -109,6 +111,7 @@ ARG PCX_DISCORDBOT_COMMIT
 ENV PCX_DISCORDBOT_BUILD ${PCX_DISCORDBOT_BUILD}
 ENV PCX_DISCORDBOT_COMMIT ${PCX_DISCORDBOT_COMMIT}
 ENV PCX_DISCORDBOT_TAG core-audio
+ENV PYLAV__IN_CONTAINER 1
 
 COPY root/ /
 
@@ -136,6 +139,7 @@ ARG PCX_DISCORDBOT_COMMIT
 ENV PCX_DISCORDBOT_BUILD ${PCX_DISCORDBOT_BUILD}
 ENV PCX_DISCORDBOT_COMMIT ${PCX_DISCORDBOT_COMMIT}
 ENV PCX_DISCORDBOT_TAG extra-audio
+ENV PYLAV__IN_CONTAINER 1
 
 COPY root/ /
 
@@ -144,7 +148,7 @@ CMD ["/app/start-redbot.sh"]
 
 #######################################################################################
 
-FROM core-audio-build as core-pylav-build
+FROM core-build as core-pylav-build
 
 RUN set -eux; \
 # Install redbot audio dependencies
@@ -167,6 +171,7 @@ ENV PCX_DISCORDBOT_COMMIT ${PCX_DISCORDBOT_COMMIT}
 ENV PCX_DISCORDBOT_TAG core-pylav
 ENV PYLAV__DATA_FOLDER /data/pylav
 ENV PYLAV__YAML_CONFIG /data/pylav/pylav.yaml
+ENV PYLAV__IN_CONTAINER 1
 
 COPY root/ /
 
@@ -175,7 +180,7 @@ CMD ["/app/start-redbot.sh"]
 
 #######################################################################################
 
-FROM extra-audio-build as extra-pylav-build
+FROM extra-build as extra-pylav-build
 
 RUN set -eux; \
 # Install redbot audio dependencies
@@ -198,6 +203,7 @@ ENV PCX_DISCORDBOT_COMMIT ${PCX_DISCORDBOT_COMMIT}
 ENV PCX_DISCORDBOT_TAG extra-pylav
 ENV PYLAV__DATA_FOLDER /data/pylav
 ENV PYLAV__YAML_CONFIG /data/pylav/pylav.yaml
+ENV PYLAV__IN_CONTAINER 1
 
 COPY root/ /
 
