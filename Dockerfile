@@ -150,7 +150,7 @@ CMD ["/app/start-redbot.sh"]
 
 #######################################################################################
 
-FROM core-audio-build as core-pylav-build
+FROM core-build as core-pylav-build
 
 RUN set -eux; \
 # Install pylav dependencies
@@ -182,7 +182,7 @@ CMD ["/app/start-redbot.sh"]
 
 #######################################################################################
 
-FROM extra-audio-build as extra-pylav-build
+FROM extra-build as extra-pylav-build
 
 RUN set -eux; \
 # Install pylav dependencies
