@@ -151,7 +151,7 @@ CMD ["/app/start-redbot.sh"]
 FROM core-build as core-pylav-build
 
 RUN set -eux; \
-# Install redbot audio dependencies
+# Install pylav dependencies
     apt-get update; \
     apt-get install -y --no-install-recommends \
         libaio1  \
@@ -183,7 +183,7 @@ CMD ["/app/start-redbot.sh"]
 FROM extra-build as extra-pylav-build
 
 RUN set -eux; \
-# Install redbot audio dependencies
+# Install pylav dependencies
     apt-get update; \
     apt-get install -y --no-install-recommends \
         libaio1  \
