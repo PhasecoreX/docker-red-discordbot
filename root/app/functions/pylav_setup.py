@@ -22,8 +22,8 @@ log = logging.getLogger("PyLavSetup")
 STORAGE_TYPE = os.environ.get("STORAGE_TYPE")
 
 if not STORAGE_TYPE:
-    _data = json.load(pathlib.Path("/data/config.json").open("r", encoding="utf-8"))
-    STORAGE_TYPE = _data["docker"]["STORAGE_TYPE"]
+    with pathlib.Path("/data/config.json").open("r", encoding="utf-8") as __f:
+        STORAGE_TYPE = json.load(__f)["docker"]["STORAGE_TYPE"]
 
 
 IS_JSON = STORAGE_TYPE.upper() == "JSON"
