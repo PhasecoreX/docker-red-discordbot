@@ -76,7 +76,7 @@ def clone_or_update_pylav_repo() -> str:
         log.info("Updating PyLav repo")
         subprocess.call(["git", "reset", "--hard", "HEAD", "-q"], cwd=RepoManagerRepoFolder, env=env)
         subprocess.call(["git", "clean", "-f", "-d", "-q"], cwd=RepoManagerRepoFolder, env=env)
-        subprocess.call(["git", "pull", "-q"], cwd=RepoManagerRepoFolder, env=env)
+        subprocess.call(["git", "pull", "-q", "--rebase", "--autostash"], cwd=RepoManagerRepoFolder, env=env)
     else:
         log.info("Cloning PyLav repo")
         subprocess.call(["git", "clone", CogRepoURL, RepoManagerRepoFolder], cwd=RepoManagerRepoFolder, env=env)
