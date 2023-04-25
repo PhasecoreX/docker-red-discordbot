@@ -80,7 +80,7 @@ def clone_or_update_pylav_repo() -> str:
     else:
         log.info("Cloning PyLav repo")
         subprocess.call(["git", "clone", CogRepoURL, RepoManagerRepoFolder], cwd=RepoManagerRepoFolder, env=env)
-    return subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=RepoManagerRepoFolder, env=env).decode().strip()
+    return subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=RepoManagerRepoFolder, env=env).decode().strip()
 
 
 def get_pylav_cogs() -> Dict[str, pathlib.Path]:
@@ -118,7 +118,24 @@ def get_requirements_for_all_cogs(cogs: Dict[str, pathlib.Path]) -> Set[str]:
 def install_requirements(cogs: Dict[str, pathlib.Path]) -> None | subprocess.Popen[str]:
     if requirements := get_requirements_for_all_cogs(cogs):
         log.info("Installing requirements: %s", requirements)
-        proc = subprocess.Popen(["/data/venv/bin/pip", "install", "--upgrade", "--no-input", "--no-warn-conflicts", "--require-virtualenv", "--upgrade-strategy", "eager", "--target",  DownloaderLibFolder, *requirements], env=get_git_env(), stdout=subprocess.PIPE, universal_newlines=True)
+        proc = subprocess.Popen(
+            [
+                "/data/venv/bin/pip",
+                "install",
+                "--upgrade",
+                "--no-input",
+                "--no-warn-conflicts",
+                "--require-virtualenv",
+                "--upgrade-strategy",
+                "eager",
+                "--target",
+                DownloaderLibFolder,
+                *requirements,
+            ],
+            env=get_git_env(),
+            stdout=subprocess.PIPE,
+            universal_newlines=True,
+        )
         while True:
             line = proc.stdout.readline()
             if not line:
@@ -130,7 +147,9 @@ def install_requirements(cogs: Dict[str, pathlib.Path]) -> None | subprocess.Pop
     log.info("Requirements installed")
 
 
-def generate_updated_downloader_setting(cogs: Dict[str, pathlib.Path], commit_hash: str) -> Dict[str, Dict[str, Union[str, bool]]]:
+def generate_updated_downloader_setting(
+    cogs: Dict[str, pathlib.Path], commit_hash: str
+) -> Dict[str, Dict[str, Union[str, bool]]]:
     return {
         cog.name: {
             "repo_name": "pylav",
