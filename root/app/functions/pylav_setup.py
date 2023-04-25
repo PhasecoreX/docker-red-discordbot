@@ -19,6 +19,18 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)5s: %(me
 
 log = logging.getLogger("PyLavSetup")
 
+STORAGE_TYPE = os.environ.get("STORAGE_TYPE")
+
+if not STORAGE_TYPE:
+    _data = json.load(pathlib.Path("/data/config.json").open("r", encoding="utf-8"))
+    STORAGE_TYPE = _data["docker"]["STORAGE_TYPE"]
+
+
+IS_JSON = STORAGE_TYPE == "json"
+
+if not IS_JSON:
+    RepoManagerRepoFolder = pathlib.Path("/data/pylav/cogs")
+
 
 def get_git_env() -> Dict[str, str]:
     env = os.environ.copy()
@@ -157,14 +169,16 @@ if __name__ == "__main__":
         log.info("PyLav is up to date")
         sys.exit(0)
     else:
-        install_or_update_pylav_cogs(cogs_mapping)
+        if IS_JSON:
+            install_or_update_pylav_cogs(cogs_mapping)
         process = install_requirements(cogs_mapping)
     try:
         log.info("Current PyLav-Cogs Commit: %s", current_commit)
         downloader_data = generate_updated_downloader_setting(cogs_mapping, current_commit)
         log.info("Updated Downloader Data: %s", downloader_data)
-        create_or_update_downloader_setting(downloader_data)
-        create_or_update_repo_manager_setting()
+        if IS_JSON:
+            create_or_update_downloader_setting(downloader_data)
+            create_or_update_repo_manager_setting()
         update_existing_commit(current_commit)
         if process is not None:
             log.info("Waiting for requirements to finish installing")
