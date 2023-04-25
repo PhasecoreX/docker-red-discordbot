@@ -26,7 +26,7 @@ if not STORAGE_TYPE:
     STORAGE_TYPE = _data["docker"]["STORAGE_TYPE"]
 
 
-IS_JSON = STORAGE_TYPE == "json"
+IS_JSON = STORAGE_TYPE.upper() == "JSON"
 
 if not IS_JSON:
     RepoManagerRepoFolder = pathlib.Path("/data/pylav/cogs")
