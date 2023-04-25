@@ -9,12 +9,9 @@ if [ -z "${STORAGE_TYPE:-}" ]; then
     STORAGE_TYPE=$(jq -r .docker.STORAGE_TYPE /data/config.json | tr '[:upper:]' '[:lower:]')
 fi
 SETUPTOOLS_EXTRAS=""
-if [ "${STORAGE_TYPE}" != "json" ]; then
-    SETUPTOOLS_EXTRAS="[${STORAGE_TYPE}]"
-else
-  # Install/Update PyLav for JSON configs
-  python /app/functions/pylav_setup.py
-fi
+
+# Clone/Pull/Install/Update PyLav Cogs
+python /app/functions/pylav_setup.py
 
 if [ -z "${PYLAV__DOCKER_DEV_SKIP_INSTALL:-}" ]; then
   # Clone/Pull/Install/Update PyLav Cogs
