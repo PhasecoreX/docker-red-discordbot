@@ -12,7 +12,7 @@ DownloaderSetting = pathlib.Path("/data/cogs/Downloader/settings.json")
 DownloaderLibFolder = pathlib.Path("/data/cogs/Downloader/lib")
 RepoManagerRepoFolder = pathlib.Path("/data/cogs/RepoManager/repos/pylav")
 CogManagerCogFolder = pathlib.Path("/data/cogs/CogManager/cogs")
-CogRepoURL = "https://github.com/Drapersniper/PyLav-Cogs"
+CogRepoURL = "https://github.com/PyLav/Red-Cogs"
 PyLavHashFile = pathlib.Path("/data/pylav/.hashfile")
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)5s: %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
@@ -144,12 +144,12 @@ def update_existing_commit(commit_hash: str) -> None:
 
 if __name__ == "__main__":
     if (PCX_DISCORDBOT_TAG := os.getenv("PCX_DISCORDBOT_TAG")) is None or "pylav" not in PCX_DISCORDBOT_TAG:
-        # This script was called outside of a docker container or the docker container is not a pylav image
+        # This script was called outside a docker container or the docker container is not a pylav image
         log.info("Skipping PyLav setup and update")
         sys.exit(0)
     for folder in (DownloaderLibFolder, RepoManagerRepoFolder, CogManagerCogFolder):
         if not folder.exists():
-            folder.mkdir(parents=True, mode=0o777)
+            folder.mkdir(parents=True, mode=0o776)
     current_commit = clone_or_update_pylav_repo()
     existing_commit = get_existing_commit()
     cogs_mapping = get_pylav_cogs()
