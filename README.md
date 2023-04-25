@@ -240,3 +240,33 @@ But remember, no Java, so no Audio cog support.
 Same as extra, but with Java included so that you can use the Audio cog.
 
 Basically, pick if you want bare minimum (core) or extra 3rd party cog support (extra), then add the "-audio" to the tag if you want the Audio cog to work.
+
+
+### core-pylav (Alias: pylav, pylav-latest)
+Same as core, but it adds the [PyLav cogs](https://github.com/PyLav/Red-Cogs) to the bot for users using the JSON driver.
+
+> **Note**
+> If you are not using the JSON config driver with Red, PyLav Cogs can be loaded after running `[p]addpath /data/pylav/cogs`
+> If you use the JSON config driver, this image will automatically install the PyLav repo and cogs for you.
+> This image will always keep the PyLav dependencies and cog up to date on every restart.
+
+Make sure to read [pylav.yaml Setup (Docker)](https://github.com/PyLav/PyLav/blob/master/SETUP.md#pylavyaml-setup-docker) and [Docker Compose](https://github.com/PyLav/PyLav/blob/master/SETUP.md#with-docker) to see the mountable volumes, and environment variables.
+
+> **Warning**
+> PyLav requires a PostgresSQL Database to store its data, this is completely independent to Red's Postgres config driver.
+> PyLav requires adittional configuration not covered here, make sure to follow the instructions in its SETUP documentation.
+
+
+### extra-pylav (Alias: pylav-full)
+Same as extra, but it adds the [PyLav cogs](https://github.com/PyLav/Red-Cogs) to the bot for users using the JSON driver.
+
+> **Note**
+> If you are not using the JSON config driver with Red, PyLav Cogs can be loaded after running `[p]addpath /data/pylav/cogs`
+> If you use the JSON config driver, this image will automatically install the PyLav repo and cogs for you.
+> This image will always keep the PyLav dependencies and cog up to date on every restart.
+
+Make sure to read [pylav.yaml Setup (Docker)](https://github.com/PyLav/PyLav/blob/master/SETUP.md#pylavyaml-setup-docker) and [Docker Compose](https://github.com/PyLav/PyLav/blob/master/SETUP.md#with-docker) to see the mountable volumes, and environment variables.
+
+> **Warning**
+> PyLav requires a PostgresSQL Database to store its data, this is completely independent to Red's Postgres config driver.
+> PyLav requires adittional configuration not covered here, make sure to follow the instructions in its SETUP documentation.
