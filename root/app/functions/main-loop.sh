@@ -44,10 +44,12 @@ while [ "${RETURN_CODE}" -eq 26 ]; do
     set +e
     # If we are running in an interactive shell, we can't (and don't need to) do any of the fancy interrupt catching
     if [ -t 0 ]; then
+        # shellcheck disable=SC2086
         python -O -m redbot docker ${EXTRA_ARGS:-}
         RETURN_CODE=$?
     else
         prep_term
+        # shellcheck disable=SC2086
         python -O -m redbot docker ${EXTRA_ARGS:-} &
         wait_term
         RETURN_CODE=$?
