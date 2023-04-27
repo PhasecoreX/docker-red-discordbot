@@ -42,6 +42,7 @@ fi
 
 if [ -n "${PREFIXES}" ]; then
     echo "Setting bot prefix(es)..."
+    # shellcheck disable=SC2086
     python -O -m redbot docker --edit --no-prompt ${PREFIXES}
     unset PREFIXES
 fi
