@@ -64,10 +64,8 @@ RUN set -eux; \
         # CrabRave
         ffmpeg \
         imagemagick \
-        # RSS \
-        gfortran \
-        libopenblas-dev \
-        liblapack-dev \
+        # RSS (SciPy has no wheels for armv7)
+        $([ "$(uname --machine)" = "armv7l" ] && echo "gfortran libopenblas-dev liblapack-dev") \
         # ReTrigger
         tesseract-ocr \
     ; \
@@ -150,7 +148,7 @@ CMD ["/app/start-redbot.sh"]
 
 #######################################################################################
 
-FROM core-audio-build as core-pylav-build
+FROM core-build as core-pylav-build
 
 RUN set -eux; \
 # Install pylav dependencies
@@ -182,7 +180,7 @@ CMD ["/app/start-redbot.sh"]
 
 #######################################################################################
 
-FROM extra-audio-build as extra-pylav-build
+FROM extra-build as extra-pylav-build
 
 RUN set -eux; \
 # Install pylav dependencies
