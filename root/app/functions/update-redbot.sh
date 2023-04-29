@@ -12,8 +12,11 @@ SETUPTOOLS_EXTRAS=""
 if [ "${STORAGE_TYPE}" != "json" ]; then
     SETUPTOOLS_EXTRAS="[${STORAGE_TYPE}]"
 fi
-# Clone/Pull/Install/Update PyLav Cogs
-python /app/functions/pylav_setup.py
+
+if [ -z "${PYLAV__DOCKER_DEV_SKIP_INSTALL:-}" ]; then
+  # Clone/Pull/Install/Update PyLav Cogs
+  python /app/functions/pylav_setup.py
+fi
 
 if [ -z "${PYLAV__DOCKER_DEV_SKIP_INSTALL:-}" ]; then
   # Clone/Pull/Install/Update PyLav Cogs
