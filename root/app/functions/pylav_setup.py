@@ -5,7 +5,7 @@ import shutil
 import subprocess
 import sys
 import json
-from typing import Set, Dict, Union
+from typing import Set, Dict, Union, Any
 
 RepoManagerSetting = pathlib.Path("/data/cogs/RepoManager/settings.json")
 DownloaderSetting = pathlib.Path("/data/cogs/Downloader/settings.json")
@@ -13,23 +13,23 @@ DownloaderLibFolder = pathlib.Path("/data/cogs/Downloader/lib")
 RepoManagerRepoFolder = pathlib.Path("/data/cogs/RepoManager/repos/pylav")
 CogManagerCogFolder = pathlib.Path("/data/cogs/CogManager/cogs")
 CogRepoURL = "https://github.com/PyLav/Red-Cogs"
-PyLavHashFile = pathlib.Path("/data/pylav/.hashfile")
+PyLavHashFile = pathlib.Path("/pylav/.hashfile")
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)5s: %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
 
 log = logging.getLogger("PyLavSetup")
 
-STORAGE_TYPE = os.environ.get("STORAGE_TYPE")
 
-if not STORAGE_TYPE:
-    with pathlib.Path("/data/config.json").open("r", encoding="utf-8") as __f:
-        STORAGE_TYPE = json.load(__f)["docker"]["STORAGE_TYPE"]
+DEV_PYLAV = os.environ.get("PYLAV__DEV_LIB")
+DEV_PYLAV_COGS = os.environ.get("PYLAV__DEV_COG")
 
 
-IS_JSON = STORAGE_TYPE.upper() == "JSON"
+with pathlib.Path("/data/config.json").open("r", encoding="utf-8") as __f:
+    IS_JSON = json.load(__f)["docker"]["STORAGE_TYPE"].upper() == "JSON"
+
 
 if not IS_JSON:
-    RepoManagerRepoFolder = pathlib.Path("/data/pylav/cogs")
+    RepoManagerRepoFolder = pathlib.Path("/pylav/git-cogs")
 
 
 def get_git_env() -> Dict[str, str]:
@@ -84,11 +84,20 @@ def clone_or_update_pylav_repo() -> str:
 
 
 def get_pylav_cogs() -> Dict[str, pathlib.Path]:
-    return {
-        cog.name: cog
-        for cog in RepoManagerRepoFolder.iterdir()
-        if cog.is_dir() and (cog.name.startswith("pl") or cog.name == "audio")
-    }
+
+    return (
+        {
+            cog.name: cog
+            for cog in RepoManagerRepoFolder.iterdir()
+            if cog.is_dir() and (cog.name.startswith("pl") or cog.name == "audio")
+        }
+        if not DEV_PYLAV_COGS
+        else {
+            cog.name: cog
+            for cog in pathlib.Path(DEV_PYLAV_COGS).iterdir()
+            if cog.is_dir() and (cog.name.startswith("pl") or cog.name == "audio")
+        }
+    )
 
 
 def copy_and_overwrite(from_path: Union[str, os.PathLike[str]], to_path: Union[str, os.PathLike[str]]) -> None:
@@ -111,11 +120,20 @@ def get_requirements_for_all_cogs(cogs: Dict[str, pathlib.Path]) -> Set[str]:
                 data = json.load(f)
             if "requirements" in data:
                 for req in data["requirements"]:
+                    if DEV_PYLAV and req.startswith("Py-Lav"):
+                        continue
                     requirements.add(req)
     return requirements
 
 
-def install_requirements(cogs: Dict[str, pathlib.Path]) -> None | subprocess.Popen[str]:
+def install_requirements(
+    cogs: Dict[str, pathlib.Path]
+) -> tuple[
+    subprocess.Popen[str] | subprocess.Popen[str | bytes | Any] | None,
+    subprocess.Popen[str] | subprocess.Popen[str | bytes | Any] | None,
+]:
+    proc = None
+    proc2 = None
     if requirements := get_requirements_for_all_cogs(cogs):
         log.info("Installing requirements: %s", requirements)
         proc = subprocess.Popen(
@@ -143,8 +161,38 @@ def install_requirements(cogs: Dict[str, pathlib.Path]) -> None | subprocess.Pop
             log.info(line.strip("\n"))
             if line.startswith("Successfully installed"):
                 break
-        return proc
+
+    if DEV_PYLAV:
+        log.info("Installing editable PyLav")
+        proc2 = subprocess.Popen(
+            [
+                "/data/venv/bin/pip",
+                "install",
+                "--upgrade",
+                "--no-input",
+                "--no-warn-conflicts",
+                "--require-virtualenv",
+                "--upgrade-strategy",
+                "eager",
+                "--target",
+                DownloaderLibFolder,
+                "--editable",
+                ".[all]",
+            ],
+            cwd=DEV_PYLAV,
+            env=get_git_env(),
+            stdout=subprocess.PIPE,
+            universal_newlines=True,
+        )
+        while True:
+            line = proc2.stdout.readline()
+            if not line:
+                break
+            log.info(line.strip("\n"))
+            if line.startswith("Successfully installed"):
+                break
     log.info("Requirements installed")
+    return proc, proc2
 
 
 def generate_updated_downloader_setting(
@@ -181,27 +229,34 @@ if __name__ == "__main__":
     for folder in (DownloaderLibFolder, RepoManagerRepoFolder, CogManagerCogFolder):
         if not folder.exists():
             folder.mkdir(parents=True, mode=0o776)
-    current_commit = clone_or_update_pylav_repo()
-    existing_commit = get_existing_commit()
+    if not DEV_PYLAV_COGS:
+        current_commit = clone_or_update_pylav_repo()
+        existing_commit = get_existing_commit()
+    else:
+        current_commit = 1
+        existing_commit = 0
     cogs_mapping = get_pylav_cogs()
     if current_commit == existing_commit:
         log.info("PyLav is up to date")
         sys.exit(0)
     else:
-        if IS_JSON:
-            install_or_update_pylav_cogs(cogs_mapping)
-        process = install_requirements(cogs_mapping)
+        install_or_update_pylav_cogs(cogs_mapping)
+        process, process2 = install_requirements(cogs_mapping)
     try:
         log.info("Current PyLav-Cogs Commit: %s", current_commit)
         downloader_data = generate_updated_downloader_setting(cogs_mapping, current_commit)
-        log.info("Updated Downloader Data: %s", downloader_data)
         if IS_JSON:
+            log.info("Updating Downloader Data: %s", downloader_data)
             create_or_update_downloader_setting(downloader_data)
             create_or_update_repo_manager_setting()
-        update_existing_commit(current_commit)
+        if not DEV_PYLAV_COGS:
+            update_existing_commit(current_commit)
         if process is not None:
             log.info("Waiting for requirements to finish installing")
             process.wait()
+        if process2 is not None:
+            log.info("Waiting for PyLav to finish installing")
+            process2.wait()
         log.info("PyLav setup and update finished")
     except Exception as e:
         log.info("PyLav setup and update failed: %s", e, exc_info=e)
@@ -209,4 +264,7 @@ if __name__ == "__main__":
         if process is not None:
             process.kill()
             process.terminate()
+        if process2 is not None:
+            process2.kill()
+            process2.terminate()
         sys.exit(0)
