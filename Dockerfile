@@ -63,10 +63,8 @@ RUN set -eux; \
         # CrabRave
         ffmpeg \
         imagemagick \
-        # RSS \
-        gfortran \
-        libopenblas-dev \
-        liblapack-dev \
+        # RSS (SciPy has no wheels for armv7)
+        $([ "$(uname --machine)" = "armv7l" ] && echo "gfortran libopenblas-dev liblapack-dev") \
         # ReTrigger
         tesseract-ocr \
     ; \
