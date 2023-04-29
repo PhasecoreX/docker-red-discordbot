@@ -242,7 +242,7 @@ Same as extra, but with Java included so that you can use the Audio cog.
 Basically, pick if you want bare minimum (core) or extra 3rd party cog support (extra), then add the "-audio" to the tag if you want the Audio cog to work.
 
 
-### core-pylav (Alias: pylav, pylav-latest)
+### core-pylav (Alias: pylav, latest-pylav)
 Same as core, but it adds the [PyLav cogs](https://github.com/PyLav/Red-Cogs) to the bot for users using the JSON driver.
 
 > **Note**
@@ -257,7 +257,7 @@ Make sure to read [pylav.yaml Setup (Docker)](https://github.com/PyLav/PyLav/blo
 > PyLav requires adittional configuration not covered here, make sure to follow the instructions in its SETUP documentation.
 
 
-### extra-pylav (Alias: pylav-full)
+### extra-pylav (Alias: full-pylav)
 Same as extra, but it adds the [PyLav cogs](https://github.com/PyLav/Red-Cogs) to the bot for users using the JSON driver.
 
 > **Note**

@@ -179,8 +179,8 @@ jobs:
             ${{ env.DOCK_SLUG }}:pylav
             ${{ env.GHCR_SLUG }}:core-pylav
             ${{ env.DOCK_SLUG }}:core-pylav
-            ${{ env.GHCR_SLUG }}:pylav-latest
-            ${{ env.DOCK_SLUG }}:pylav-latest
+            ${{ env.GHCR_SLUG }}:latest-pylav
+            ${{ env.DOCK_SLUG }}:latest-pylav
           build-args: |
             PCX_DISCORDBOT_BUILD=${{ github.run_id }}
             PCX_DISCORDBOT_COMMIT=${{ github.sha }}
@@ -199,8 +199,8 @@ jobs:
             linux/386
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
-            ${{ env.GHCR_SLUG }}:pylav-full
-            ${{ env.DOCK_SLUG }}:pylav-full
+            ${{ env.GHCR_SLUG }}:full-pylav
+            ${{ env.DOCK_SLUG }}:full-pylav
             ${{ env.GHCR_SLUG }}:extra-pylav
             ${{ env.DOCK_SLUG }}:extra-pylav
           build-args: |
