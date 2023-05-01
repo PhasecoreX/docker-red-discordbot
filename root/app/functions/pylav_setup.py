@@ -174,8 +174,6 @@ def install_requirements(
                 "--require-virtualenv",
                 "--upgrade-strategy",
                 "eager",
-                "--target",
-                DownloaderLibFolder,
                 "--editable",
                 ".[all]",
             ],
