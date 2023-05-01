@@ -100,16 +100,20 @@ def get_pylav_cogs() -> Dict[str, pathlib.Path]:
     )
 
 
-def copy_and_overwrite(from_path: Union[str, os.PathLike[str]], to_path: Union[str, os.PathLike[str]]) -> None:
+def copy_and_overwrite(from_path: Union[str, os.PathLike[str]], to_path: Union[str, os.PathLike[str]], symlink: bool = False) -> None:
     if os.path.exists(to_path):
         shutil.rmtree(to_path)
-    log.info("Copying %s to %s", from_path, to_path)
-    shutil.copytree(from_path, to_path)
+    if symlink:
+        log.info("Symlinking %s to %s", from_path, to_path)
+        os.symlink(from_path, to_path)
+    else:
+        log.info("Copying %s to %s", from_path, to_path)
+        shutil.copytree(from_path, to_path)
 
 
-def install_or_update_pylav_cogs(cogs: Dict[str, pathlib.Path]) -> None:
+def install_or_update_pylav_cogs(cogs: Dict[str, pathlib.Path], symlink: bool = False) -> None:
     for cog in cogs.values():
-        copy_and_overwrite(cog, CogManagerCogFolder / cog.name)
+        copy_and_overwrite(cog, CogManagerCogFolder / cog.name, symlink=symlink)
 
 
 def get_requirements_for_all_cogs(cogs: Dict[str, pathlib.Path]) -> Set[str]:
@@ -238,7 +242,7 @@ if __name__ == "__main__":
         log.info("PyLav is up to date")
         sys.exit(0)
     else:
-        install_or_update_pylav_cogs(cogs_mapping)
+        install_or_update_pylav_cogs(cogs_mapping, symlink=True)
         process, process2 = install_requirements(cogs_mapping)
     try:
         log.info("Current PyLav-Cogs Commit: %s", current_commit)
