@@ -13,7 +13,8 @@ DownloaderLibFolder = pathlib.Path("/data/cogs/Downloader/lib")
 RepoManagerRepoFolder = pathlib.Path("/data/cogs/RepoManager/repos/pylav")
 CogManagerCogFolder = pathlib.Path("/data/cogs/CogManager/cogs")
 CogRepoURL = "https://github.com/PyLav/Red-Cogs"
-PyLavHashFile = pathlib.Path("/pylav/.hashfile")
+DATA_FOLDER = pathlib.Path(os.environ.get("PYLAV__DATA_FOLDER", "/pylav"))
+PyLavHashFile = DATA_FOLDER / ".hashfile"
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)5s: %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
 
@@ -29,7 +30,7 @@ with pathlib.Path("/data/config.json").open("r", encoding="utf-8") as __f:
 
 
 if not IS_JSON:
-    RepoManagerRepoFolder = pathlib.Path("/pylav/git-cogs")
+    RepoManagerRepoFolder = DATA_FOLDER / "git-cogs"
 
 
 def get_git_env() -> Dict[str, str]:
