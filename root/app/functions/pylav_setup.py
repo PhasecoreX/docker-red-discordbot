@@ -103,7 +103,10 @@ def get_pylav_cogs() -> Dict[str, pathlib.Path]:
 
 def copy_and_overwrite(from_path: Union[str, os.PathLike[str]], to_path: Union[str, os.PathLike[str]], symlink: bool = False) -> None:
     if os.path.exists(to_path):
-        shutil.rmtree(to_path)
+        if not os.path.islink(to_path):
+            shutil.rmtree(to_path)
+        else:
+            os.unlink(to_path)
     if symlink:
         log.info("Symlinking %s to %s", from_path, to_path)
         os.symlink(from_path, to_path)
