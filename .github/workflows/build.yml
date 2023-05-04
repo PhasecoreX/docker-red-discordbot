@@ -74,17 +74,16 @@ jobs:
             linux/amd64
             linux/arm/v7
             linux/arm64
-            linux/386
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
+            ${{ env.GHCR_SLUG }}:full-py311
+            ${{ env.DOCK_SLUG }}:full-py311
             ${{ env.GHCR_SLUG }}:full
-            ${{ env.GHCR_SLUG }}:full-py39
             ${{ env.DOCK_SLUG }}:full
-            ${{ env.DOCK_SLUG }}:full-py39
+            ${{ env.GHCR_SLUG }}:extra-audio-py311
+            ${{ env.DOCK_SLUG }}:extra-audio-py311
             ${{ env.GHCR_SLUG }}:extra-audio
-            ${{ env.GHCR_SLUG }}:extra-audio-py39
             ${{ env.DOCK_SLUG }}:extra-audio
-            ${{ env.DOCK_SLUG }}:extra-audio-py39
           build-args: |
             PCX_DISCORDBOT_BUILD=${{ github.run_id }}
             PCX_DISCORDBOT_COMMIT=${{ github.sha }}
@@ -100,17 +99,16 @@ jobs:
             linux/amd64
             linux/arm/v7
             linux/arm64
-            linux/386
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
+            ${{ env.GHCR_SLUG }}:noaudio-py311
+            ${{ env.DOCK_SLUG }}:noaudio-py311
             ${{ env.GHCR_SLUG }}:noaudio
-            ${{ env.GHCR_SLUG }}:noaudio-py39
             ${{ env.DOCK_SLUG }}:noaudio
-            ${{ env.DOCK_SLUG }}:noaudio-py39
+            ${{ env.GHCR_SLUG }}:core-py311
+            ${{ env.DOCK_SLUG }}:core-py311
             ${{ env.GHCR_SLUG }}:core
-            ${{ env.GHCR_SLUG }}:core-py39
             ${{ env.DOCK_SLUG }}:core
-            ${{ env.DOCK_SLUG }}:core-py39
           build-args: |
             PCX_DISCORDBOT_BUILD=${{ github.run_id }}
             PCX_DISCORDBOT_COMMIT=${{ github.sha }}
@@ -126,13 +124,12 @@ jobs:
             linux/amd64
             linux/arm/v7
             linux/arm64
-            linux/386
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
+            ${{ env.GHCR_SLUG }}:extra-py311
+            ${{ env.DOCK_SLUG }}:extra-py311
             ${{ env.GHCR_SLUG }}:extra
-            ${{ env.GHCR_SLUG }}:extra-py39
             ${{ env.DOCK_SLUG }}:extra
-            ${{ env.DOCK_SLUG }}:extra-py39
           build-args: |
             PCX_DISCORDBOT_BUILD=${{ github.run_id }}
             PCX_DISCORDBOT_COMMIT=${{ github.sha }}
@@ -148,17 +145,16 @@ jobs:
             linux/amd64
             linux/arm/v7
             linux/arm64
-            linux/386
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
+            ${{ env.GHCR_SLUG }}:audio-py311
+            ${{ env.DOCK_SLUG }}:audio-py311
             ${{ env.GHCR_SLUG }}:audio
-            ${{ env.GHCR_SLUG }}:audio-py39
             ${{ env.DOCK_SLUG }}:audio
-            ${{ env.DOCK_SLUG }}:audio-py39
+            ${{ env.GHCR_SLUG }}:core-audio-py311
+            ${{ env.DOCK_SLUG }}:core-audio-py311
             ${{ env.GHCR_SLUG }}:core-audio
-            ${{ env.GHCR_SLUG }}:core-audio-py39
             ${{ env.DOCK_SLUG }}:core-audio
-            ${{ env.DOCK_SLUG }}:core-audio-py39
             ${{ env.GHCR_SLUG }}:latest
             ${{ env.DOCK_SLUG }}:latest
           build-args: |

@@ -1,8 +1,13 @@
 #!/usr/bin/env sh
 set -euf
 
-# Patch older versions of data if needed
-/app/functions/patch.sh
+# Remove old python venv if detected
+PYVERSION=$(realpath "$(command -v python)" | grep -o '[^/]*$')
+if [ ! -f "/data/venv/.pyversion" ] || [ "$(cat "/data/venv/.pyversion")" != "${PYVERSION}" ]; then
+    rm -rf /data/venv
+    mkdir -p /data/venv
+    echo "${PYVERSION}" >"/data/venv/.pyversion"
+fi
 
 # If config file doesn't exist, make one
 if ! [ -f "/data/config.json" ]; then

@@ -149,10 +149,8 @@ If you were using a non-JSON datastore, you will need to copy your `config.json`
 
 By default, Red-DiscordBot will check for updates on each (re)start of the container. If for some reason you want to have Red-DiscordBot stay at a certain version, you can use the `REDBOT_VERSION` environment variable to specify this. The format is the same as a [version specifier](https://www.python.org/dev/peps/pep-0440/#version-specifiers) for a pip package:
 
-- `REDBOT_VERSION="==3.2.1"`: Version Matching. Must be version 3.2.1
-- `REDBOT_VERSION="~=3.2.1"`: Compatible release. Same as >= 3.2.1, == 3.2.*
-
-Do note: If you need to use a version of Red-DiscordBot that is below 3.4.13, you will need to use the images tagged with `*-py38`, as those are the last ones that use Python 3.8. Also note that those tagged images are no longer updated, and you really should be using the latest Red-DiscordBot and not using this `REDBOT_VERSION` environment variable at all.
+- `REDBOT_VERSION="==3.5.0"`: Version Matching. Must be version 3.5.0
+- `REDBOT_VERSION="~=3.5.0"`: Compatible release. Same as >= 3.5.0, == 3.5.*
 
 ### Extra Arguments
 
