@@ -46,13 +46,13 @@ def create_or_update_repo_manager_setting() -> None:
     if not RepoManagerSetting.exists():
         log.info("Creating RepoManager setting")
         with RepoManagerSetting.open("w", encoding="utf-8") as f:
-            json.dump({"170708480": {"GLOBAL": {"repos": {"pylav": "master"}}}}, f)
+            json.dump({"170708480": {"GLOBAL": {"repos": {"pylav": "develop"}}}}, f)
     else:
         log.info("Updating RepoManager setting")
         with RepoManagerSetting.open("r", encoding="utf-8") as f:
             exiting_data = json.load(f)
         if "pylav" not in exiting_data["170708480"]["GLOBAL"]["repos"]:
-            exiting_data["170708480"]["GLOBAL"]["repos"]["pylav"] = "master"
+            exiting_data["170708480"]["GLOBAL"]["repos"]["pylav"] = "develop"
             with RepoManagerSetting.open("w", encoding="utf-8") as f:
                 json.dump(exiting_data, f)
 
