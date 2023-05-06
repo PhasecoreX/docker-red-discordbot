@@ -23,6 +23,7 @@ log = logging.getLogger("PyLavSetup")
 
 DEV_PYLAV = os.environ.get("PYLAV__DEV_LIB")
 DEV_PYLAV_COGS = os.environ.get("PYLAV__DEV_COG")
+DEV_BRANCH = os.environ.get("PYLAV__DEV_BRANCH", "develop")
 
 
 with pathlib.Path("/data/config.json").open("r", encoding="utf-8") as __f:
@@ -46,13 +47,13 @@ def create_or_update_repo_manager_setting() -> None:
     if not RepoManagerSetting.exists():
         log.info("Creating RepoManager setting")
         with RepoManagerSetting.open("w", encoding="utf-8") as f:
-            json.dump({"170708480": {"GLOBAL": {"repos": {"pylav": "develop"}}}}, f)
+            json.dump({"170708480": {"GLOBAL": {"repos": {"pylav": DEV_BRANCH}}}}, f)
     else:
         log.info("Updating RepoManager setting")
         with RepoManagerSetting.open("r", encoding="utf-8") as f:
             exiting_data = json.load(f)
         if "pylav" not in exiting_data["170708480"]["GLOBAL"]["repos"]:
-            exiting_data["170708480"]["GLOBAL"]["repos"]["pylav"] = "develop"
+            exiting_data["170708480"]["GLOBAL"]["repos"]["pylav"] = DEV_BRANCH
             with RepoManagerSetting.open("w", encoding="utf-8") as f:
                 json.dump(exiting_data, f)
 
@@ -77,10 +78,13 @@ def clone_or_update_pylav_repo() -> str:
         log.info("Updating PyLav repo")
         subprocess.call(["git", "reset", "--hard", "HEAD", "-q"], cwd=RepoManagerRepoFolder, env=env)
         subprocess.call(["git", "clean", "-f", "-d", "-q"], cwd=RepoManagerRepoFolder, env=env)
+        subprocess.call(["git", "checkout", DEV_BRANCH], cwd=RepoManagerRepoFolder, env=env)
         subprocess.call(["git", "pull", "-q", "--rebase", "--autostash"], cwd=RepoManagerRepoFolder, env=env)
+
     else:
         log.info("Cloning PyLav repo")
         subprocess.call(["git", "clone", CogRepoURL, RepoManagerRepoFolder], cwd=RepoManagerRepoFolder, env=env)
+        subprocess.call(["git", "checkout", DEV_BRANCH], cwd=RepoManagerRepoFolder, env=env)
     return subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=RepoManagerRepoFolder, env=env).decode().strip()
 
 
