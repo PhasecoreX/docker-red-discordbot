@@ -18,6 +18,7 @@ on:
   repository_dispatch:
     types:
       - upstream_image_update
+  workflow_dispatch:
 
 jobs:
   docker:
