@@ -150,12 +150,15 @@ def install_requirements(
         log.info("Installing requirements: %s", requirements)
         proc = subprocess.Popen(
             [
-                "/data/venv/bin/pip",
+               sys.executable,
+                "-m",
+                "pip",
                 "install",
                 "--upgrade",
                 "--no-input",
                 "--no-warn-conflicts",
                 "--require-virtualenv",
+                "--no-cache-dir",
                 "--upgrade-strategy",
                 "eager",
                 "--target",
@@ -178,12 +181,15 @@ def install_requirements(
         log.info("Installing editable PyLav")
         proc2 = subprocess.Popen(
             [
-                "/data/venv/bin/pip",
+                sys.executable,
+                "-m",
+                "pip",
                 "install",
                 "--upgrade",
                 "--no-input",
                 "--no-warn-conflicts",
                 "--require-virtualenv",
+                "--no-cache-dir",
                 "--upgrade-strategy",
                 "eager",
                 "--editable",
