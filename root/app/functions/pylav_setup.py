@@ -161,8 +161,6 @@ def install_requirements(
                 "--no-cache-dir",
                 "--upgrade-strategy",
                 "eager",
-                "--target",
-                DownloaderLibFolder,
                 *requirements,
             ],
             env=get_git_env(),
