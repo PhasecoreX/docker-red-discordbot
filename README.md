@@ -161,9 +161,27 @@ The environment variable `EXTRA_ARGS` can be used to append extra arguments to t
 - `--debug`: Sets the loggers level as debug
 - And many other, more powerful arguments.
 
-Specify multiple arguments at once by surrounding them all with double quotes:
+When running directly from the terminal, specify multiple arguments at once by surrounding them all with double quotes:
 
-- `EXTRA_ARGS="--no-cogs --dry-run --debug"`
+- `-e EXTRA_ARGS="--no-cogs --dry-run --debug"`
+
+If using a compose file, do not use quotes:
+
+```
+environment:
+  TZ: America/Detroit
+  PUID: 1000
+  PREFIX: .
+  EXTRA_ARGS: --no-cogs --dry-run --debug
+```
+or
+```
+environment:
+  - TZ=America/Detroit
+  - PUID=1000
+  - PREFIX=.
+  - EXTRA_ARGS=--no-cogs --dry-run --debug
+```
 
 The typical user will not need to use this environment variable.
 
