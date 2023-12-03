@@ -20,15 +20,12 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)5s: %(me
 
 log = logging.getLogger("PyLavSetup")
 
-
 DEV_PYLAV = os.environ.get("PYLAV__DEV_LIB")
 DEV_PYLAV_COGS = os.environ.get("PYLAV__DEV_COG")
 DEV_BRANCH = os.environ.get("PYLAV__DEV_BRANCH", "develop")
 
-
 with pathlib.Path("/data/config.json").open("r", encoding="utf-8") as __f:
     IS_JSON = json.load(__f)["docker"]["STORAGE_TYPE"].upper() == "JSON"
-
 
 if not IS_JSON:
     RepoManagerRepoFolder = DATA_FOLDER / "git-cogs"
@@ -89,7 +86,6 @@ def clone_or_update_pylav_repo() -> str:
 
 
 def get_pylav_cogs() -> Dict[str, pathlib.Path]:
-
     return (
         {
             cog.name: cog
@@ -105,7 +101,8 @@ def get_pylav_cogs() -> Dict[str, pathlib.Path]:
     )
 
 
-def copy_and_overwrite(from_path: Union[str, os.PathLike[str]], to_path: Union[str, os.PathLike[str]], symlink: bool = False) -> None:
+def copy_and_overwrite(from_path: Union[str, os.PathLike[str]], to_path: Union[str, os.PathLike[str]],
+                       symlink: bool = False) -> None:
     if os.path.exists(to_path):
         if not os.path.islink(to_path):
             shutil.rmtree(to_path)
@@ -139,7 +136,7 @@ def get_requirements_for_all_cogs(cogs: Dict[str, pathlib.Path]) -> Set[str]:
 
 
 def install_requirements(
-    cogs: Dict[str, pathlib.Path]
+        cogs: Dict[str, pathlib.Path]
 ) -> tuple[
     subprocess.Popen[str] | subprocess.Popen[str | bytes | Any] | None,
     subprocess.Popen[str] | subprocess.Popen[str | bytes | Any] | None,
@@ -150,7 +147,7 @@ def install_requirements(
         log.info("Installing requirements: %s", requirements)
         proc = subprocess.Popen(
             [
-               sys.executable,
+                sys.executable,
                 "-m",
                 "pip",
                 "install",
@@ -210,7 +207,7 @@ def install_requirements(
 
 
 def generate_updated_downloader_setting(
-    cogs: Dict[str, pathlib.Path], commit_hash: str
+        cogs: Dict[str, pathlib.Path], commit_hash: str
 ) -> Dict[str, Dict[str, Union[str, bool]]]:
     return {
         cog.name: {
