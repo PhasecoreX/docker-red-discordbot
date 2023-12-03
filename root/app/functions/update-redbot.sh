@@ -14,8 +14,7 @@ if [ "${STORAGE_TYPE}" != "json" ]; then
 fi
 
 if [ -z "${PYLAV__DOCKER_DEV_SKIP_INSTALL:-}" ]; then
-  git git config --global --add safe.directory $PYLAV__DEV_LIB || true
-  git git config --global --add safe.directory $PYLAV__DEV_COG || true
+  git config --global --add safe.directory '*'
   python /app/functions/pylav_setup.py
 fi
 
