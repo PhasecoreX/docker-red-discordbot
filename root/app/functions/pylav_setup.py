@@ -237,7 +237,7 @@ if __name__ == "__main__":
         # This script was called outside a docker container or the docker container is not a pylav image
         log.info("Skipping PyLav setup and update")
         sys.exit(0)
-    for folder in (DownloaderLibFolder, RepoManagerRepoFolder, CogManagerCogFolder):
+    for folder in (DATA_FOLDER, DownloaderLibFolder, RepoManagerRepoFolder, CogManagerCogFolder):
         if not folder.exists():
             folder.mkdir(parents=True, mode=0o776)
     if not DEV_PYLAV_COGS:
