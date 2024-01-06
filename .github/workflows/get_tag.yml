@@ -1,0 +1,47 @@
+name: Parse Red Release Tags
+
+on:
+  schedule:
+    - cron:  '*/15 * * * *'
+  workflow_dispatch:
+
+jobs:
+  get-workflow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PAT }} # Needed to trigger the build workflow (Private Access Token)
+      - run: |
+          mkdir -p ./action-run
+      - name: Fetch action identifier
+        id: get-tag
+        run: |
+          TAG_NAME=`gh release view -R  Cog-Creators/Red-DiscordBot --json tagName --jq '.tagName'`
+          echo TAG_NAME > ./red_tag/latest-tag.txt
+          echo tag_name="%TAG_NAME%" >> $GITHUB_OUTPUT
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check for modified files
+        id: git-check
+        run: |
+          [[ -z "`git status --porcelain`" ]] && echo modified="false" || echo modified="true" >> $GITHUB_OUTPUT
+      - name: Import GPG key
+        if: steps.git-check.outputs.modified == 'true'
+        uses: crazy-max/ghaction-import-gpg@v5
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }} # Needed to sign the commit (Private GPG Key)
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+          git_tag_gpgsign: true
+        id: import_gpg
+      -   name: Git Auto Commit
+          if: steps.git-check.outputs.modified == 'true'
+          uses: stefanzweifel/git-auto-commit-action@v4.15.4
+          with:
+              commit_message: 'Updated latest release tag'
+              commit_options: -S
+              tagging_message: steps.get-tag.outputs.tag_name
+              commit_user_name: ${{ steps.import_gpg.outputs.name }}
+              commit_user_email: ${{ steps.import_gpg.outputs.email }}
+              commit_author: ${{ steps.import_gpg.outputs.name }} <${{ steps.import_gpg.outputs.email }}>
