@@ -13,6 +13,11 @@ if [ "${STORAGE_TYPE}" != "json" ]; then
     SETUPTOOLS_EXTRAS="[${STORAGE_TYPE}]"
 fi
 
+if [ -z "${PYLAV__DOCKER_DEV_SKIP_INSTALL:-}" ]; then
+  git config --global --add safe.directory '*'
+  python /app/functions/pylav_setup.py
+fi
+
 if [ -n "${CUSTOM_REDBOT_PACKAGE:-}" ]; then
     echo "WARNING: You have specified a custom Red-DiscordBot Pip install. Little to no support will be given for this setup."
     echo "Updating Red-DiscordBot with \"${CUSTOM_REDBOT_PACKAGE}\"..."
