@@ -73,6 +73,7 @@ jobs:
           target: extra-audio
           platforms: |
             linux/amd64
+            linux/arm/v7
             linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
@@ -164,8 +165,8 @@ jobs:
             ${{ env.GHCR_SLUG }}:core
             ${{ env.GHCR_SLUG }}:core-audio
           labels: ${{ steps.meta.outputs.labels }}
-
-      - name: Build and push core-pylav
+      -
+        name: Build and push core-pylav
         uses: docker/build-push-action@v3
         with:
           target: core-pylav
@@ -188,7 +189,8 @@ jobs:
             ${{ env.GHCR_SLUG }}:core-audio
             ${{ env.GHCR_SLUG }}:core-pylav
           labels: ${{ steps.meta.outputs.labels }}
-      - name: Build and push extra-pylav
+      -
+        name: Build and push extra-pylav
         uses: docker/build-push-action@v3
         with:
           target: extra-pylav
@@ -218,14 +220,14 @@ jobs:
           docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:extra
           docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:core-audio
           docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:extra-audio
-          docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:extra-pylav
           docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:core-pylav
+          docker buildx imagetools inspect ${{ env.GHCR_SLUG }}:extra-pylav
           docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:core
           docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:extra
           docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:core-audio
           docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:extra-audio
-          docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:extra-pylav
           docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:core-pylav
+          docker buildx imagetools inspect ${{ env.DOCK_SLUG }}:extra-pylav
       -
         name: Check pull
         if: github.event_name != 'pull_request'

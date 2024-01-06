@@ -145,7 +145,6 @@ COPY root/ /
 
 CMD ["/app/start-redbot.sh"]
 
-
 #######################################################################################
 
 FROM core-build as core-pylav-build
@@ -177,7 +176,6 @@ COPY root/ /
 
 CMD ["/app/start-redbot.sh"]
 
-
 #######################################################################################
 
 FROM extra-build as extra-pylav-build
@@ -208,5 +206,3 @@ ENV PYLAV__IN_CONTAINER 1
 COPY root/ /
 
 CMD ["/app/start-redbot.sh"]
-
-#######################################################################################
