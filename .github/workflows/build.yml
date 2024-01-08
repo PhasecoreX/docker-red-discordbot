@@ -167,7 +167,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
       -
         name: Build and push core-pylav
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           target: core-pylav
           platforms: |
@@ -191,7 +191,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
       -
         name: Build and push extra-pylav
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           target: extra-pylav
           platforms: |
