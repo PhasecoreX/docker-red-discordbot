@@ -13,7 +13,7 @@ DownloaderLibFolder = pathlib.Path("/data/cogs/Downloader/lib")
 RepoManagerRepoFolder = pathlib.Path("/data/cogs/RepoManager/repos/pylav")
 CogManagerCogFolder = pathlib.Path("/data/cogs/CogManager/cogs")
 CogRepoURL = "https://github.com/PyLav/Red-Cogs"
-DATA_FOLDER = pathlib.Path(os.environ.get("PYLAV__DATA_FOLDER", "/pylav"))
+DATA_FOLDER = pathlib.Path(os.environ.get("PYLAV__DATA_FOLDER", "/data/pylav"))
 PyLavHashFile = DATA_FOLDER / ".hashfile"
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)5s: %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
