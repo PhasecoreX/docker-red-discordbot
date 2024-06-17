@@ -68,7 +68,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
         name: Build and push extra-audio
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           target: extra-audio
           platforms: |
@@ -93,7 +93,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
       -
         name: Build and push core
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           target: core
           platforms: |
@@ -118,7 +118,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
       -
         name: Build and push extra
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           target: extra
           platforms: |
@@ -139,7 +139,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
       -
         name: Build and push core-audio
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           target: core-audio
           platforms: |
@@ -167,7 +167,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
       -
         name: Build and push core-pylav
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           target: core-pylav
           platforms: |
@@ -191,7 +191,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
       -
         name: Build and push extra-pylav
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           target: extra-pylav
           platforms: |
