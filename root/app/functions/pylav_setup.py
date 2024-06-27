@@ -251,7 +251,7 @@ if __name__ == "__main__":
         log.info("PyLav is up to date")
         sys.exit(0)
     else:
-        install_or_update_pylav_cogs(cogs_mapping, symlink=True)
+        install_or_update_pylav_cogs(cogs_mapping, symlink=bool(DEV_PYLAV_COGS))
         process, process2 = install_requirements(cogs_mapping)
     try:
         log.info("Current PyLav-Cogs Commit: %s", current_commit)
