@@ -1,6 +1,8 @@
 #!/usr/bin/env sh
 set -euf
 
+stringContain() { case $2 in *$1* ) return 0;; *) return 1;; esac ;}
+
 # Make sure we are in the venv
 [ -n "${VIRTUAL_ENV:-}" ]
 
@@ -13,9 +15,11 @@ if [ "${STORAGE_TYPE}" != "json" ]; then
     SETUPTOOLS_EXTRAS="[${STORAGE_TYPE}]"
 fi
 
-if [ -z "${PYLAV__DOCKER_DEV_SKIP_INSTALL:-}" ]; then
-  git config --global --add safe.directory '*'
-  python /app/functions/pylav_setup.py
+if stringContain "pylav" "${PCX_DISCORDBOT_TAG}"; then
+    if [ -z "${PYLAV__DOCKER_DEV_SKIP_INSTALL:-}" ]; then
+        git config --global --add safe.directory '*'
+        python /app/functions/pylav_setup.py
+    fi
 fi
 
 if [ -n "${CUSTOM_REDBOT_PACKAGE:-}" ]; then
