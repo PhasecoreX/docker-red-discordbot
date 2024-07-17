@@ -20,17 +20,17 @@ There are many reasons that this image is better (or as good as) the others out 
 
 ## Quick Start
 
-Just do this:
+The basic run command looks like this:
 
 ```
-docker run -v /local_folder_for_persistence:/data -e TOKEN=bot_token -e PREFIX=. phasecorex/red-discordbot
+docker run -v /local/folder/for/persistence:/data -e TOKEN=bot_token -e PREFIX=. phasecorex/red-discordbot
 ```
 
-Red-DiscordBot will start up with the specified token and prefix, and after updating, it will show the invite URL. Use this to add the bot to your server.
+At minimum, you will need to replace the `/local/folder/for/persistence` as well as the `bot_token`. Red-DiscordBot will start up with the specified token and prefix, and after updating, it will show the invite URL. Use this to add the bot to your server.
 
 Here is an explanation of the command:
 
-- `-v /local_folder_for_persistence:/data`: Folder to persist Red-DiscordBot data. You could also use a named volume.
+- `-v /local/folder/for/persistence:/data`: Folder to persist Red-DiscordBot data. You could also use a named volume.
 - `-e TOKEN=bot_token`: The bot token you want Red-DiscordBot to use.
 - `-e PREFIX=.`: The prefix you want Red-DiscordBot to use. You can specify more than one prefix by additionally using the environment variables `PREFIX2`, `PREFIX3`, `PREFIX4`, and `PREFIX5`.
 
