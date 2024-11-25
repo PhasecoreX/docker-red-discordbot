@@ -2,7 +2,7 @@ FROM python:3.11-slim-bookworm AS core-build
 
 # Add PhasecoreX user-entrypoint script
 ADD https://raw.githubusercontent.com/PhasecoreX/docker-user-image/master/user-entrypoint.sh /bin/user-entrypoint
-RUN chmod +x /bin/user-entrypoint && /bin/user-entrypoint --init
+RUN chmod +rx /bin/user-entrypoint && /bin/user-entrypoint --init
 ENTRYPOINT ["/bin/user-entrypoint"]
 
 RUN set -eux; \
