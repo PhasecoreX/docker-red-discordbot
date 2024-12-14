@@ -50,7 +50,7 @@ Once you like how it's working, you can add these:
 You can also remove the `OWNER`, `TOKEN`, and `PREFIX`es after the initial run, as they are saved to the bots config. This allows for you to use the `[p]set prefix` command, and makes subsequent runs as simple as:
 
 ```
-docker run -v /local_folder_for_persistence:/data phasecorex/red-discordbot
+docker run -v /local/folder/for/persistence:/data phasecorex/red-discordbot
 ```
 
 Enjoy!
@@ -120,13 +120,13 @@ Any software that needs to communicate to Red-DiscordBot via RPC can only do so 
 `redbot-setup` can be run manually, in case you want to set up the bot yourself or to convert it's datastore. It can only be run in interactive mode, like so:
 
 ```
-docker run -it --rm -v /local_folder_for_persistence:/data phasecorex/red-discordbot redbot-setup [OPTIONS] COMMAND [ARGS]...
+docker run -it --rm -v /local/folder/for/persistence:/data phasecorex/red-discordbot redbot-setup [OPTIONS] COMMAND [ARGS]...
 ```
 
 By default, Red-DiscordBot will use the JSON datastore. If you would like to use a different datastore (Postgres for example), specify it in the `STORAGE_TYPE` environment variable:
 
 ```
-docker run -it --rm -v /local_folder_for_persistence:/data -e STORAGE_TYPE=postgres phasecorex/red-discordbot redbot-setup [OPTIONS] COMMAND [ARGS]...
+docker run -it --rm -v /local/folder/for/persistence:/data -e STORAGE_TYPE=postgres phasecorex/red-discordbot redbot-setup [OPTIONS] COMMAND [ARGS]...
 ```
 
 You can [check the official Red-DiscordBot documentation](https://docs.discord.red/en/latest/install_linux_mac.html#installing-red) to find out what datastores are available. The example on the page looks like this:
