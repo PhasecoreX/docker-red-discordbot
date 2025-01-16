@@ -143,7 +143,20 @@ You can also do this on your first run if you want to set up the bot to use a no
 
 Migrating to this container should be fairly easy. Simply copy your `cogs` and `core` folder into the `/data` folder that is to be mounted.
 
-If you were using a non-JSON datastore, you will need to copy your `config.json` file (usually found in `~/.config/Red-DiscordBot/config.json`) into the `/data` folder. Be sure to set the `DATA_PATH` to `/data`, and double check if you need to update the `STORAGE_DETAILS` `host` value.
+If you were using a non-JSON datastore, you will need to copy your `config.json` file (usually found in `~/.config/Red-DiscordBot/config.json`) into the `/data` folder as well. You will then need update the file contents to look something like this:
+```
+{
+    "docker": {                       <-- must be "docker"
+        "DATA_PATH": "/data",         <-- must be "/data"
+        "COG_PATH_APPEND": "cogs",    <-- must be "cogs"
+        "CORE_PATH_APPEND": "core",   <-- must be "core"
+        "STORAGE_TYPE": "POSTGRES",   <-- everything here and below you configured for your non-JSON datastore, so leave it alone
+        "STORAGE_DETAILS": {}
+    }
+}
+
+```
+The important part is that you make sure your instance name is "docker". This can either be done by using the `redbot --edit` command (from the un-migrated redbot) to rename the instance to "docker", or you can just modify the config.json file (like above) and manually name it.
 
 ### Version Freeze
 
