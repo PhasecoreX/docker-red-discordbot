@@ -111,6 +111,8 @@ By default, Red-DiscordBot (and the Lavalink audio server) will run at the nicen
 
 Niceness has a range of -20 (highest priority, least nice to other processes) to 19 (lowest priority, very nice to other processes). Setting this to a value less than the default (higher priority) will require that you start the container with `--cap-add=SYS_NICE`. Setting it above the default will not need that capability set. If you are on a lower powered device or shared VPS that allows it, this option may help with audio stuttering when set to a lower (negative) value.
 
+Another potential solution to audio stuttering is to run the container in host networking mode. Docker does a bunch of network stack emulation for containers which, on a slow server, could affect realtime processes like audio.
+
 ### Dashboard (or other RPC software)
 
 Any software that needs to communicate to Red-DiscordBot via RPC can only do so when the container is running in host networking mode. Since the RPC port only listens on localhost (for security purposes), it would normally only be listening inside its own container. Setting the container to host networking mode allows for other software (running on the host) to connect successfully.
