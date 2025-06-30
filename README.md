@@ -101,6 +101,10 @@ If you find out that Red-DiscordBot was updated, simply issue the `[p]restart` c
 
 Consider using the [UpdateNotify](https://github.com/PhasecoreX/PCXCogs) cog I created to get notifications when Red-DiscordBot (or this Docker image) updates!
 
+#### Portainer Update Note
+
+If you are using Portainer to run this image and want to use my UpdateNotify cog, make sure you deploy using Portainers "Stacks" functionality, not from the "Containers" tab. If you deploy from the containers tab (pressing the "Add Container" button), the UpdateNotify cog will always tell you that there is an update, even when there isn't. More information can be found [here](https://github.com/PhasecoreX/docker-red-discordbot/issues/115).
+
 ## More Advanced Stuff
 
 ### Niceness
