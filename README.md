@@ -95,6 +95,10 @@ services:
 
 And again, subsequent runs you can omit the `OWNER`, `TOKEN`, and `PREFIX`es from the docker-compose.yml file.
 
+### Unraid
+
+This container can also be found in the Unraid Community Apps store. Search for and use "red-discordbot" made by [Selfhosters Unraid Discord Repository](https://unraid.net/community/apps?q=Selfhosters+Unraid+Discord+Repository&r=0#r). This is the one that I know works and that I support.
+
 ### Updates
 
 If you find out that Red-DiscordBot was updated, simply issue the `[p]restart` command. Red-DiscordBot will gracefully shut down, update itself, and then start back up.
